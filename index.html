@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala Stampa 2.0 — A&R Playlist Studio</title>
+<title>Sala Stampa 3.0 — A&R Playlist Studio & Genre DB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -28,7 +28,7 @@
     line-height:1.5;
     padding:0 0 90px;
   }
-  .wrap{max-width:860px;margin:0 auto;padding:48px 24px 0;}
+  .wrap{max-width:900px;margin:0 auto;padding:48px 24px 0;}
 
   header.hero{
     margin-bottom:40px;
@@ -64,7 +64,7 @@
     letter-spacing:-0.01em;
     line-height:1.1;
   }
-  .sub{color:var(--text-dim);font-size:15px;max-width:58ch;margin:0;}
+  .sub{color:var(--text-dim);font-size:15px;max-width:60ch;margin:0;}
 
   .card{
     background:var(--surface);
@@ -121,9 +121,9 @@
     background:var(--surface-alt);
     border:1px dashed var(--border);
     color:var(--text-dim);
-    padding:14px;
+    padding:12px;
     border-radius:7px;
-    font-size:13.5px;
+    font-size:13px;
     cursor:pointer;
   }
   input[type=file]:hover{border-color:var(--teal);}
@@ -131,7 +131,7 @@
   input:focus, textarea:focus, select:focus{outline:2px solid var(--teal);outline-offset:1px;}
 
   .row{display:flex;gap:14px;flex-wrap:wrap;}
-  .row > div{flex:1;min-width:180px;}
+  .row > div{flex:1;min-width:170px;}
 
   button{
     font-family:'Inter', sans-serif;
@@ -150,11 +150,13 @@
   button:active:not(:disabled){transform:scale(0.98);}
   button.primary{background:var(--teal);color:#0B1512;}
   button.primary:hover:not(:disabled){background:#5fd0af;}
+  button.amber{background:var(--amber);color:#161209;}
+  button.amber:hover:not(:disabled){background:#f0b64d;}
   button.secondary{background:transparent;border:1px solid var(--border);color:var(--text);}
   button.secondary:hover:not(:disabled){border-color:var(--teal);color:var(--teal);background:rgba(79,191,159,0.06);}
   button.danger{background:transparent;border:1px solid rgba(226,87,76,0.4);color:#f0938a;}
   button.danger:hover:not(:disabled){background:rgba(226,87,76,0.12);border-color:var(--red);}
-  button.sm{padding:6px 12px;font-size:12px;}
+  button.sm{padding:6px 11px;font-size:12px;}
   button:disabled{opacity:0.4;cursor:not-allowed;}
 
   .status-pill{
@@ -171,7 +173,7 @@
   .dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;}
   .dot.ok{background:var(--teal);box-shadow:0 0 8px var(--teal);}
 
-  /* Pressing Stamps */
+  /* Pressing Stamps & Genre Tags */
   .stamp{
     display:inline-flex;
     align-items:center;
@@ -188,6 +190,54 @@
   .stamp.hit{background:rgba(227,167,62,0.14);color:var(--amber);border:1px dashed rgba(227,167,62,0.5);}
   .stamp.catalog{background:rgba(79,191,159,0.14);color:var(--teal);border:1px dashed rgba(79,191,159,0.5);}
   .stamp.manual{background:rgba(226,87,76,0.14);color:var(--red);border:1px dashed rgba(226,87,76,0.5);}
+
+  .genre-pill{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    padding:2px 6px;
+    border-radius:4px;
+    background:rgba(79,191,159,0.12);
+    color:var(--teal);
+    border:1px solid rgba(79,191,159,0.3);
+    white-space:nowrap;
+  }
+  .genre-pill.empty{
+    background:rgba(145,152,169,0.1);
+    color:var(--text-dim);
+    border-color:var(--border);
+  }
+  .genre-pill.pending{
+    background:rgba(227,167,62,0.1);
+    color:var(--amber);
+    border-color:rgba(227,167,62,0.3);
+  }
+
+  /* DB Sync Panel */
+  .db-sync-box{
+    background:linear-gradient(180deg, rgba(35,39,51,0.9), rgba(27,30,38,0.9));
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:16px;
+    margin-bottom:16px;
+  }
+  .db-sync-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .db-metrics{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-top:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+  }
+  .db-metric span{color:var(--text-dim);}
+  .db-metric strong{color:var(--text);margin-left:4px;}
 
   /* Stats Bar in Preview */
   .stats-bar{
@@ -206,18 +256,19 @@
 
   /* Progress Bar */
   .progress-wrap{
-    margin-top:14px;
+    margin-top:12px;
     background:var(--surface-alt);
     border:1px solid var(--border);
     border-radius:7px;
     overflow:hidden;
   }
   .progress-bar{
-    height:4px;
+    height:5px;
     background:var(--teal);
     width:0%;
     transition:width .2s ease;
   }
+  .progress-bar.amber{background:var(--amber);}
   .progress-text{
     padding:8px 12px;
     font-family:'JetBrains Mono',monospace;
@@ -338,9 +389,9 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v2.0</div>
+      <div class="eyebrow">A&amp;R Automation Studio · v3.0</div>
       <h1>Sala Stampa</h1>
-      <p class="sub">Seleziona le uscite della tua etichetta per UPC o ISRC: l'app rileva i generi dagli artisti Spotify, campiona hit coerenti con caching intelligente e costruisce la scaletta perfetta.</p>
+      <p class="sub">Database persistente per UPC e ISRC con sincronizzazione intelligente dei generi da Spotify, filtri A&amp;R immediati e generatore scalette.</p>
     </div>
     <div class="status-pill">
       <span class="dot" id="statusDot"></span>
@@ -372,30 +423,85 @@
     </div>
   </section>
 
-  <!-- STEP 2: CONFIGURAZIONE & CATALOGO -->
+  <!-- STEP 2: DATABASE CATALOGO, SYNC GENERI & REGOLE -->
   <section class="card">
     <div class="card-header">
-      <h2><span class="num">02</span> Catalogo &amp; Regole di Mixaggio</h2>
-      <span class="count-badge" id="cacheStatsBadge" title="Riduce le chiamate API ripetute">Cache: 0 artisti · 0 generi</span>
+      <h2><span class="num">02</span> Database Repertorio &amp; Sincronizzazione Generi</h2>
+      <span class="count-badge" id="cacheStatsBadge" title="Salvati nella memoria permanente del browser">DB: 0 uscite · 0 artisti</span>
     </div>
-    <p class="hint">Importa il tuo database (JSON, CSV o TXT) oppure incolla direttamente i codici UPC / ISRC.</p>
+    <p class="hint">Il tuo repertorio e i generi sincronizzati da Spotify restano salvati in automatico nel browser a ogni apertura. Carica un nuovo CSV da Believe per aggiungere le nuove uscite.</p>
 
-    <label for="repertoireFile">Carica file repertorio (CSV Believe/distributori, JSON o TXT — supporta sia UPC che ISRC)</label>
-    <input type="file" id="repertoireFile" accept=".csv,.txt,.json">
+    <div class="row" style="align-items:center;">
+      <div style="flex:2;">
+        <label for="repertoireFile" style="margin-top:0;">Aggiorna / Aggiungi uscite da file Believe (CSV, JSON o TXT)</label>
+        <input type="file" id="repertoireFile" accept=".csv,.txt,.json">
+      </div>
+      <div style="flex:1;">
+        <label style="margin-top:0;">Backup Database &amp; Export</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="secondary sm" type="button" id="exportDbJsonBtn" title="Salva su PC il database completo (Catalogo + Generi)">💾 Backup DB (.json)</button>
+          <button class="secondary sm" type="button" id="importDbJsonBtn" title="Ripristina un file .json di backup">📂 Importa DB</button>
+          <input type="file" id="importDbFileInput" accept=".json" class="hidden">
+          <button class="secondary sm" type="button" id="exportCatalogCsvBtn" title="Esporta tabella CSV con i generi Spotify per Excel">📊 CSV + Generi</button>
+        </div>
+      </div>
+    </div>
     <div id="fileParseMsg"></div>
 
-    <!-- BLOCCO FILTRI CATALOGO -->
-    <div id="catalogFilterBlock" class="hidden" style="margin-top:14px;padding:16px;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;">
+    <!-- BLOCCO DATABASE E FILTRI CATALOGO -->
+    <div id="catalogFilterBlock" class="hidden" style="margin-top:16px;padding:18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:9px;">
+
+      <!-- PANNELLO SINCRONIZZAZIONE GENERI SPOTIFY -->
+      <div class="db-sync-box">
+        <div class="db-sync-header">
+          <div>
+            <div style="font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:8px;">
+              <span>⚡ Sincronizzazione Generi Spotify</span>
+              <span class="count-badge" id="syncStatusPill">Pronto</span>
+            </div>
+            <div style="font-size:12.5px;color:var(--text-dim);margin-top:2px;">
+              Interroga Spotify solo per gli UPC/ISRC non ancora analizzati e salva i generi in modo permanente.
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="amber sm" type="button" id="syncGenresBtn">🔄 Sincronizza Generi Mancanti</button>
+            <button class="danger sm hidden" type="button" id="stopSyncBtn">⏹ Metti in Pausa</button>
+            <button class="secondary sm" type="button" id="rescanEmptyGenresBtn" title="Ripeti il controllo sui codici che non avevano generi">🔁 Riprova "Senza genere"</button>
+          </div>
+        </div>
+
+        <div class="db-metrics">
+          <div class="db-metric"><span>Totale in Catalogo:</span><strong id="metricTotal">0</strong></div>
+          <div class="db-metric"><span>Con Genere Spotify:</span><strong id="metricWithGenre" style="color:var(--teal);">0</strong></div>
+          <div class="db-metric"><span>Senza Genere su Spotify:</span><strong id="metricNoGenre">0</strong></div>
+          <div class="db-metric"><span>Da Scansionare:</span><strong id="metricPending" style="color:var(--amber);">0</strong></div>
+        </div>
+
+        <div id="syncProgressWrap" class="progress-wrap hidden">
+          <div class="progress-bar amber" id="syncProgressBar"></div>
+          <div class="progress-text" id="syncProgressText">Sincronizzazione in corso...</div>
+        </div>
+      </div>
+
+      <!-- FILTRO ETICHETTE -->
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <label style="margin:0;">Filtra per Etichetta</label>
         <div style="display:flex;gap:8px;">
-          <button class="secondary sm" type="button" id=" filterAllLabelsBtn" onclick="toggleAllLabels(true)">Tutte</button>
+          <button class="secondary sm" type="button" onclick="toggleAllLabels(true)">Tutte</button>
           <button class="secondary sm" type="button" onclick="toggleAllLabels(false)">Nessuna</button>
+          <button class="danger sm" type="button" id="wipeCatalogDbBtn" title="Cancella il catalogo salvato nel browser">🗑️ Svuota Catalogo</button>
         </div>
       </div>
       <div id="labelCheckboxes" style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;"></div>
 
+      <!-- FILTRI GENERE, DATE E TIPO -->
       <div class="row">
+        <div style="flex:1.5;">
+          <label for="genreFilterSelect">Filtra per Genere Spotify</label>
+          <select id="genreFilterSelect">
+            <option value="__ALL__">Tutti i generi</option>
+          </select>
+        </div>
         <div>
           <label for="dateFrom">Uscite dal</label>
           <input type="date" id="dateFrom">
@@ -414,8 +520,8 @@
         </div>
       </div>
 
-      <label for="titleSearch">Cerca per titolo, artista o codice</label>
-      <input type="text" id="titleSearch" placeholder="Digita per filtrare istantaneamente...">
+      <label for="titleSearch">Cerca per titolo, artista, genere o codice UPC/ISRC</label>
+      <input type="text" id="titleSearch" placeholder="es. tech house, Reeds, 019800...">
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
         <span class="count-badge" id="filterMatchCount"></span>
@@ -425,21 +531,32 @@
         </div>
       </div>
 
-      <div id="releaseChecklist" style="max-height:280px;overflow-y:auto;margin-top:10px;border-top:1px solid var(--border);"></div>
+      <div id="releaseChecklist" style="max-height:310px;overflow-y:auto;margin-top:10px;border-top:1px solid var(--border);"></div>
 
-      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;">
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
         <button class="primary" id="addSelectedBtn" type="button">Aggiungi selezionati alla coda ↓</button>
         <span class="count-badge" id="selectedCheckCount"></span>
       </div>
     </div>
 
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;">
-      <label for="upcs" style="margin:0;">Coda codici UPC o ISRC da elaborare (uno per riga)</label>
-      <button class="secondary sm" type="button" id="clearUpcsBtn">Svuota codici</button>
+    <!-- CODA CODICI DA ELABORARE -->
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;">
+      <label for="upcs" style="margin:0;">Coda codici UPC o ISRC da usare per questa playlist (uno per riga)</label>
+      <button class="secondary sm" type="button" id="clearUpcsBtn">Svuota coda</button>
     </div>
     <textarea id="upcs" style="margin-top:6px;" placeholder="0198004321789&#10;ITBQY2301270&#10;..."></textarea>
 
     <div class="row" style="margin-top:12px;">
+      <div>
+        <label for="maxTracksPerUpc">Tracce da estrarre per ogni UPC (Album/EP)</label>
+        <select id="maxTracksPerUpc">
+          <option value="1">Solo la 1ª traccia (evita compilation intere)</option>
+          <option value="2">Prime 2 tracce</option>
+          <option value="3">Prime 3 tracce</option>
+          <option value="5">Prime 5 tracce</option>
+          <option value="50" selected>Tutte le tracce dell'uscita</option>
+        </select>
+      </div>
       <div>
         <label for="famousCount">Hit da abbinare per ogni uscita</label>
         <input type="number" id="famousCount" value="5" min="0" max="30">
@@ -447,16 +564,16 @@
       <div>
         <label for="mixOrder">Algoritmo di Mixaggio</label>
         <select id="mixOrder">
-          <option value="smart-global">Smart Pacing Globale (distribuzione uniforme)</option>
-          <option value="alternate">Alterna per blocco uscita (Catalogo / Hit)</option>
-          <option value="catalog-first">Catalogo prima, poi Hit (per uscita)</option>
-          <option value="hit-first">Hit prima, poi Catalogo (per uscita)</option>
+          <option value="smart-global">Smart Pacing Globale (uniforme)</option>
+          <option value="alternate">Alterna per blocco uscita</option>
+          <option value="catalog-first">Catalogo prima, poi Hit</option>
+          <option value="hit-first">Hit prima, poi Catalogo</option>
           <option value="shuffle">Shuffle totale</option>
         </select>
       </div>
     </div>
 
-    <label for="fallbackGenre">Generi di riserva (usati se l'artista non ha generi classificati su Spotify — separati da virgola)</label>
+    <label for="fallbackGenre">Generi di riserva (usati se l'uscita non ha generi classificati su Spotify — separati da virgola)</label>
     <input type="text" id="fallbackGenre" placeholder="es. tech house, deep house, lounge, pop italiano">
 
     <!-- OPZIONI AVANZATE A&R -->
@@ -494,7 +611,7 @@
       <h2><span class="num">03</span> Curation &amp; Pubblicazione</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="secondary sm" type="button" id="reshufflePreviewBtn" title="Rimescola i brani mantenendo la lista">🔀 Rimescola</button>
-        <button class="secondary sm" type="button" id="exportCsvBtn" title="Scarica scaletta in CSV">⬇ CSV</button>
+        <button class="secondary sm" type="button" id="exportCsvBtn" title="Scarica scaletta in CSV">⬇ CSV Scaletta</button>
         <button class="danger sm" type="button" id="clearPreviewBtn">✕ Svuota</button>
       </div>
     </div>
@@ -529,7 +646,7 @@
       <div id="manualSearchResults" style="margin-top:8px;"></div>
     </div>
 
-    <p class="hint" style="margin-bottom:8px;">💡 Puoi trascinare le righe per riordinarle oppure cliccare <strong>↻</strong> su una Hit per cambiarla con un altro brano dello stesso genere.</p>
+    <p class="hint" style="margin-bottom:8px;">💡 Trascina le righe per riordinarle oppure clicca <strong>↻</strong> su una Hit per cambiarla al volo con un'altra traccia dello stesso genere.</p>
     <div id="trackList"></div>
 
     <!-- IMPOSTAZIONI DESTINAZIONE SPOTIFY -->
@@ -580,10 +697,9 @@
 
   <footer id="howto">
     <p style="max-width:64ch;margin:0 auto 8px;">
-      <strong>Configurazione rapida Client ID:</strong> apri <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">developer.spotify.com/dashboard</a> →
-      Crea un'app → In <em>Redirect URIs</em> incolla esattamente <code id="currentRedirectUri" style="color:var(--amber);"></code> → Copia il Client ID nel passo 01.
+      <strong>Redirect URI attivo per la tua Spotify Dashboard:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
     </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v2.0 — PKCE + Smart Genre Cache</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v3.0 — Persistent Genre DB &amp; Delta Sync</p>
   </footer>
 
 </div>
@@ -593,27 +709,73 @@ const REDIRECT_URI = window.location.origin + window.location.pathname;
 document.getElementById('currentRedirectUri').textContent = REDIRECT_URI;
 const SCOPES = "playlist-modify-public playlist-modify-private playlist-read-private user-read-private";
 
-// ---------- Caches & State ----------
-const artistGenreCache = new Map(); // artistId -> string[]
-const genreTrackPoolCache = new Map(); // cacheKey -> TrackObject[]
+// ---------- Persistent Database Keys (localStorage) ----------
+const LS_CATALOG_KEY = 'ss_catalog_db_v3';
+const LS_CODE_META_KEY = 'ss_code_meta_db_v3';   // code -> { genres: string[], status: 'synced'|'empty'|'not_found', trackCount: number, updatedAt: number }
+const LS_ARTIST_GENRE_KEY = 'ss_artist_genre_db_v3'; // artistId -> string[]
 
+// In-Memory Stores hydrated from localStorage
+let catalogData = [];
+let codeMetaDb = {};
+let artistGenreCache = new Map();
+const genreTrackPoolCache = new Map();
+
+function loadPersistentDatabase(){
+  try{
+    const rawCat = localStorage.getItem(LS_CATALOG_KEY);
+    if(rawCat) catalogData = JSON.parse(rawCat) || [];
+  }catch(e){ catalogData = []; }
+
+  try{
+    const rawMeta = localStorage.getItem(LS_CODE_META_KEY);
+    if(rawMeta) codeMetaDb = JSON.parse(rawMeta) || {};
+  }catch(e){ codeMetaDb = {}; }
+
+  try{
+    const rawArt = localStorage.getItem(LS_ARTIST_GENRE_KEY);
+    if(rawArt){
+      const obj = JSON.parse(rawArt);
+      Object.entries(obj).forEach(([k, v]) => artistGenreCache.set(k, v));
+    }
+  }catch(e){}
+}
+
+function saveCatalogToStorage(){
+  try{ localStorage.setItem(LS_CATALOG_KEY, JSON.stringify(catalogData)); }catch(e){}
+  updateCacheBadge();
+}
+
+function saveCodeMetaToStorage(){
+  try{ localStorage.setItem(LS_CODE_META_KEY, JSON.stringify(codeMetaDb)); }catch(e){}
+  updateCacheBadge();
+}
+
+function saveArtistCacheToStorage(){
+  try{
+    const obj = Object.fromEntries(artistGenreCache.entries());
+    localStorage.setItem(LS_ARTIST_GENRE_KEY, JSON.stringify(obj));
+  }catch(e){}
+  updateCacheBadge();
+}
+
+function updateCacheBadge(){
+  document.getElementById('cacheStatsBadge').textContent =
+    `DB: ${catalogData.length} uscite · ${artistGenreCache.size} artisti`;
+}
+
+// ---------- Auth & Session State ----------
 let accessToken = sessionStorage.getItem('sp_access_token') || null;
 let refreshToken = localStorage.getItem('sp_refresh_token') || null;
 let tokenExpiresAt = parseInt(sessionStorage.getItem('sp_expires_at') || '0', 10);
 let userId = sessionStorage.getItem('sp_user_id') || null;
 let userDisplayName = sessionStorage.getItem('sp_user_name') || null;
 
-let catalogData = []; // {code, type: 'release'|'track', label, release_date, title, artist}
-let builtTracks = []; // {uri, name, artist, kind, cover, duration_ms, external_url, sourceGenre}
+let builtTracks = [];
+let isSyncingGenres = false;
+let stopSyncRequested = false;
 
-// Ripristina Client ID salvato in localStorage
 const savedClientId = localStorage.getItem('sp_client_id') || sessionStorage.getItem('sp_client_id') || '';
 if(savedClientId) document.getElementById('clientId').value = savedClientId;
-
-function updateCacheBadge(){
-  document.getElementById('cacheStatsBadge').textContent =
-    `Cache: ${artistGenreCache.size} artisti · ${genreTrackPoolCache.size} generi`;
-}
 
 // ---------- PKCE Helpers ----------
 function randomString(len){
@@ -746,8 +908,7 @@ async function tryRefreshToken(){
   }
 }
 
-// ---------- Resilient Spotify Fetch (Handles 429 Rate Limit, 401 Refresh & Network Retry) ----------
-async function spotifyFetch(url, opts={}, retries=2){
+async function spotifyFetch(url, opts={}, retries=3){
   if(tokenExpiresAt && Date.now() > tokenExpiresAt && refreshToken){
     await tryRefreshToken();
   }
@@ -766,20 +927,18 @@ async function spotifyFetch(url, opts={}, retries=2){
     res = await doFetch();
   }catch(networkErr){
     if(retries > 0){
-      await new Promise(r => setTimeout(r, 700));
+      await new Promise(r => setTimeout(r, 800));
       return spotifyFetch(url, opts, retries - 1);
     }
     throw networkErr;
   }
 
-  // Handle Rate Limiting (HTTP 429)
   if(res.status === 429 && retries > 0){
-    const retryAfterSec = parseInt(res.headers.get('Retry-After') || '2', 10);
-    await new Promise(r => setTimeout(r, (retryAfterSec + 0.5) * 1000));
+    const retryAfterSec = parseInt(res.headers.get('Retry-After') || '3', 10);
+    await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
     return spotifyFetch(url, opts, retries - 1);
   }
 
-  // Handle Expired Token (HTTP 401)
   if(res.status === 401 && retries > 0 && refreshToken){
     const refreshed = await tryRefreshToken();
     if(refreshed) return spotifyFetch(url, opts, retries - 1);
@@ -794,30 +953,11 @@ async function spotifyFetch(url, opts={}, retries=2){
   return text ? JSON.parse(text) : null;
 }
 
-(async function initFromRedirect(){
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get('code');
-  if(code){
-    try{
-      await exchangeCodeForToken(code);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }catch(e){
-      console.error(e);
-      alert('Connessione a Spotify fallita: ' + e.message);
-    }
-  } else if(!accessToken && refreshToken){
-    await tryRefreshToken();
-  }
-  reflectConnectionState();
-})();
-
-// ---------- Date & Code Normalization Helpers ----------
+// ---------- Date & Code Normalization ----------
 function normalizeDateString(raw){
   if(!raw) return '';
   const s = String(raw).trim();
-  // Already YYYY-MM-DD
   if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
-  // DD/MM/YYYY or DD-MM-YYYY (common in Italian/European exports)
   const dmy = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
   if(dmy){
     return `${dmy[3]}-${dmy[2].padStart(2,'0')}-${dmy[1].padStart(2,'0')}`;
@@ -829,18 +969,16 @@ function cleanCatalogCode(raw){
   const trimmed = String(raw || '').trim();
   const digitsOnly = trimmed.replace(/\D/g, '');
   const alnumOnly = trimmed.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-  // ISRC pattern: 2 letters + 3 alphanumeric + 7 digits (12 chars)
   if(/^[A-Z]{2}[A-Z0-9]{3}\d{7}$/.test(alnumOnly)){
     return { code: alnumOnly, type: 'track' };
   }
-  // UPC / EAN pattern: 12 to 14 digits
   if(digitsOnly.length >= 12 && digitsOnly.length <= 14){
     return { code: digitsOnly, type: 'release' };
   }
   return null;
 }
 
-// ---------- File Upload & Multi-Format Parser ----------
+// ---------- File Parser & Catalog Merger ----------
 function parseDelimited(text, delimiter){
   const rows = [];
   let row = [], field = '', inQuotes = false;
@@ -878,9 +1016,10 @@ function parseTabularCatalog(text){
     isrc: findCol(/isrc/),
     upc: findCol(/\bupc\b|\bean\b|barcode/),
     artist: findCol(/artist|interprete|autore/),
-    title: findCol(/titolo|title|traccia|track|release|album/),
+    title: findCol(/titolo|title|traccia|track|release|album|nome/),
     label: findCol(/label|etichett/),
-    date: findCol(/data|date|uscita|release/)
+    date: findCol(/data|date|uscita|release/),
+    genre: findCol(/genre|genere/)
   };
 
   const entries = [];
@@ -895,6 +1034,14 @@ function parseTabularCatalog(text){
     if(!chosen || seen.has(chosen.code)) continue;
     seen.add(chosen.code);
 
+    const csvGenreRaw = idx.genre >= 0 ? (r[idx.genre]||'').trim() : '';
+    if(csvGenreRaw && !codeMetaDb[chosen.code]){
+      const gList = csvGenreRaw.split(/[,;/]+/).map(s=>s.trim().toLowerCase()).filter(Boolean);
+      if(gList.length > 0){
+        codeMetaDb[chosen.code] = { genres: gList, status: 'synced', trackCount: 0, updatedAt: Date.now() };
+      }
+    }
+
     entries.push({
       code: chosen.code,
       type: chosen.type,
@@ -907,16 +1054,39 @@ function parseTabularCatalog(text){
   return entries;
 }
 
+function mergeIncomingCatalog(incomingEntries){
+  const byCode = new Map();
+  catalogData.forEach(item => byCode.set(item.code, item));
+  let added = 0, updated = 0;
+
+  incomingEntries.forEach(entry => {
+    if(byCode.has(entry.code)){
+      const existing = byCode.get(entry.code);
+      existing.title = entry.title || existing.title;
+      existing.artist = entry.artist || existing.artist;
+      existing.label = (entry.label && entry.label !== 'Senza etichetta') ? entry.label : existing.label;
+      existing.release_date = entry.release_date || existing.release_date;
+      updated++;
+    } else {
+      byCode.set(entry.code, entry);
+      added++;
+    }
+  });
+
+  catalogData = Array.from(byCode.values());
+  saveCatalogToStorage();
+  saveCodeMetaToStorage();
+  return { added, updated, total: catalogData.length };
+}
+
 document.getElementById('repertoireFile').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   const msgBox = document.getElementById('fileParseMsg');
-  const filterBlock = document.getElementById('catalogFilterBlock');
   msgBox.innerHTML = '';
-  filterBlock.classList.add('hidden');
-  catalogData = [];
   if(!file) return;
 
   const text = await file.text();
+  let parsedEntries = [];
   const isJson = file.name.toLowerCase().endsWith('.json') || text.trim().startsWith('[') || text.trim().startsWith('{');
 
   if(isJson){
@@ -924,10 +1094,13 @@ document.getElementById('repertoireFile').addEventListener('change', async (e) =
       let parsed = JSON.parse(text);
       if(!Array.isArray(parsed)) parsed = parsed.releases || parsed.data || parsed.items || [];
       const seen = new Set();
-      catalogData = parsed.map(r => {
-        const c = cleanCatalogCode(r.isrc || r.ISRC || r.upc || r.UPC || r.ean || r.EAN || '');
+      parsedEntries = parsed.map(r => {
+        const c = cleanCatalogCode(r.isrc || r.ISRC || r.upc || r.UPC || r.ean || r.EAN || r.code || '');
         if(!c || seen.has(c.code)) return null;
         seen.add(c.code);
+        if(Array.isArray(r.genres) && r.genres.length > 0 && !codeMetaDb[c.code]){
+          codeMetaDb[c.code] = { genres: r.genres, status: 'synced', trackCount: r.trackCount || 0, updatedAt: Date.now() };
+        }
         return {
           code: c.code,
           type: c.type,
@@ -942,18 +1115,17 @@ document.getElementById('repertoireFile').addEventListener('change', async (e) =
       return;
     }
   } else if(file.name.toLowerCase().endsWith('.csv') || text.includes(';') || text.includes(',')){
-    catalogData = parseTabularCatalog(text);
+    parsedEntries = parseTabularCatalog(text);
   }
 
-  // Fallback per file TXT (ora supporta sia UPC che ISRC!)
-  if(catalogData.length === 0){
+  if(parsedEntries.length === 0){
     const tokens = text.split(/[\s,;]+/);
     const seen = new Set();
     for(const tok of tokens){
       const c = cleanCatalogCode(tok);
       if(c && !seen.has(c.code)){
         seen.add(c.code);
-        catalogData.push({
+        parsedEntries.push({
           code: c.code,
           type: c.type,
           label: 'Senza etichetta',
@@ -965,32 +1137,102 @@ document.getElementById('repertoireFile').addEventListener('change', async (e) =
     }
   }
 
-  if(catalogData.length === 0){
+  if(parsedEntries.length === 0){
     addMsg(msgBox, 'Nessun codice UPC (12-14 cifre) o ISRC valido trovato nel file.', 'warn');
     return;
   }
 
-  const releaseCount = catalogData.filter(r => r.type === 'release').length;
-  const trackCount = catalogData.filter(r => r.type === 'track').length;
+  const { added, updated, total } = mergeIncomingCatalog(parsedEntries);
+  addMsg(msgBox, `Database aggiornato: +${added} nuove uscite, ${updated} aggiornate (${total} totali in memoria).`, 'ok');
+  refreshCatalogUI();
+});
+
+// ---------- Render Catalog UI, Labels & Genre Dropdown ----------
+function refreshCatalogUI(){
+  const filterBlock = document.getElementById('catalogFilterBlock');
+  updateCacheBadge();
+
+  if(catalogData.length === 0){
+    filterBlock.classList.add('hidden');
+    return;
+  }
+  filterBlock.classList.remove('hidden');
+
+  // Preserve current checked labels if already rendered
+  const prevChecked = new Set([...document.querySelectorAll('.label-cb:checked')].map(cb => cb.value));
+  const hadCheckboxes = document.querySelectorAll('.label-cb').length > 0;
+
   const labelCounts = {};
   catalogData.forEach(r => { labelCounts[r.label] = (labelCounts[r.label]||0) + 1; });
 
   const cbContainer = document.getElementById('labelCheckboxes');
   cbContainer.innerHTML = '';
   Object.keys(labelCounts).sort().forEach(label => {
+    const isChecked = !hadCheckboxes || prevChecked.has(label);
     const wrap = document.createElement('label');
     wrap.style.cssText = 'display:flex;align-items:center;gap:6px;margin:0;font-family:Inter,sans-serif;font-size:13px;color:var(--text);cursor:pointer;';
-    wrap.innerHTML = `<input type="checkbox" class="label-cb" value="${escapeHtml(label)}" checked style="width:auto;"> ${escapeHtml(label)} <span style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px;">(${labelCounts[label]})</span>`;
+    wrap.innerHTML = `<input type="checkbox" class="label-cb" value="${escapeHtml(label)}" ${isChecked?'checked':''} style="width:auto;"> ${escapeHtml(label)} <span style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px;">(${labelCounts[label]})</span>`;
     cbContainer.appendChild(wrap);
   });
 
-  filterBlock.classList.remove('hidden');
-  const parts = [];
-  if(releaseCount > 0) parts.push(`${releaseCount} uscite (UPC)`);
-  if(trackCount > 0) parts.push(`${trackCount} brani (ISRC)`);
-  addMsg(msgBox, `Catalogo pronto: ${parts.join(' + ')} su ${Object.keys(labelCounts).length} etichette.`, 'ok');
+  refreshSyncMetricsAndGenreDropdown();
   renderReleaseChecklist();
-});
+}
+
+function refreshSyncMetricsAndGenreDropdown(){
+  let withGenre = 0, noGenre = 0, pending = 0;
+  const genreCounts = {};
+
+  catalogData.forEach(item => {
+    const meta = codeMetaDb[item.code];
+    if(!meta){
+      pending++;
+    } else if(meta.genres && meta.genres.length > 0){
+      withGenre++;
+      meta.genres.forEach(g => {
+        genreCounts[g] = (genreCounts[g] || 0) + 1;
+      });
+    } else {
+      noGenre++;
+    }
+  });
+
+  document.getElementById('metricTotal').textContent = String(catalogData.length);
+  document.getElementById('metricWithGenre').textContent = String(withGenre);
+  document.getElementById('metricNoGenre').textContent = String(noGenre);
+  document.getElementById('metricPending').textContent = String(pending);
+
+  const syncBtn = document.getElementById('syncGenresBtn');
+  if(!isSyncingGenres){
+    syncBtn.textContent = pending > 0
+      ? `🔄 Sincronizza Generi Mancanti (${pending})`
+      : `✅ Tutti i codici sincronizzati`;
+    syncBtn.disabled = pending === 0;
+  }
+
+  // Update Genre Select Dropdown preserving current selection
+  const genreSelect = document.getElementById('genreFilterSelect');
+  const currentVal = genreSelect.value || '__ALL__';
+  const sortedGenres = Object.keys(genreCounts).sort((a,b) => genreCounts[b] - genreCounts[a] || a.localeCompare(b));
+
+  let html = `
+    <option value="__ALL__">Tutti i generi (${catalogData.length})</option>
+    <option value="__WITH_GENRE__">✅ Solo con genere rilevato (${withGenre})</option>
+    <option value="__NO_GENRE__">⚠️ Senza genere su Spotify (${noGenre})</option>
+    <option value="__PENDING__">⏳ Non ancora scansionati (${pending})</option>
+  `;
+  if(sortedGenres.length > 0){
+    html += `<optgroup label="Generi Spotify rilevati nel tuo catalogo">`;
+    sortedGenres.forEach(g => {
+      html += `<option value="${escapeHtml(g)}">${escapeHtml(g)} (${genreCounts[g]})</option>`;
+    });
+    html += `</optgroup>`;
+  }
+  genreSelect.innerHTML = html;
+  if([...genreSelect.options].some(o => o.value === currentVal)){
+    genreSelect.value = currentVal;
+  }
+}
 
 window.toggleAllLabels = function(state){
   document.querySelectorAll('.label-cb').forEach(cb => cb.checked = state);
@@ -999,17 +1241,31 @@ window.toggleAllLabels = function(state){
 
 function currentFilteredCatalog(){
   const checkedLabels = [...document.querySelectorAll('.label-cb:checked')].map(cb => cb.value);
+  const genreFilter = document.getElementById('genreFilterSelect').value;
   const dateFrom = document.getElementById('dateFrom').value.trim();
   const dateTo = document.getElementById('dateTo').value.trim();
   const typeFilter = document.getElementById('typeFilter').value;
   const search = document.getElementById('titleSearch').value.trim().toLowerCase();
 
   return catalogData.filter(r => {
-    if(checkedLabels.length > 0 && !checkedLabels.includes(r.label)) return false;
+    if(checkedLabels.length === 0) return false;
+    if(!checkedLabels.includes(r.label)) return false;
     if(typeFilter !== 'all' && r.type !== typeFilter) return false;
     if(dateFrom && (!r.release_date || r.release_date < dateFrom)) return false;
     if(dateTo && (!r.release_date || r.release_date > dateTo)) return false;
-    if(search && !(`${r.title} ${r.artist} ${r.code}`).toLowerCase().includes(search)) return false;
+
+    const meta = codeMetaDb[r.code];
+    const genres = meta?.genres || [];
+
+    if(genreFilter === '__WITH_GENRE__' && genres.length === 0) return false;
+    if(genreFilter === '__NO_GENRE__' && (!meta || genres.length > 0)) return false;
+    if(genreFilter === '__PENDING__' && meta) return false;
+    if(!genreFilter.startsWith('__') && !genres.includes(genreFilter)) return false;
+
+    if(search){
+      const haystack = `${r.title} ${r.artist} ${r.code} ${genres.join(' ')}`.toLowerCase();
+      if(!haystack.includes(search)) return false;
+    }
     return true;
   });
 }
@@ -1024,27 +1280,52 @@ function renderReleaseChecklist(){
   const listEl = document.getElementById('releaseChecklist');
   document.getElementById('filterMatchCount').textContent = `${matches.length} voci corrispondenti`;
 
-  const MAX_RENDER = 350;
+  const MAX_RENDER = 400;
   const toRender = matches.slice(0, MAX_RENDER);
   listEl.innerHTML = '';
+
   toRender.forEach(r => {
+    const meta = codeMetaDb[r.code];
     const row = document.createElement('label');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--border);font-family:Inter,sans-serif;font-size:13px;cursor:pointer;margin:0;';
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border);font-family:Inter,sans-serif;font-size:13px;cursor:pointer;margin:0;flex-wrap:wrap;';
     const typeLabel = r.type === 'track' ? 'ISRC' : 'UPC';
     const typeColor = r.type === 'track' ? 'var(--amber)' : 'var(--teal)';
-    const dateBadge = r.release_date ? `<span style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px;">${escapeHtml(r.release_date)}</span>` : '';
+
+    let genreBadgeHtml = '';
+    if(!meta){
+      genreBadgeHtml = `<span class="genre-pill pending">da sincronizzare</span>`;
+    } else if(meta.status === 'not_found'){
+      genreBadgeHtml = `<span class="genre-pill empty">non su Spotify</span>`;
+    } else if(meta.genres && meta.genres.length > 0){
+      genreBadgeHtml = meta.genres.slice(0, 3).map(g => `<span class="genre-pill">${escapeHtml(g)}</span>`).join(' ');
+    } else {
+      genreBadgeHtml = `<span class="genre-pill empty">nessun genere</span>`;
+    }
+
+    const trackCountBadge = (meta && meta.trackCount > 1)
+      ? `<span style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10.5px;" title="Numero di brani dentro questo UPC">[${meta.trackCount} brani]</span>`
+      : '';
+
     row.innerHTML = `
       <input type="checkbox" class="release-cb" value="${escapeHtml(r.code)}" style="width:auto;flex-shrink:0;">
-      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-        <strong>${escapeHtml(r.title || 'Senza titolo')}</strong>
-        ${r.artist ? `<span style="color:var(--text-dim)"> — ${escapeHtml(r.artist)}</span>` : ''}
+      <span style="flex:1;min-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        <strong>${escapeHtml(r.title || meta?.spotifyTitle || 'Senza titolo')}</strong>
+        ${(r.artist || meta?.spotifyArtist) ? `<span style="color:var(--text-dim)"> — ${escapeHtml(r.artist || meta?.spotifyArtist)}</span>` : ''}
+        ${trackCountBadge}
       </span>
-      ${dateBadge}
+      <span style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;">${genreBadgeHtml}</span>
       <span style="color:${typeColor};font-family:'JetBrains Mono',monospace;font-size:10px;flex-shrink:0;border:1px dashed ${typeColor};padding:1px 5px;border-radius:3px;">${typeLabel}</span>
       <span style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px;flex-shrink:0;min-width:13ch;text-align:right;">${escapeHtml(r.code)}</span>
     `;
     listEl.appendChild(row);
   });
+
+  if(matches.length > MAX_RENDER){
+    const note = document.createElement('div');
+    note.style.cssText = 'padding:8px 4px;color:var(--text-dim);font-size:12px;';
+    note.textContent = `Mostrate le prime ${MAX_RENDER} voci su ${matches.length} — usa i filtri sopra per restringere.`;
+    listEl.appendChild(note);
+  }
   updateSelectedCheckCount();
 }
 
@@ -1075,7 +1356,82 @@ document.getElementById('clearUpcsBtn').addEventListener('click', () => {
   document.getElementById('upcs').value = '';
 });
 
-// ---------- Spotify Resolvers & Cached Genre Engine ----------
+document.getElementById('wipeCatalogDbBtn').addEventListener('click', () => {
+  if(!confirm('Vuoi svuotare l\'elenco del catalogo salvato nel browser? (La cache dei generi degli artisti verrà mantenuta)')) return;
+  catalogData = [];
+  saveCatalogToStorage();
+  refreshCatalogUI();
+});
+
+// ---------- Database Backup Export / Import ----------
+document.getElementById('exportDbJsonBtn').addEventListener('click', () => {
+  const payload = {
+    version: '3.0',
+    exportedAt: new Date().toISOString(),
+    catalogData,
+    codeMetaDb,
+    artistGenreDb: Object.fromEntries(artistGenreCache.entries())
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sala-stampa-db-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+});
+
+document.getElementById('importDbJsonBtn').addEventListener('click', () => {
+  document.getElementById('importDbFileInput').click();
+});
+
+document.getElementById('importDbFileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    const data = JSON.parse(await file.text());
+    if(Array.isArray(data.catalogData)){
+      mergeIncomingCatalog(data.catalogData);
+    }
+    if(data.codeMetaDb && typeof data.codeMetaDb === 'object'){
+      codeMetaDb = { ...codeMetaDb, ...data.codeMetaDb };
+      saveCodeMetaToStorage();
+    }
+    if(data.artistGenreDb && typeof data.artistGenreDb === 'object'){
+      Object.entries(data.artistGenreDb).forEach(([k, v]) => artistGenreCache.set(k, v));
+      saveArtistCacheToStorage();
+    }
+    refreshCatalogUI();
+    addMsg(document.getElementById('fileParseMsg'), 'Backup Database importato e sincronizzato con successo!', 'ok');
+  }catch(err){
+    alert('File di backup non valido: ' + err.message);
+  }
+});
+
+document.getElementById('exportCatalogCsvBtn').addEventListener('click', () => {
+  if(catalogData.length === 0){ alert('Il catalogo è vuoto.'); return; }
+  const header = ['Codice','Tipo','Titolo','Artista','Etichetta','Data Uscita','Tracce UPC','Stato Spotify','Generi Spotify'];
+  const rows = catalogData.map(r => {
+    const meta = codeMetaDb[r.code];
+    return [
+      r.code,
+      r.type.toUpperCase(),
+      `"${(r.title || meta?.spotifyTitle || '').replace(/"/g,'""')}"`,
+      `"${(r.artist || meta?.spotifyArtist || '').replace(/"/g,'""')}"`,
+      `"${(r.label || '').replace(/"/g,'""')}"`,
+      r.release_date || '',
+      meta?.trackCount || '',
+      meta?.status || 'pending',
+      `"${(meta?.genres || []).join(', ').replace(/"/g,'""')}"`
+    ];
+  });
+  const csv = [header.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `catalogo-generi-spotify-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+});
+
+// ---------- Spotify Resolvers & Background Genre Sync Engine ----------
 function formatTrackObj(t, albumCoverFallback, kind, sourceGenre=''){
   const cover = t.album?.images?.[t.album.images.length - 1]?.url || albumCoverFallback || '';
   return {
@@ -1090,39 +1446,61 @@ function formatTrackObj(t, albumCoverFallback, kind, sourceGenre=''){
   };
 }
 
-async function tracksFromUpc(upc){
+async function tracksFromUpc(upc, maxTracks = 50){
   const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent('upc:'+upc)}&type=album&limit=5`);
   const albums = data.albums?.items || [];
-  if(albums.length === 0) return { tracks: [], found:false };
+  if(albums.length === 0) return { tracks: [], found:false, totalTracks: 0 };
   const album = albums[0];
   const cover = album.images?.[album.images.length - 1]?.url || '';
   const albumData = await spotifyFetch(`https://api.spotify.com/v1/albums/${album.id}/tracks?limit=50`);
-  const tracks = (albumData.items || []).map(t => formatTrackObj(t, cover, 'catalog'));
-  const artistIds = [...new Set((albumData.items || []).flatMap(t => t.artists.map(a => a.id)))].slice(0, 3);
-  return { tracks, found:true, artistIds, albumGenres: album.genres || [], releaseName: album.name };
+  const allItems = albumData.items || [];
+  const slicedItems = allItems.slice(0, maxTracks);
+  const tracks = slicedItems.map(t => formatTrackObj(t, cover, 'catalog'));
+  const artistIds = [...new Set(allItems.flatMap(t => (t.artists || []).map(a => a.id)).filter(Boolean))].slice(0, 3);
+  const primaryArtistName = (album.artists || []).map(a => a.name).join(', ');
+  return {
+    tracks,
+    found: true,
+    artistIds,
+    albumGenres: album.genres || [],
+    releaseName: album.name,
+    primaryArtistName,
+    totalTracks: album.total_tracks || allItems.length
+  };
 }
 
 async function trackFromIsrc(isrc){
   const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent('isrc:'+isrc)}&type=track&limit=5`);
   const items = data.tracks?.items || [];
-  if(items.length === 0) return { tracks: [], found:false };
+  if(items.length === 0) return { tracks: [], found:false, totalTracks: 0 };
   const t = items[0];
   const track = formatTrackObj(t, '', 'catalog');
-  const artistIds = [...new Set(t.artists.map(a => a.id))].slice(0, 3);
-  return { tracks: [track], found:true, artistIds, albumGenres: [], releaseName: t.name };
+  const artistIds = [...new Set((t.artists || []).map(a => a.id).filter(Boolean))].slice(0, 3);
+  const primaryArtistName = (t.artists || []).map(a => a.name).join(', ');
+  return {
+    tracks: [track],
+    found: true,
+    artistIds,
+    albumGenres: [],
+    releaseName: t.name,
+    primaryArtistName,
+    totalTracks: 1
+  };
 }
 
-async function resolveCatalogCode(rawCode){
+async function resolveCatalogCode(rawCode, maxTracks = 50){
   const cleaned = cleanCatalogCode(rawCode);
   const code = cleaned ? cleaned.code : rawCode.trim();
   const isUpc = /^\d{12,14}$/.test(code);
-  return isUpc ? await tracksFromUpc(code) : await trackFromIsrc(code);
+  return isUpc ? await tracksFromUpc(code, maxTracks) : await trackFromIsrc(code);
 }
 
 async function detectGenres(artistIds, albumGenres){
   if(albumGenres && albumGenres.length > 0) return [...new Set(albumGenres)];
   if(!artistIds || artistIds.length === 0) return [];
   const allGenres = [];
+  let cacheChanged = false;
+
   for(const id of artistIds){
     if(artistGenreCache.has(id)){
       allGenres.push(...artistGenreCache.get(id));
@@ -1133,13 +1511,129 @@ async function detectGenres(artistIds, albumGenres){
       const g = artist.genres || [];
       artistGenreCache.set(id, g);
       allGenres.push(...g);
-      updateCacheBadge();
+      cacheChanged = true;
     }catch(e){ /* ignore single artist failure */ }
-    await new Promise(r => setTimeout(r, 60));
+    await new Promise(r => setTimeout(r, 75));
   }
+  if(cacheChanged) saveArtistCacheToStorage();
   return [...new Set(allGenres)];
 }
 
+// ---------- Delta Sync Engine (Sincronizza Generi Mancanti) ----------
+async function runCatalogGenreSync(){
+  if(!accessToken){
+    alert('Connettiti prima a Spotify nello Step 01 per sincronizzare i generi.');
+    return;
+  }
+  if(isSyncingGenres) return;
+
+  const pendingItems = catalogData.filter(item => !codeMetaDb[item.code]);
+  if(pendingItems.length === 0){
+    alert('Tutti i codici del catalogo sono già stati sincronizzati!');
+    return;
+  }
+
+  isSyncingGenres = true;
+  stopSyncRequested = false;
+
+  const syncBtn = document.getElementById('syncGenresBtn');
+  const stopBtn = document.getElementById('stopSyncBtn');
+  const statusPill = document.getElementById('syncStatusPill');
+  const progWrap = document.getElementById('syncProgressWrap');
+  const progBar = document.getElementById('syncProgressBar');
+  const progText = document.getElementById('syncProgressText');
+
+  syncBtn.classList.add('hidden');
+  stopBtn.classList.remove('hidden');
+  progWrap.classList.remove('hidden');
+  statusPill.textContent = 'Sincronizzazione attiva...';
+
+  try{
+    for(let i=0; i<pendingItems.length; i++){
+      if(stopSyncRequested) break;
+      const item = pendingItems[i];
+      const pct = Math.round(((i + 1) / pendingItems.length) * 100);
+      progBar.style.width = `${pct}%`;
+      progText.textContent = `[${i+1}/${pendingItems.length}] Controllo ${item.code} (${item.title || 'uscita'})...`;
+
+      try{
+        const res = await resolveCatalogCode(item.code, 50);
+        if(!res.found){
+          codeMetaDb[item.code] = {
+            genres: [],
+            status: 'not_found',
+            trackCount: 0,
+            updatedAt: Date.now()
+          };
+        } else {
+          const genres = await detectGenres(res.artistIds, res.albumGenres);
+          // Arricchisce anche titolo/artista nel catalogo se erano vuoti
+          if(!item.title || item.title === 'Uscita UPC' || item.title === 'Traccia ISRC'){
+            item.title = res.releaseName || item.title;
+          }
+          if(!item.artist && res.primaryArtistName){
+            item.artist = res.primaryArtistName;
+          }
+          codeMetaDb[item.code] = {
+            genres,
+            status: genres.length > 0 ? 'synced' : 'empty',
+            trackCount: res.totalTracks || 1,
+            spotifyTitle: res.releaseName || '',
+            spotifyArtist: res.primaryArtistName || '',
+            updatedAt: Date.now()
+          };
+        }
+        saveCodeMetaToStorage();
+      }catch(itemErr){
+        console.warn('Errore sync su ' + item.code, itemErr);
+      }
+
+      // Aggiorna la UI ogni 3 brani o all'ultimo per fluidità
+      if((i + 1) % 3 === 0 || i === pendingItems.length - 1){
+        refreshSyncMetricsAndGenreDropdown();
+        renderReleaseChecklist();
+      }
+
+      // Throttling anti-rate-limit
+      await new Promise(r => setTimeout(r, 110));
+    }
+    saveCatalogToStorage();
+  }finally{
+    isSyncingGenres = false;
+    stopBtn.classList.add('hidden');
+    syncBtn.classList.remove('hidden');
+    statusPill.textContent = stopSyncRequested ? 'In pausa (progressi salvati)' : 'Sincronizzato';
+    refreshSyncMetricsAndGenreDropdown();
+    renderReleaseChecklist();
+    setTimeout(() => {
+      if(!isSyncingGenres) progWrap.classList.add('hidden');
+    }, 1800);
+  }
+}
+
+document.getElementById('syncGenresBtn').addEventListener('click', runCatalogGenreSync);
+document.getElementById('stopSyncBtn').addEventListener('click', () => {
+  stopSyncRequested = true;
+  document.getElementById('syncStatusPill').textContent = 'Arresto in corso...';
+});
+document.getElementById('rescanEmptyGenresBtn').addEventListener('click', () => {
+  let resetCount = 0;
+  Object.keys(codeMetaDb).forEach(code => {
+    if(codeMetaDb[code].status === 'empty' || codeMetaDb[code].status === 'not_found'){
+      delete codeMetaDb[code];
+      resetCount++;
+    }
+  });
+  if(resetCount === 0){
+    alert('Non ci sono uscite "Senza genere" da riscansionare.');
+    return;
+  }
+  saveCodeMetaToStorage();
+  refreshSyncMetricsAndGenreDropdown();
+  renderReleaseChecklist();
+});
+
+// ---------- Hit Pool Sampling ----------
 async function getGenrePool(genre){
   const yearFilter = document.getElementById('hitYearFilter').value.trim();
   const market = document.getElementById('hitMarket').value.trim().toUpperCase();
@@ -1174,14 +1668,12 @@ async function getGenrePool(genre){
   }
 
   genreTrackPoolCache.set(cacheKey, pool);
-  updateCacheBadge();
   return pool;
 }
 
 async function sampleHitsFromGenre(genre, count, excludedUris){
   const basePool = await getGenrePool(genre);
   const available = basePool.filter(t => !excludedUris.has(t.uri));
-  // Shuffle copia locale
   const copy = [...available];
   for(let i=copy.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
@@ -1190,7 +1682,6 @@ async function sampleHitsFromGenre(genre, count, excludedUris){
   return copy.slice(0, count);
 }
 
-// ---------- Smart Global Interleaving ----------
 function interleaveSmartGlobal(catalogList, hitList){
   if(catalogList.length === 0) return [...hitList];
   if(hitList.length === 0) return [...catalogList];
@@ -1210,7 +1701,7 @@ function interleaveSmartGlobal(catalogList, hitList){
   return result;
 }
 
-// ---------- STEP 2: Build Playlist Preview ----------
+// ---------- Build Playlist Preview ----------
 function addMsg(container, text, type){
   const el = document.createElement('div');
   el.className = 'msg ' + type;
@@ -1225,13 +1716,14 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
   const progText = document.getElementById('progressText');
 
   msgsBox.innerHTML = '';
+  const maxTracksPerUpc = parseInt(document.getElementById('maxTracksPerUpc').value, 10) || 50;
   const famousPerRelease = parseInt(document.getElementById('famousCount').value, 10) || 0;
   const fallbackGenre = document.getElementById('fallbackGenre').value.trim();
   const upcList = document.getElementById('upcs').value.split('\n').map(s=>s.trim()).filter(Boolean);
   const mixOrder = document.getElementById('mixOrder').value;
 
   if(upcList.length === 0){
-    addMsg(msgsBox, 'Inserisci almeno un codice UPC o ISRC prima di generare la scaletta.', 'warn');
+    addMsg(msgsBox, 'Inserisci almeno un codice UPC o ISRC nella coda prima di generare la scaletta.', 'warn');
     return;
   }
 
@@ -1247,22 +1739,40 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
   try{
     for(let i=0; i<upcList.length; i++){
       const rawCode = upcList[i];
+      const cleaned = cleanCatalogCode(rawCode);
+      const normCode = cleaned ? cleaned.code : rawCode.trim();
       const pct = Math.round(((i) / upcList.length) * 100);
       progBar.style.width = `${Math.max(5, pct)}%`;
-      progText.textContent = `[${i+1}/${upcList.length}] Risoluzione codice ${rawCode}...`;
+      progText.textContent = `[${i+1}/${upcList.length}] Risoluzione codice ${normCode}...`;
 
       try{
-        const { tracks, found, artistIds, albumGenres, releaseName } = await resolveCatalogCode(rawCode);
+        const { tracks, found, artistIds, albumGenres, releaseName, primaryArtistName, totalTracks } =
+          await resolveCatalogCode(normCode, maxTracksPerUpc);
+
         if(!found){
-          addMsg(msgsBox, `Nessuna corrispondenza su Spotify per il codice ${rawCode}.`, 'warn');
+          addMsg(msgsBox, `Nessuna corrispondenza su Spotify per il codice ${normCode}.`, 'warn');
           continue;
         }
 
         const catalogTracks = tracks.filter(t => (seenUri.has(t.uri) ? false : (seenUri.add(t.uri), true)));
         let famousTracks = [];
 
+        // Usa i generi già presenti nel DB locale o li rileva e salva al volo
+        let genreCandidates = codeMetaDb[normCode]?.genres || [];
+        if(genreCandidates.length === 0){
+          genreCandidates = await detectGenres(artistIds, albumGenres);
+          codeMetaDb[normCode] = {
+            genres: genreCandidates,
+            status: genreCandidates.length > 0 ? 'synced' : 'empty',
+            trackCount: totalTracks || tracks.length,
+            spotifyTitle: releaseName || '',
+            spotifyArtist: primaryArtistName || '',
+            updatedAt: Date.now()
+          };
+          saveCodeMetaToStorage();
+        }
+
         if(famousPerRelease > 0){
-          let genreCandidates = await detectGenres(artistIds, albumGenres);
           if(genreCandidates.length === 0 && fallbackGenre){
             genreCandidates = fallbackGenre.split(',').map(s=>s.trim()).filter(Boolean);
           }
@@ -1279,7 +1789,7 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
               }
             }
             if(famousTracks.length < famousPerRelease){
-              addMsg(msgsBox, `"${releaseName}": trovati ${famousTracks.length}/${famousPerRelease} brani per i generi (${genreCandidates.join(', ')}).`, 'warn');
+              addMsg(msgsBox, `"${releaseName}": trovati ${famousTracks.length}/${famousPerRelease} brani per (${genreCandidates.join(', ')}).`, 'warn');
             }
           } else {
             addMsg(msgsBox, `"${releaseName}": nessun genere rilevato su Spotify e nessun genere di riserva impostato.`, 'warn');
@@ -1300,7 +1810,7 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
             [block[k],block[j]] = [block[j],block[k]];
           }
           combined.push(...block);
-        } else { // alternate per blocco
+        } else {
           const max = Math.max(catalogTracks.length, famousTracks.length);
           for(let k=0;k<max;k++){
             if(catalogTracks[k]) combined.push(catalogTracks[k]);
@@ -1309,13 +1819,18 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
         }
       }catch(releaseErr){
         console.error(releaseErr);
-        addMsg(msgsBox, `Errore sul codice ${rawCode}: ${releaseErr.message}`, 'warn');
+        addMsg(msgsBox, `Errore sul codice ${normCode}: ${releaseErr.message}`, 'warn');
       }
       await new Promise(r => setTimeout(r, 80));
     }
 
     progBar.style.width = '100%';
     progText.textContent = 'Completato!';
+
+    if(catalogData.length > 0){
+      refreshSyncMetricsAndGenreDropdown();
+      renderReleaseChecklist();
+    }
 
     builtTracks = mixOrder === 'smart-global'
       ? interleaveSmartGlobal(allCatalogGlobal, allHitsGlobal)
@@ -1401,7 +1916,6 @@ function renderPreview(){
       </div>
     `;
 
-    // Drag & Drop Listeners
     row.addEventListener('dragstart', () => {
       draggedIndex = idx;
       row.classList.add('dragging');
@@ -1584,7 +2098,6 @@ document.getElementById('targetMode').addEventListener('change', (e) => {
   if(!isNew) loadUserPlaylists();
 });
 
-// Helper compatibile sia con endpoint /items (Feb 2026+) sia con /tracks
 async function pushPlaylistTracks(playlistId, uris, method='POST'){
   try{
     await spotifyFetch(`https://api.spotify.com/v1/playlists/${playlistId}/items`, {
@@ -1642,13 +2155,12 @@ document.getElementById('createBtn').addEventListener('click', async () => {
       playlistUrl = `https://open.spotify.com/playlist/${playlistId}`;
 
       if(mode === 'replace'){
-        // Il primo blocco da 100 usa PUT per sostituire, i successivi POST per accodare
         const firstChunk = uris.slice(0, 100);
         await pushPlaylistTracks(playlistId, firstChunk, 'PUT');
         for(let i=100; i<uris.length; i+=100){
           await pushPlaylistTracks(playlistId, uris.slice(i, i+100), 'POST');
         }
-      } else { // append
+      } else {
         for(let i=0; i<uris.length; i+=100){
           await pushPlaylistTracks(playlistId, uris.slice(i, i+100), 'POST');
         }
@@ -1673,6 +2185,27 @@ function escapeHtml(s){
   d.textContent = s ?? '';
   return d.innerHTML;
 }
+
+// ---------- Startup Initialization ----------
+(async function initApp(){
+  loadPersistentDatabase();
+  refreshCatalogUI();
+
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if(code){
+    try{
+      await exchangeCodeForToken(code);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }catch(e){
+      console.error(e);
+      alert('Connessione a Spotify fallita: ' + e.message);
+    }
+  } else if(!accessToken && refreshToken){
+    await tryRefreshToken();
+  }
+  reflectConnectionState();
+})();
 </script>
 </body>
 </html>
