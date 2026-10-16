@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala Stampa 4.0 — Chart &amp; Editorial A&amp;R Studio</title>
+<title>Sala Stampa 4.0 — A&R Playlist Studio & Editorial Charts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -376,9 +376,9 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v4.0 (Chart &amp; Editorial)</div>
+      <div class="eyebrow">A&amp;R Automation Studio · v4.1 (Cleaned &amp; Verified)</div>
       <h1>Sala Stampa</h1>
-      <p class="sub">Incrocia il tuo catalogo Soulgem Records (UPC/ISRC) con le playlist editoriali e le chart in vetta su Spotify per generare la scaletta perfetta.</p>
+      <p class="sub">Incrocia il tuo catalogo Soulgem Records con le chart editoriali di Spotify.</p>
     </div>
     <div class="status-pill">
       <span class="dot" id="statusDot"></span>
@@ -395,7 +395,7 @@
         <button class="secondary sm" id="disconnectBtn">Disconnetti</button>
       </div>
     </div>
-    <p class="hint" id="connectHint">Inserisci il tuo Client ID Spotify (salvato automaticamente nel browser).</p>
+    <p class="hint" id="connectHint">Inserisci il Client ID della tua app Spotify.</p>
 
     <div id="connectForm">
       <div class="row" style="align-items:flex-end;">
@@ -410,23 +410,23 @@
     </div>
   </section>
 
-  <!-- STEP 2: DATABASE CATALOGO, SYNC GENERI & REGOLE -->
+  <!-- STEP 2: CATALOGO & MOTORE EDITORIAL -->
   <section class="card">
     <div class="card-header">
-      <h2><span class="num">02</span> Repertorio &amp; Motore Chart &amp; Editorial</h2>
-      <span class="count-badge" id="cacheStatsBadge">DB: 0 uscite · 0 artisti</span>
+      <h2><span class="num">02</span> Repertorio &amp; Chart Engine</h2>
+      <span class="count-badge" id="cacheStatsBadge">DB: 0 righe · 0 artisti</span>
     </div>
-    <p class="hint">Carica il maxi file CSV completo esportato da Believe (con tutti i campi: UPC, ISRC, Autori, Genere, ecc.).</p>
+    <p class="hint">Carica il file CSV definitivo estratto da Believe.</p>
 
     <div class="row" style="align-items:center;">
       <div style="flex:2;">
-        <label for="repertoireFile" style="margin-top:0;">Carica file CSV Believe (Completo di tutti i campi)</label>
+        <label for="repertoireFile" style="margin-top:0;">Carica file CSV Believe</label>
         <input type="file" id="repertoireFile" accept=".csv,.txt,.json">
       </div>
       <div style="flex:1;">
         <label style="margin-top:0;">Backup &amp; Export</label>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="secondary sm" type="button" id="exportDbJsonBtn">💾 Backup DB (.json)</button>
+          <button class="secondary sm" type="button" id="exportDbJsonBtn">💾 Backup DB</button>
           <button class="secondary sm" type="button" id="importDbJsonBtn">📂 Importa DB</button>
           <input type="file" id="importDbFileInput" accept=".json" class="hidden">
         </div>
@@ -434,10 +434,8 @@
     </div>
     <div id="fileParseMsg"></div>
 
-    <!-- BLOCCO DATABASE E FILTRI CATALOGO -->
     <div id="catalogFilterBlock" class="hidden" style="margin-top:16px;padding:18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:9px;">
 
-      <!-- PANNELLO SYNC GENERI -->
       <div class="db-sync-box">
         <div class="db-sync-header">
           <div>
@@ -446,7 +444,7 @@
               <span class="count-badge" id="syncStatusPill">Pronto</span>
             </div>
             <div style="font-size:12.5px;color:var(--text-dim);margin-top:2px;">
-              Collega gli ISRC e UPC del catalogo ai generi ufficiali degli artisti su Spotify.
+              Collega gli ISRC del catalogo ai generi ufficiali su Spotify.
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -494,8 +492,8 @@
         </div>
       </div>
 
-      <label for="titleSearch">Cerca per titolo, artista, genere o codice ISRC/UPC</label>
-      <input type="text" id="titleSearch" placeholder="Digita per filtrare istantaneamente...">
+      <label for="titleSearch">Cerca per titolo, artista, genere o ISRC</label>
+      <input type="text" id="titleSearch" placeholder="Digita per filtrare...">
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
         <span class="count-badge" id="filterMatchCount"></span>
@@ -514,16 +512,16 @@
     </div>
 
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;">
-      <label for="upcs" style="margin:0;">Coda codici UPC o ISRC da usare in questa playlist (uno per riga)</label>
+      <label for="upcs" style="margin:0;">Coda codici UPC o ISRC (uno per riga)</label>
       <button class="secondary sm" type="button" id="clearUpcsBtn">Svuota coda</button>
     </div>
     <textarea id="upcs" style="margin-top:6px;" placeholder="IT-BQY-26-02423&#10;3618113986387&#10;..."></textarea>
 
     <div class="row" style="margin-top:12px;">
       <div>
-        <label for="maxTracksPerUpc">Tracce da estrarre per ogni UPC (Album/EP)</label>
+        <label for="maxTracksPerUpc">Tracce da estrarre per ogni UPC</label>
         <select id="maxTracksPerUpc">
-          <option value="1">Solo la 1ª traccia (evita compilation intere)</option>
+          <option value="1">Solo la 1ª traccia</option>
           <option value="3">Prime 3 tracce</option>
           <option value="50" selected>Tutte le tracce dell'uscita</option>
         </select>
@@ -533,10 +531,10 @@
         <input type="number" id="famousCount" value="5" min="0" max="30">
       </div>
       <div>
-        <label for="hitSourceMode">Sorgente Hit (Chart &amp; Editorial vs Search)</label>
+        <label for="hitSourceMode">Sorgente Hit</label>
         <select id="hitSourceMode">
-          <option value="editorial">🔥 Playlist Editoriali &amp; Chart ufficiali Spotify</option>
-          <option value="search">🔍 Ricerca per genere &amp; rilevanza</option>
+          <option value="editorial">🔥 Playlist Editoriali &amp; Chart Spotify</option>
+          <option value="search">🔍 Ricerca per genere</option>
         </select>
       </div>
     </div>
@@ -546,7 +544,7 @@
         <label for="mixOrder">Algoritmo di Mixaggio</label>
         <select id="mixOrder">
           <option value="smart-global">Smart Pacing Globale (distribuzione uniforme)</option>
-          <option value="alternate">Alterna per blocco uscita (Catalogo / Hit)</option>
+          <option value="alternate">Alterna per blocco uscita</option>
           <option value="catalog-first">Catalogo prima, poi Hit</option>
           <option value="hit-first">Hit prima, poi Catalogo</option>
           <option value="shuffle">Shuffle totale</option>
@@ -557,23 +555,6 @@
         <input type="text" id="fallbackGenre" placeholder="es. tech house, dance, house">
       </div>
     </div>
-
-    <!-- OPZIONI AVANZATE A&R -->
-    <details class="advanced-panel">
-      <summary>⚙️ Filtri Avanzati A&amp;R (Anno, Mercato, Esclusioni)</summary>
-      <div class="row" style="margin-top:10px;">
-        <div>
-          <label for="hitYearFilter">Filtro Anno Hit</label>
-          <input type="text" id="hitYearFilter" placeholder="es. 2025-2026">
-        </div>
-        <div>
-          <label for="hitMarket">Mercato Spotify (Market ISO)</label>
-          <input type="text" id="hitMarket" value="IT" placeholder="es. IT, US">
-        </div>
-      </div>
-      <label for="excludeKeywords">Escludi parole nel titolo (separate da virgola)</label>
-      <input type="text" id="excludeKeywords" value="karaoke, tribute, instrumental, remix cover">
-    </details>
 
     <div style="margin-top:22px;display:flex;gap:12px;align-items:center;">
       <button class="primary" id="buildBtn" disabled>Genera Anteprima Scaletta</button>
@@ -587,13 +568,13 @@
     <div id="buildMsgs"></div>
   </section>
 
-  <!-- STEP 3: ANTEPRIMA, CURATION & PUBBLICAZIONE -->
+  <!-- STEP 3: ANTEPRIMA & PUBBLICAZIONE -->
   <section class="card hidden" id="previewCard">
     <div class="card-header">
       <h2><span class="num">03</span> Curation &amp; Pubblicazione</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="secondary sm" type="button" id="reshufflePreviewBtn" title="Rimescola i brani">🔀 Rimescola</button>
-        <button class="secondary sm" type="button" id="exportCsvBtn" title="Scarica CSV">⬇ CSV Scaletta</button>
+        <button class="secondary sm" type="button" id="reshufflePreviewBtn">🔀 Rimescola</button>
+        <button class="secondary sm" type="button" id="exportCsvBtn">⬇ CSV Scaletta</button>
         <button class="danger sm" type="button" id="clearPreviewBtn">✕ Svuota</button>
       </div>
     </div>
@@ -620,13 +601,12 @@
     <div style="background:var(--surface-alt);padding:14px;border-radius:8px;border:1px solid var(--border);margin-bottom:18px;">
       <label for="manualSearchInput" style="margin-top:0;">Aggiungi brano specifico da Spotify</label>
       <div style="display:flex;gap:8px;">
-        <input type="text" id="manualSearchInput" placeholder="Cerca artista o titolo e premi Invio..." style="flex:1;">
+        <input type="text" id="manualSearchInput" placeholder="Cerca artista o titolo..." style="flex:1;">
         <button class="secondary" id="manualSearchBtn" type="button">Cerca</button>
       </div>
       <div id="manualSearchResults" style="margin-top:8px;"></div>
     </div>
 
-    <p class="hint" style="margin-bottom:8px;">💡 Trascina le righe per riordinarle o clicca <strong>↻</strong> su una Hit per cambiarla con un'altra traccia chart-topping dello stesso genere.</p>
     <div id="trackList"></div>
 
     <div style="margin-top:26px;padding-top:20px;border-top:1px solid var(--border);">
@@ -658,11 +638,11 @@
         <div class="row">
           <div>
             <label for="plName">Nome Playlist</label>
-            <input type="text" id="plName" placeholder="es. Soulgem Chart Selection — 2026">
+            <input type="text" id="plName" placeholder="es. Soulgem Selection — 2026">
           </div>
           <div>
             <label for="plDesc">Descrizione Playlist</label>
-            <input type="text" id="plDesc" value="Selezionata con Sala Stampa (Chart & Editorial).">
+            <input type="text" id="plDesc" value="Curata con Sala Stampa (Editorial Charts).">
           </div>
         </div>
       </div>
@@ -678,7 +658,7 @@
     <p style="max-width:64ch;margin:0 auto 8px;">
       <strong>Redirect URI attivo:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
     </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.0 — Full Believe CSV Integration + Editorial Charts</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.1 — Full Believe CSV Integration + Editorial Charts</p>
   </footer>
 
 </div>
@@ -688,9 +668,9 @@ const REDIRECT_URI = window.location.origin + window.location.pathname;
 document.getElementById('currentRedirectUri').textContent = REDIRECT_URI;
 const SCOPES = "playlist-modify-public playlist-modify-private playlist-read-private user-read-private";
 
-const LS_CATALOG_KEY = 'ss_catalog_db_v4';
-const LS_CODE_META_KEY = 'ss_code_meta_db_v4';
-const LS_ARTIST_GENRE_KEY = 'ss_artist_genre_db_v4';
+const LS_CATALOG_KEY = 'ss_catalog_db_v41';
+const LS_CODE_META_KEY = 'ss_code_meta_db_v41';
+const LS_ARTIST_GENRE_KEY = 'ss_artist_genre_db_v41';
 
 let catalogData = [];
 let codeMetaDb = {};
@@ -877,9 +857,7 @@ async function tryRefreshToken(){
     const data = await res.json();
     await saveTokenResponse(data);
     return true;
-  }catch(e){
-    return false;
-  }
+  }catch(e){ return false; }
 }
 
 async function spotifyFetch(url, opts={}, retries=3){
@@ -978,11 +956,8 @@ function parseCompleteCatalogCsv(text){
     upc: findCol(/\bupc\b|\bean\b|barcode/),
     artist: findCol(/artist|interprete/),
     title: findCol(/track title|titolo traccia|title|nome/),
-    releaseTitle: findCol(/release title|album/.),
     label: findCol(/etichetta|label/),
-    genre: findCol(/genre|genere/),
-    authors: findCol(/author|autore/),
-    composers: findCol(/composer|compositore/)
+    genre: findCol(/genre|genere/)
   };
 
   const entries = [];
@@ -1216,11 +1191,11 @@ document.getElementById('wipeCatalogDbBtn').addEventListener('click', () => {
 });
 
 document.getElementById('exportDbJsonBtn').addEventListener('click', () => {
-  const payload = { version: '4.0', catalogData, codeMetaDb, artistGenreDb: Object.fromEntries(artistGenreCache.entries()) };
+  const payload = { version: '4.1', catalogData, codeMetaDb, artistGenreDb: Object.fromEntries(artistGenreCache.entries()) };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `sala-stampa-db-v4-${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `sala-stampa-db-v4.1-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
 });
 document.getElementById('importDbJsonBtn').addEventListener('click', () => {
@@ -1274,8 +1249,7 @@ async function tracksFromUpc(upc, maxTracks = 50){
   const slicedItems = allItems.slice(0, maxTracks);
   const tracks = slicedItems.map(t => formatTrackObj(t, cover, 'catalog'));
   const artistIds = [...new Set(allItems.flatMap(t => (t.artists || []).map(a => a.id)).filter(Boolean))].slice(0, 3);
-  const primaryArtistName = (album.artists || []).map(a => a.name).join(', ');
-  return { tracks, found: true, artistIds, albumGenres: album.genres || [], releaseName: album.name, primaryArtistName, totalTracks: allItems.length };
+  return { tracks, found: true, artistIds, albumGenres: album.genres || [], releaseName: album.name, totalTracks: allItems.length };
 }
 
 async function trackFromIsrc(isrc){
@@ -1285,8 +1259,7 @@ async function trackFromIsrc(isrc){
   const t = items[0];
   const track = formatTrackObj(t, '', 'catalog');
   const artistIds = [...new Set((t.artists || []).map(a => a.id).filter(Boolean))].slice(0, 3);
-  const primaryArtistName = (t.artists || []).map(a => a.name).join(', ');
-  return { tracks: [track], found: true, artistIds, albumGenres: [], releaseName: t.name, primaryArtistName, totalTracks: 1 };
+  return { tracks: [track], found: true, artistIds, albumGenres: [], releaseName: t.name, totalTracks: 1 };
 }
 
 async function resolveCatalogCode(rawCode, maxTracks = 50){
@@ -1320,12 +1293,9 @@ async function detectGenres(artistIds, albumGenres){
   return [...new Set(allGenres)];
 }
 
-// 🌟 MOTORE EDITORIAL CHARTS & PLAYLIST
 async function getEditorialChartTracks(genre){
   const cacheKey = `editorial|${genre.toLowerCase()}`;
-  if(genreTrackPoolCache.has(cacheKey)){
-    return genreTrackPoolCache.get(cacheKey);
-  }
+  if(genreTrackPoolCache.has(cacheKey)) return genreTrackPoolCache.get(cacheKey);
 
   const pool = [];
   const seen = new Set();
@@ -1334,14 +1304,13 @@ async function getEditorialChartTracks(genre){
     .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 
   try {
-    // Cerca playlist editoriali e chart ufficiali su Spotify basate sul genere
     const searchRes = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(genre)}&type=playlist&limit=5&market=${market}`);
     const playlists = searchRes.playlists?.items || [];
 
     for(const pl of playlists){
       if(!pl || !pl.id) continue;
       try {
-        const tracksRes = await spotifyFetch(`https://api.spotify.com/v1/v1/playlists/${pl.id}/tracks?limit=25&market=${market}`.replace('/v1/v1/', '/v1/'));
+        const tracksRes = await spotifyFetch(`https://api.spotify.com/v1/playlists/${pl.id}/tracks?limit=25&market=${market}`);
         const items = tracksRes.items || [];
         for(const item of items){
           const t = item.track;
@@ -1355,7 +1324,6 @@ async function getEditorialChartTracks(genre){
     }
   } catch(e){}
 
-  // Fallback se le playlist non bastano: usa la ricerca standard di rilevanza chart
   if(pool.length < 10){
     const searchPool = await getSearchGenrePool(genre);
     searchPool.forEach(t => {
@@ -1415,7 +1383,6 @@ async function sampleHitsFromGenre(genre, count, excludedUris){
   return copy.slice(0, count);
 }
 
-// Delta Sync Engine
 async function runCatalogGenreSync(){
   if(!accessToken){ alert('Connettiti prima a Spotify.'); return; }
   if(isSyncingGenres) return;
@@ -1515,7 +1482,7 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
   const mixOrder = document.getElementById('mixOrder').value;
 
   if(upcList.length === 0){
-    addMsg(msgsBox, 'Inserisci almeno un codice UPC o ISRC nella coda.', 'warn');
+    alert('Inserisci almeno un codice UPC o ISRC nella coda.');
     return;
   }
 
@@ -1538,8 +1505,7 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
       progText.textContent = `[${i+1}/${upcList.length}] Elaborazione ${normCode}...`;
 
       try{
-        const { tracks, found, artistIds, albumGenres, releaseName, totalTracks } =
-          await resolveCatalogCode(normCode, maxTracksPerUpc);
+        const { tracks, found, artistIds, albumGenres } = await resolveCatalogCode(normCode, maxTracksPerUpc);
 
         if(!found){
           addMsg(msgsBox, `Codice ${normCode} non trovato su Spotify.`, 'warn');
@@ -1616,6 +1582,13 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
     setTimeout(() => progWrap.classList.add('hidden'), 1200);
   }
 });
+
+function addMsg(container, text, type){
+  const el = document.createElement('div');
+  el.className = 'msg ' + type;
+  el.textContent = text;
+  container.appendChild(el);
+}
 
 function formatDuration(ms){
   if(!ms) return '--:--';
@@ -1841,7 +1814,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
   const createBtn = document.getElementById('createBtn');
 
   if(builtTracks.length === 0){
-    addMsg(msgsBox, 'La scaletta è vuota.', 'warn');
+    alert('La scaletta è vuota.');
     return;
   }
 
@@ -1855,7 +1828,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
 
     if(mode === 'new'){
       const name = document.getElementById('plName').value.trim() || 'Chart Playlist Etichetta';
-      const description = document.getElementById('plDesc').value.trim() || 'Generata con Sala Stampa (Editorial Charts).';
+      const description = document.getElementById('plDesc').value.trim() || 'Curata con Sala Stampa.';
       const isPublic = document.getElementById('plVisibility').value === 'public';
 
       const playlist = await spotifyFetch(`https://api.spotify.com/v1/me/playlists`, {
@@ -1869,7 +1842,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
       }
     } else {
       playlistId = document.getElementById('existingPlaylistSelect').value;
-      if(!playlistId){ addMsg(msgsBox, 'Seleziona una playlist esistente.', 'warn'); return; }
+      if(!playlistId){ alert('Seleziona una playlist esistente.'); return; }
       playlistUrl = `https://open.spotify.com/playlist/${playlistId}`;
 
       if(mode === 'replace'){
