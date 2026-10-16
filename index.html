@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala Stampa 4.0 — A&R Playlist Studio & Editorial Charts</title>
+<title>Sala Stampa — A&amp;R Playlist Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -46,16 +46,7 @@
     color:var(--amber);
     display:flex;align-items:center;gap:10px;
   }
-  .eyebrow::before{
-    content:"●";
-    font-size:9px;
-    color:var(--red);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.35; }
-  }
+  .eyebrow::before{content:"●";font-size:9px;color:var(--red);}
   h1{
     font-family:'Fraunces', serif;
     font-weight:600;
@@ -114,7 +105,6 @@
     border-radius:7px;
     font-size:14px;
     font-family:'Inter', sans-serif;
-    transition:border-color .15s ease;
   }
   input[type=file]{
     width:100%;
@@ -126,7 +116,6 @@
     font-size:13px;
     cursor:pointer;
   }
-  input[type=file]:hover{border-color:var(--teal);}
   textarea{font-family:'JetBrains Mono',monospace;font-size:13px;min-height:110px;resize:vertical;}
   input:focus, textarea:focus, select:focus{outline:2px solid var(--teal);outline-offset:1px;}
 
@@ -147,15 +136,12 @@
     justify-content:center;
     gap:8px;
   }
-  button:active:not(:disabled){transform:scale(0.98);}
   button.primary{background:var(--teal);color:#0B1512;}
   button.primary:hover:not(:disabled){background:#5fd0af;}
   button.amber{background:var(--amber);color:#161209;}
-  button.amber:hover:not(:disabled){background:#f0b64d;}
   button.secondary{background:transparent;border:1px solid var(--border);color:var(--text);}
-  button.secondary:hover:not(:disabled){border-color:var(--teal);color:var(--teal);background:rgba(79,191,159,0.06);}
+  button.secondary:hover{border-color:var(--teal);color:var(--teal);}
   button.danger{background:transparent;border:1px solid rgba(226,87,76,0.4);color:#f0938a;}
-  button.danger:hover:not(:disabled){background:rgba(226,87,76,0.12);border-color:var(--red);}
   button.sm{padding:6px 11px;font-size:12px;}
   button:disabled{opacity:0.4;cursor:not-allowed;}
 
@@ -180,7 +166,6 @@
     font-family:'JetBrains Mono',monospace;
     font-size:10.5px;
     font-weight:700;
-    letter-spacing:0.04em;
     padding:3px 7px;
     border-radius:4px;
     white-space:nowrap;
@@ -188,46 +173,6 @@
   }
   .stamp.hit{background:rgba(227,167,62,0.14);color:var(--amber);border:1px dashed rgba(227,167,62,0.5);}
   .stamp.catalog{background:rgba(79,191,159,0.14);color:var(--teal);border:1px dashed rgba(79,191,159,0.5);}
-  .stamp.manual{background:rgba(226,87,76,0.14);color:var(--red);border:1px dashed rgba(226,87,76,0.5);}
-
-  .genre-pill{
-    display:inline-block;
-    font-family:'JetBrains Mono',monospace;
-    font-size:10px;
-    padding:2px 6px;
-    border-radius:4px;
-    background:rgba(79,191,159,0.12);
-    color:var(--teal);
-    border:1px solid rgba(79,191,159,0.3);
-    white-space:nowrap;
-  }
-  .genre-pill.empty{background:rgba(145,152,169,0.1);color:var(--text-dim);border-color:var(--border);}
-  .genre-pill.pending{background:rgba(227,167,62,0.1);color:var(--amber);border-color:rgba(227,167,62,0.3);}
-
-  .db-sync-box{
-    background:linear-gradient(180deg, rgba(35,39,51,0.9), rgba(27,30,38,0.9));
-    border:1px solid var(--border);
-    border-radius:9px;
-    padding:16px;
-    margin-bottom:16px;
-  }
-  .db-sync-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-  }
-  .db-metrics{
-    display:flex;
-    gap:16px;
-    flex-wrap:wrap;
-    margin-top:10px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-  }
-  .db-metric span{color:var(--text-dim);}
-  .db-metric strong{color:var(--text);margin-left:4px;}
 
   .stats-bar{
     display:grid;
@@ -243,27 +188,6 @@
   .stat-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);text-transform:uppercase;}
   .stat-val{font-size:16px;font-weight:600;color:var(--text);margin-top:2px;}
 
-  .progress-wrap{
-    margin-top:12px;
-    background:var(--surface-alt);
-    border:1px solid var(--border);
-    border-radius:7px;
-    overflow:hidden;
-  }
-  .progress-bar{
-    height:5px;
-    background:var(--teal);
-    width:0%;
-    transition:width .2s ease;
-  }
-  .progress-bar.amber{background:var(--amber);}
-  .progress-text{
-    padding:8px 12px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--text-dim);
-  }
-
   .track-row{
     display:flex;
     align-items:center;
@@ -271,23 +195,8 @@
     padding:9px 8px;
     border-bottom:1px solid var(--border);
     border-radius:6px;
-    transition:background .1s ease;
   }
   .track-row:hover{background:rgba(255,255,255,0.02);}
-  .track-row.dragging{opacity:0.4;background:var(--surface-hover);}
-  .track-row.drag-over{border-top:2px solid var(--teal);}
-  .track-row:last-child{border-bottom:none;}
-
-  .drag-handle{
-    cursor:grab;
-    color:var(--text-dim);
-    font-size:14px;
-    user-select:none;
-    padding:0 4px;
-    opacity:0.5;
-  }
-  .drag-handle:hover{opacity:1;color:var(--text);}
-
   .track-cover{
     width:38px;
     height:38px;
@@ -304,25 +213,11 @@
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    display:flex;
-    align-items:center;
-    gap:8px;
   }
   .track-title a{color:var(--text);text-decoration:none;}
-  .track-title a:hover{color:var(--teal);text-decoration:underline;}
-  .track-meta{
-    font-size:12px;
-    color:var(--text-dim);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .track-duration{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--text-dim);
-    flex-shrink:0;
-  }
+  .track-title a:hover{color:var(--teal);}
+  .track-meta{font-size:12px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .track-duration{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);flex-shrink:0;}
 
   .row-btn{
     background:var(--surface-alt);
@@ -333,39 +228,15 @@
     padding:0;
     border-radius:5px;
     font-size:13px;
-    line-height:1;
     display:flex;align-items:center;justify-content:center;
   }
-  .row-btn:hover:not(:disabled){color:var(--text);border-color:var(--teal);background:var(--surface-hover);}
-  .row-btn.reroll:hover:not(:disabled){color:var(--amber);border-color:var(--amber);}
-  .row-btn.delete:hover:not(:disabled){color:var(--red);border-color:var(--red);}
+  .row-btn:hover{color:var(--text);border-color:var(--teal);}
+  .row-btn.delete:hover{color:var(--red);border-color:var(--red);}
 
   .msg{font-size:13px;padding:10px 12px;border-radius:7px;margin-top:10px;}
   .msg.warn{background:rgba(226,87,76,0.12);color:#f0938a;border:1px solid rgba(226,87,76,0.3);}
   .msg.ok{background:rgba(79,191,159,0.12);color:var(--teal);border:1px solid rgba(79,191,159,0.3);}
-
-  .count-badge{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--text-dim);
-  }
-
-  details.advanced-panel{
-    margin-top:18px;
-    background:var(--surface-alt);
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:12px 16px;
-  }
-  details.advanced-panel summary{
-    cursor:pointer;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12.5px;
-    color:var(--amber);
-    font-weight:500;
-    user-select:none;
-  }
-
+  .count-badge{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);}
   footer{text-align:center;color:var(--text-dim);font-size:12px;margin-top:40px;}
   a{color:var(--teal);}
   .hidden{display:none !important;}
@@ -376,9 +247,9 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v4.1 (Cleaned &amp; Verified)</div>
+      <div class="eyebrow">A&amp;R Automation Studio</div>
       <h1>Sala Stampa</h1>
-      <p class="sub">Incrocia il tuo catalogo Soulgem Records con le chart editoriali di Spotify.</p>
+      <p class="sub">Incrocia il catalogo Soulgem Records con le hit di Spotify.</p>
     </div>
     <div class="status-pill">
       <span class="dot" id="statusDot"></span>
@@ -396,7 +267,6 @@
       </div>
     </div>
     <p class="hint" id="connectHint">Inserisci il Client ID della tua app Spotify.</p>
-
     <div id="connectForm">
       <div class="row" style="align-items:flex-end;">
         <div style="flex:3;">
@@ -404,179 +274,45 @@
           <input type="text" id="clientId" placeholder="es. 8f3a9c2e1b4d4f...">
         </div>
         <div style="flex:1;">
-          <button class="primary" id="connectBtn" style="width:100%;">Connetti a Spotify</button>
+          <button class="primary" id="connectBtn" style="width:100%;">Connetti</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- STEP 2: CATALOGO & MOTORE EDITORIAL -->
+  <!-- STEP 2: REPERTORIO & GENERAZIONE -->
   <section class="card">
     <div class="card-header">
-      <h2><span class="num">02</span> Repertorio &amp; Chart Engine</h2>
-      <span class="count-badge" id="cacheStatsBadge">DB: 0 righe · 0 artisti</span>
+      <h2><span class="num">02</span> Repertorio &amp; Generatore</h2>
     </div>
-    <p class="hint">Carica il file CSV definitivo estratto da Believe.</p>
+    <p class="hint">Incolla i codici ISRC o UPC (uno per riga) e imposta quante hit abbinare.</p>
 
-    <div class="row" style="align-items:center;">
-      <div style="flex:2;">
-        <label for="repertoireFile" style="margin-top:0;">Carica file CSV Believe</label>
-        <input type="file" id="repertoireFile" accept=".csv,.txt,.json">
-      </div>
-      <div style="flex:1;">
-        <label style="margin-top:0;">Backup &amp; Export</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="secondary sm" type="button" id="exportDbJsonBtn">💾 Backup DB</button>
-          <button class="secondary sm" type="button" id="importDbJsonBtn">📂 Importa DB</button>
-          <input type="file" id="importDbFileInput" accept=".json" class="hidden">
-        </div>
-      </div>
-    </div>
-    <div id="fileParseMsg"></div>
-
-    <div id="catalogFilterBlock" class="hidden" style="margin-top:16px;padding:18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:9px;">
-
-      <div class="db-sync-box">
-        <div class="db-sync-header">
-          <div>
-            <div style="font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:8px;">
-              <span>⚡ Sincronizzazione Generi Spotify</span>
-              <span class="count-badge" id="syncStatusPill">Pronto</span>
-            </div>
-            <div style="font-size:12.5px;color:var(--text-dim);margin-top:2px;">
-              Collega gli ISRC del catalogo ai generi ufficiali su Spotify.
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="amber sm" type="button" id="syncGenresBtn">🔄 Sincronizza Generi Mancanti</button>
-            <button class="danger sm hidden" type="button" id="stopSyncBtn">⏹ Pausa</button>
-          </div>
-        </div>
-
-        <div class="db-metrics">
-          <div class="db-metric"><span>Totale in Catalogo:</span><strong id="metricTotal">0</strong></div>
-          <div class="db-metric"><span>Con Genere Spotify:</span><strong id="metricWithGenre" style="color:var(--teal);">0</strong></div>
-          <div class="db-metric"><span>Da Scansionare:</span><strong id="metricPending" style="color:var(--amber);">0</strong></div>
-        </div>
-
-        <div id="syncProgressWrap" class="progress-wrap hidden">
-          <div class="progress-bar amber" id="syncProgressBar"></div>
-          <div class="progress-text" id="syncProgressText">Sincronizzazione in corso...</div>
-        </div>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <label style="margin:0;">Filtra per Etichetta</label>
-        <div style="display:flex;gap:8px;">
-          <button class="secondary sm" type="button" onclick="toggleAllLabels(true)">Tutte</button>
-          <button class="secondary sm" type="button" onclick="toggleAllLabels(false)">Nessuna</button>
-          <button class="danger sm" type="button" id="wipeCatalogDbBtn">🗑️ Svuota DB</button>
-        </div>
-      </div>
-      <div id="labelCheckboxes" style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;"></div>
-
-      <div class="row">
-        <div style="flex:1.5;">
-          <label for="genreFilterSelect">Filtra per Genere Spotify</label>
-          <select id="genreFilterSelect">
-            <option value="__ALL__">Tutti i generi</option>
-          </select>
-        </div>
-        <div>
-          <label for="typeFilter">Tipo codice</label>
-          <select id="typeFilter">
-            <option value="all">Tutti (UPC + ISRC)</option>
-            <option value="release">Solo Uscite (UPC)</option>
-            <option value="track">Solo Tracce (ISRC)</option>
-          </select>
-        </div>
-      </div>
-
-      <label for="titleSearch">Cerca per titolo, artista, genere o ISRC</label>
-      <input type="text" id="titleSearch" placeholder="Digita per filtrare...">
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
-        <span class="count-badge" id="filterMatchCount"></span>
-        <div style="display:flex;gap:8px;">
-          <button class="secondary sm" id="selectAllBtn" type="button">Seleziona visibili</button>
-          <button class="secondary sm" id="deselectAllBtn" type="button">Deseleziona tutti</button>
-        </div>
-      </div>
-
-      <div id="releaseChecklist" style="max-height:310px;overflow-y:auto;margin-top:10px;border-top:1px solid var(--border);"></div>
-
-      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <button class="primary" id="addSelectedBtn" type="button">Aggiungi selezionati alla coda ↓</button>
-        <span class="count-badge" id="selectedCheckCount"></span>
-      </div>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;">
-      <label for="upcs" style="margin:0;">Coda codici UPC o ISRC (uno per riga)</label>
-      <button class="secondary sm" type="button" id="clearUpcsBtn">Svuota coda</button>
-    </div>
-    <textarea id="upcs" style="margin-top:6px;" placeholder="IT-BQY-26-02423&#10;3618113986387&#10;..."></textarea>
+    <label for="upcs">Codici ISRC o UPC da usare (uno per riga)</label>
+    <textarea id="upcs" placeholder="IT-BQY-26-02423&#10;3618113986387"></textarea>
 
     <div class="row" style="margin-top:12px;">
       <div>
-        <label for="maxTracksPerUpc">Tracce da estrarre per ogni UPC</label>
-        <select id="maxTracksPerUpc">
-          <option value="1">Solo la 1ª traccia</option>
-          <option value="3">Prime 3 tracce</option>
-          <option value="50" selected>Tutte le tracce dell'uscita</option>
-        </select>
-      </div>
-      <div>
-        <label for="famousCount">Hit da abbinare per ogni uscita</label>
-        <input type="number" id="famousCount" value="5" min="0" max="30">
-      </div>
-      <div>
-        <label for="hitSourceMode">Sorgente Hit</label>
-        <select id="hitSourceMode">
-          <option value="editorial">🔥 Playlist Editoriali &amp; Chart Spotify</option>
-          <option value="search">🔍 Ricerca per genere</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row" style="margin-top:12px;">
-      <div>
-        <label for="mixOrder">Algoritmo di Mixaggio</label>
-        <select id="mixOrder">
-          <option value="smart-global">Smart Pacing Globale (distribuzione uniforme)</option>
-          <option value="alternate">Alterna per blocco uscita</option>
-          <option value="catalog-first">Catalogo prima, poi Hit</option>
-          <option value="hit-first">Hit prima, poi Catalogo</option>
-          <option value="shuffle">Shuffle totale</option>
-        </select>
+        <label for="famousCount">Hit da abbinare per ogni brano</label>
+        <input type="number" id="famousCount" value="3" min="0" max="20">
       </div>
       <div>
         <label for="fallbackGenre">Genere di riserva</label>
-        <input type="text" id="fallbackGenre" placeholder="es. tech house, dance, house">
+        <input type="text" id="fallbackGenre" value="dance, house, pop" placeholder="es. house, pop">
       </div>
     </div>
 
-    <div style="margin-top:22px;display:flex;gap:12px;align-items:center;">
+    <div style="margin-top:22px;">
       <button class="primary" id="buildBtn" disabled>Genera Anteprima Scaletta</button>
     </div>
 
-    <div id="progressContainer" class="progress-wrap hidden">
-      <div class="progress-bar" id="progressBar"></div>
-      <div class="progress-text" id="progressText">Avvio elaborazione...</div>
-    </div>
-
-    <div id="buildMsgs"></div>
+    <div id="buildMsgs" style="margin-top:12px;"></div>
   </section>
 
   <!-- STEP 3: ANTEPRIMA & PUBBLICAZIONE -->
   <section class="card hidden" id="previewCard">
     <div class="card-header">
-      <h2><span class="num">03</span> Curation &amp; Pubblicazione</h2>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="secondary sm" type="button" id="reshufflePreviewBtn">🔀 Rimescola</button>
-        <button class="secondary sm" type="button" id="exportCsvBtn">⬇ CSV Scaletta</button>
-        <button class="danger sm" type="button" id="clearPreviewBtn">✕ Svuota</button>
-      </div>
+      <h2><span class="num">03</span> Anteprima &amp; Pubblicazione</h2>
+      <button class="secondary sm" type="button" id="clearPreviewBtn">✕ Svuota</button>
     </div>
 
     <div class="stats-bar">
@@ -585,152 +321,37 @@
         <span class="stat-val" id="statTotalTracks">0</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">Durata Totale</span>
+        <span class="stat-label">Durata</span>
         <span class="stat-val" id="statTotalDuration">0m</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">Quota Catalogo</span>
-        <span class="stat-val" id="statCatalogRatio" style="color:var(--teal);">0%</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Composizione</span>
-        <span class="stat-val" id="statBreakdown" style="font-size:13px;font-family:'JetBrains Mono',monospace;">0 CAT · 0 HIT</span>
-      </div>
-    </div>
-
-    <div style="background:var(--surface-alt);padding:14px;border-radius:8px;border:1px solid var(--border);margin-bottom:18px;">
-      <label for="manualSearchInput" style="margin-top:0;">Aggiungi brano specifico da Spotify</label>
-      <div style="display:flex;gap:8px;">
-        <input type="text" id="manualSearchInput" placeholder="Cerca artista o titolo..." style="flex:1;">
-        <button class="secondary" id="manualSearchBtn" type="button">Cerca</button>
-      </div>
-      <div id="manualSearchResults" style="margin-top:8px;"></div>
     </div>
 
     <div id="trackList"></div>
 
     <div style="margin-top:26px;padding-top:20px;border-top:1px solid var(--border);">
-      <div class="row">
-        <div>
-          <label for="targetMode">Destinazione su Spotify</label>
-          <select id="targetMode">
-            <option value="new">Crea una nuova playlist</option>
-            <option value="replace">Sovrascrivi playlist esistente</option>
-            <option value="append">Accoda a playlist esistente</option>
-          </select>
-        </div>
-        <div id="newPlaylistVisibilityWrap">
-          <label for="plVisibility">Visibilità</label>
-          <select id="plVisibility">
-            <option value="private">Privata</option>
-            <option value="public">Pubblica</option>
-          </select>
-        </div>
-        <div id="existingPlaylistWrap" class="hidden">
-          <label for="existingPlaylistSelect">Scegli playlist</label>
-          <select id="existingPlaylistSelect">
-            <option value="">Caricamento...</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="newPlaylistMetaWrap">
-        <div class="row">
-          <div>
-            <label for="plName">Nome Playlist</label>
-            <input type="text" id="plName" placeholder="es. Soulgem Selection — 2026">
-          </div>
-          <div>
-            <label for="plDesc">Descrizione Playlist</label>
-            <input type="text" id="plDesc" value="Curata con Sala Stampa (Editorial Charts).">
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:20px;">
-        <button class="primary" id="createBtn">Salva Playlist su Spotify</button>
-      </div>
-      <div id="createMsgs"></div>
+      <label for="plName">Nome della nuova Playlist</label>
+      <input type="text" id="plName" value="Soulgem Selection — 2026" style="margin-bottom:12px;">
+      <button class="primary" id="createBtn">Salva Playlist su Spotify</button>
+      <div id="createMsgs" style="margin-top:12px;"></div>
     </div>
   </section>
 
-  <footer id="howto">
-    <p style="max-width:64ch;margin:0 auto 8px;">
-      <strong>Redirect URI attivo:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
-    </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.1 — Full Believe CSV Integration + Editorial Charts</p>
+  <footer>
+    <p>Redirect URI: <code id="currentRedirectUri" style="color:var(--amber);"></code></p>
   </footer>
-
 </div>
 
 <script>
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 document.getElementById('currentRedirectUri').textContent = REDIRECT_URI;
-const SCOPES = "playlist-modify-public playlist-modify-private playlist-read-private user-read-private";
-
-const LS_CATALOG_KEY = 'ss_catalog_db_v41';
-const LS_CODE_META_KEY = 'ss_code_meta_db_v41';
-const LS_ARTIST_GENRE_KEY = 'ss_artist_genre_db_v41';
-
-let catalogData = [];
-let codeMetaDb = {};
-let artistGenreCache = new Map();
-const genreTrackPoolCache = new Map();
-
-function loadPersistentDatabase(){
-  try{
-    const rawCat = localStorage.getItem(LS_CATALOG_KEY);
-    if(rawCat) catalogData = JSON.parse(rawCat) || [];
-  }catch(e){ catalogData = []; }
-
-  try{
-    const rawMeta = localStorage.getItem(LS_CODE_META_KEY);
-    if(rawMeta) codeMetaDb = JSON.parse(rawMeta) || {};
-  }catch(e){ codeMetaDb = {}; }
-
-  try{
-    const rawArt = localStorage.getItem(LS_ARTIST_GENRE_KEY);
-    if(rawArt){
-      const obj = JSON.parse(rawArt);
-      Object.entries(obj).forEach(([k, v]) => artistGenreCache.set(k, v));
-    }
-  }catch(e){}
-}
-
-function saveCatalogToStorage(){
-  try{ localStorage.setItem(LS_CATALOG_KEY, JSON.stringify(catalogData)); }catch(e){}
-  updateCacheBadge();
-}
-
-function saveCodeMetaToStorage(){
-  try{ localStorage.setItem(LS_CODE_META_KEY, JSON.stringify(codeMetaDb)); }catch(e){}
-  updateCacheBadge();
-}
-
-function saveArtistCacheToStorage(){
-  try{
-    const obj = Object.fromEntries(artistGenreCache.entries());
-    localStorage.setItem(LS_ARTIST_GENRE_KEY, JSON.stringify(obj));
-  }catch(e){}
-  updateCacheBadge();
-}
-
-function updateCacheBadge(){
-  document.getElementById('cacheStatsBadge').textContent =
-    `DB: ${catalogData.length} righe · ${artistGenreCache.size} artisti`;
-}
+const SCOPES = "playlist-modify-public playlist-modify-private user-read-private";
 
 let accessToken = sessionStorage.getItem('sp_access_token') || null;
 let refreshToken = localStorage.getItem('sp_refresh_token') || null;
 let tokenExpiresAt = parseInt(sessionStorage.getItem('sp_expires_at') || '0', 10);
-let userId = sessionStorage.getItem('sp_user_id') || null;
-let userDisplayName = sessionStorage.getItem('sp_user_name') || null;
-
 let builtTracks = [];
-let isSyncingGenres = false;
-let stopSyncRequested = false;
 
-const savedClientId = localStorage.getItem('sp_client_id') || sessionStorage.getItem('sp_client_id') || '';
+const savedClientId = localStorage.getItem('sp_client_id') || '';
 if(savedClientId) document.getElementById('clientId').value = savedClientId;
 
 function randomString(len){
@@ -742,8 +363,7 @@ function randomString(len){
 async function sha256base64url(str){
   const data = new TextEncoder().encode(str);
   const hash = await crypto.subtle.digest('SHA-256', data);
-  let b = btoa(String.fromCharCode(...new Uint8Array(hash)));
-  return b.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return btoa(String.fromCharCode(...new Uint8Array(hash))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 
 const statusDot = document.getElementById('statusDot');
@@ -756,8 +376,7 @@ const buildBtn = document.getElementById('buildBtn');
 function reflectConnectionState(){
   if(accessToken){
     statusDot.classList.add('ok');
-    statusText.textContent = userDisplayName ? `Connesso (${userDisplayName})` : 'Connesso a Spotify';
-    document.getElementById('userBadge').textContent = userDisplayName || userId || '';
+    statusText.textContent = 'Connesso a Spotify';
     connectForm.classList.add('hidden');
     connectHint.classList.add('hidden');
     connectedBlock.classList.remove('hidden');
@@ -774,7 +393,7 @@ function reflectConnectionState(){
 
 document.getElementById('connectBtn').addEventListener('click', async () => {
   const clientId = document.getElementById('clientId').value.trim();
-  if(!clientId){ alert('Inserisci il Client ID Spotify.'); return; }
+  if(!clientId){ alert('Inserisci il Client ID.'); return; }
   localStorage.setItem('sp_client_id', clientId);
 
   const verifier = randomString(64);
@@ -792,12 +411,9 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
 });
 
 document.getElementById('disconnectBtn').addEventListener('click', () => {
-  sessionStorage.removeItem('sp_access_token');
-  sessionStorage.removeItem('sp_expires_at');
-  sessionStorage.removeItem('sp_user_id');
-  sessionStorage.removeItem('sp_user_name');
+  sessionStorage.clear();
   localStorage.removeItem('sp_refresh_token');
-  accessToken = null; refreshToken = null; userId = null; userDisplayName = null;
+  accessToken = null; refreshToken = null;
   reflectConnectionState();
 });
 
@@ -808,8 +424,7 @@ async function saveTokenResponse(data){
     refreshToken = data.refresh_token;
     localStorage.setItem('sp_refresh_token', refreshToken);
   }
-  const expiresIn = data.expires_in || 3600;
-  tokenExpiresAt = Date.now() + (expiresIn - 60) * 1000;
+  tokenExpiresAt = Date.now() + ((data.expires_in || 3600) - 60) * 1000;
   sessionStorage.setItem('sp_expires_at', String(tokenExpiresAt));
 }
 
@@ -828,1067 +443,168 @@ async function exchangeCodeForToken(code){
     headers: {'Content-Type':'application/x-www-form-urlencoded'},
     body
   });
-  if(!res.ok) throw new Error('Scambio token OAuth fallito (' + res.status + ')');
+  if(!res.ok) throw new Error('Errore scambio token (' + res.status + ')');
   const data = await res.json();
   await saveTokenResponse(data);
-
-  const me = await spotifyFetch('https://api.spotify.com/v1/me');
-  userId = me.id;
-  userDisplayName = me.display_name || me.id;
-  sessionStorage.setItem('sp_user_id', userId);
-  sessionStorage.setItem('sp_user_name', userDisplayName);
-}
-
-async function tryRefreshToken(){
-  const clientId = localStorage.getItem('sp_client_id');
-  if(!clientId || !refreshToken) return false;
-  try{
-    const body = new URLSearchParams({
-      client_id: clientId,
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken
-    });
-    const res = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body
-    });
-    if(!res.ok) return false;
-    const data = await res.json();
-    await saveTokenResponse(data);
-    return true;
-  }catch(e){ return false; }
 }
 
 async function spotifyFetch(url, opts={}, retries=3){
-  if(tokenExpiresAt && Date.now() > tokenExpiresAt && refreshToken){
-    await tryRefreshToken();
-  }
-
-  const doFetch = () => fetch(url, {
+  const res = await fetch(url, {
     ...opts,
-    headers: {
-      'Authorization': 'Bearer ' + accessToken,
-      'Content-Type': 'application/json',
-      ...(opts.headers||{})
-    }
+    headers: { 'Authorization': 'Bearer ' + accessToken, 'Content-Type': 'application/json', ...(opts.headers||{}) }
   });
-
-  let res;
-  try{
-    res = await doFetch();
-  }catch(networkErr){
-    if(retries > 0){
-      await new Promise(r => setTimeout(r, 800));
-      return spotifyFetch(url, opts, retries - 1);
-    }
-    throw networkErr;
-  }
-
-  if(res.status === 429 && retries > 0){
-    const retryAfterSec = parseInt(res.headers.get('Retry-After') || '3', 10);
-    await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
-    return spotifyFetch(url, opts, retries - 1);
-  }
-
-  if(res.status === 401 && retries > 0 && refreshToken){
-    const refreshed = await tryRefreshToken();
-    if(refreshed) return spotifyFetch(url, opts, retries - 1);
-  }
-
-  if(!res.ok){
-    const t = await res.text();
-    throw new Error(`Errore API (${res.status}): ${t}`);
-  }
+  if(!res.ok) throw new Error(`API Error (${res.status})`);
   if(res.status === 204) return null;
   const text = await res.text();
   return text ? JSON.parse(text) : null;
 }
 
-function cleanCatalogCode(raw){
-  const trimmed = String(raw || '').trim();
-  const digitsOnly = trimmed.replace(/\D/g, '');
-  const alnumOnly = trimmed.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-  if(/^[A-Z]{2}[A-Z0-9]{3}\d{7}$/.test(alnumOnly)){
-    return { code: alnumOnly, type: 'track' };
-  }
-  if(digitsOnly.length >= 12 && digitsOnly.length <= 14){
-    return { code: digitsOnly, type: 'release' };
-  }
-  return null;
-}
-
-function parseDelimited(text, delimiter){
-  const rows = [];
-  let row = [], field = '', inQuotes = false;
-  for(let i=0;i<text.length;i++){
-    const c = text[i];
-    if(inQuotes){
-      if(c === '"'){
-        if(text[i+1] === '"'){ field += '"'; i++; }
-        else inQuotes = false;
-      } else field += c;
-    } else {
-      if(c === '"') inQuotes = true;
-      else if(c === delimiter){ row.push(field); field = ''; }
-      else if(c === '\r'){ /* skip */ }
-      else if(c === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
-      else field += c;
-    }
-  }
-  if(field.length > 0 || row.length > 0){ row.push(field); rows.push(row); }
-  return rows.filter(r => !(r.length === 1 && r[0].trim() === ''));
-}
-
-function parseCompleteCatalogCsv(text){
-  const firstLine = text.split(/\r?\n/)[0] || '';
-  const semi = (firstLine.match(/;/g)||[]).length;
-  const comma = (firstLine.match(/,/g)||[]).length;
-  const tab = (firstLine.match(/\t/g)||[]).length;
-  const delimiter = (tab > semi && tab > comma) ? '\t' : (semi > comma ? ';' : ',');
-  const rows = parseDelimited(text, delimiter);
-  if(rows.length < 2) return [];
-
-  const header = rows[0].map(h => h.trim().toLowerCase());
-  const findCol = (regex) => header.findIndex(h => regex.test(h));
-  const idx = {
-    isrc: findCol(/isrc/),
-    upc: findCol(/\bupc\b|\bean\b|barcode/),
-    artist: findCol(/artist|interprete/),
-    title: findCol(/track title|titolo traccia|title|nome/),
-    label: findCol(/etichetta|label/),
-    genre: findCol(/genre|genere/)
-  };
-
-  const entries = [];
-  const seen = new Set();
-  for(let i=1;i<rows.length;i++){
-    const r = rows[i];
-    const isrcRaw = idx.isrc >= 0 ? (r[idx.isrc]||'') : '';
-    const upcRaw = idx.upc >= 0 ? (r[idx.upc]||'') : '';
-    const parsedIsrc = cleanCatalogCode(isrcRaw);
-    const parsedUpc = cleanCatalogCode(upcRaw);
-    
-    const chosenCode = parsedIsrc ? parsedIsrc.code : (parsedUpc ? parsedUpc.code : (isrcRaw || upcRaw));
-    if(!chosenCode || seen.has(chosenCode)) continue;
-    seen.add(chosenCode);
-
-    const title = idx.title >= 0 ? (r[idx.title]||'').trim() : '';
-    const artist = idx.artist >= 0 ? (r[idx.artist]||'').trim() : '';
-    const label = idx.label >= 0 ? (r[idx.label]||'').trim() || 'Soulgem Records' : 'Soulgem Records';
-    const genre = idx.genre >= 0 ? (r[idx.genre]||'').trim() : '';
-
-    if(genre && !codeMetaDb[chosenCode]){
-      const gList = genre.split(/[,;/]+/).map(s=>s.trim().toLowerCase()).filter(Boolean);
-      if(gList.length > 0){
-        codeMetaDb[chosenCode] = { genres: gList, status: 'synced', trackCount: 1, updatedAt: Date.now() };
-      }
-    }
-
-    entries.push({
-      code: chosenCode,
-      type: parsedIsrc ? 'track' : (parsedUpc ? 'release' : 'track'),
-      artist,
-      title: title || 'Senza titolo',
-      label,
-      release_date: ''
-    });
-  }
-  return entries;
-}
-
-document.getElementById('repertoireFile').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  const msgBox = document.getElementById('fileParseMsg');
-  msgBox.innerHTML = '';
-  catalogData = [];
-  if(!file) return;
-
-  const text = await file.text();
-  let parsed = parseCompleteCatalogCsv(text);
-
-  if(parsed.length === 0){
-    addMsg(msgBox, 'Nessun codice valido trovato nel file CSV.', 'warn');
-    return;
-  }
-
-  catalogData = parsed;
-  saveCatalogToStorage();
-  saveCodeMetaToStorage();
-  addMsg(msgBox, `Catalogo caricato con successo: ${catalogData.length} voci importate.`, 'ok');
-  refreshCatalogUI();
-});
-
-function refreshCatalogUI(){
-  const filterBlock = document.getElementById('catalogFilterBlock');
-  updateCacheBadge();
-
-  if(catalogData.length === 0){
-    filterBlock.classList.add('hidden');
-    return;
-  }
-  filterBlock.classList.remove('hidden');
-
-  const prevChecked = new Set([...document.querySelectorAll('.label-cb:checked')].map(cb => cb.value));
-  const hadCheckboxes = document.querySelectorAll('.label-cb').length > 0;
-
-  const labelCounts = {};
-  catalogData.forEach(r => { labelCounts[r.label] = (labelCounts[r.label]||0) + 1; });
-
-  const cbContainer = document.getElementById('labelCheckboxes');
-  cbContainer.innerHTML = '';
-  Object.keys(labelCounts).sort().forEach(label => {
-    const isChecked = !hadCheckboxes || prevChecked.has(label);
-    const wrap = document.createElement('label');
-    wrap.style.cssText = 'display:flex;align-items:center;gap:6px;margin:0;font-family:Inter,sans-serif;font-size:13px;color:var(--text);cursor:pointer;';
-    wrap.innerHTML = `<input type="checkbox" class="label-cb" value="${escapeHtml(label)}" ${isChecked?'checked':''} style="width:auto;"> ${escapeHtml(label)} <span style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px;">(${labelCounts[label]})</span>`;
-    cbContainer.appendChild(wrap);
-  });
-
-  refreshSyncMetricsAndGenreDropdown();
-  renderReleaseChecklist();
-}
-
-function refreshSyncMetricsAndGenreDropdown(){
-  let withGenre = 0, pending = 0;
-  const genreCounts = {};
-
-  catalogData.forEach(item => {
-    const meta = codeMetaDb[item.code];
-    if(!meta){
-      pending++;
-    } else if(meta.genres && meta.genres.length > 0){
-      withGenre++;
-      meta.genres.forEach(g => {
-        genreCounts[g] = (genreCounts[g] || 0) + 1;
-      });
-    }
-  });
-
-  document.getElementById('metricTotal').textContent = String(catalogData.length);
-  document.getElementById('metricWithGenre').textContent = String(withGenre);
-  document.getElementById('metricPending').textContent = String(pending);
-
-  const genreSelect = document.getElementById('genreFilterSelect');
-  const currentVal = genreSelect.value || '__ALL__';
-  const sortedGenres = Object.keys(genreCounts).sort((a,b) => genreCounts[b] - genreCounts[a] || a.localeCompare(b));
-
-  let html = `<option value="__ALL__">Tutti i generi (${catalogData.length})</option>`;
-  if(sortedGenres.length > 0){
-    html += `<optgroup label="Generi Spotify rilevati">`;
-    sortedGenres.forEach(g => {
-      html += `<option value="${escapeHtml(g)}">${escapeHtml(g)} (${genreCounts[g]})</option>`;
-    });
-    html += `</optgroup>`;
-  }
-  genreSelect.innerHTML = html;
-  if([...genreSelect.options].some(o => o.value === currentVal)){
-    genreSelect.value = currentVal;
-  }
-}
-
-window.toggleAllLabels = function(state){
-  document.querySelectorAll('.label-cb').forEach(cb => cb.checked = state);
-  renderReleaseChecklist();
-};
-
-function currentFilteredCatalog(){
-  const checkedLabels = [...document.querySelectorAll('.label-cb:checked')].map(cb => cb.value);
-  const genreFilter = document.getElementById('genreFilterSelect').value;
-  const typeFilter = document.getElementById('typeFilter').value;
-  const search = document.getElementById('titleSearch').value.trim().toLowerCase();
-
-  return catalogData.filter(r => {
-    if(checkedLabels.length > 0 && !checkedLabels.includes(r.label)) return false;
-    if(typeFilter !== 'all' && r.type !== typeFilter) return false;
-
-    const meta = codeMetaDb[r.code];
-    const genres = meta?.genres || [];
-    if(genreFilter !== '__ALL__' && !genres.includes(genreFilter)) return false;
-
-    if(search){
-      const haystack = `${r.title} ${r.artist} ${r.code} ${genres.join(' ')}`.toLowerCase();
-      if(!haystack.includes(search)) return false;
-    }
-    return true;
-  });
-}
-
-function updateSelectedCheckCount(){
-  const n = document.querySelectorAll('.release-cb:checked').length;
-  document.getElementById('selectedCheckCount').textContent = n > 0 ? `${n} selezionati` : '';
-}
-
-function renderReleaseChecklist(){
-  const matches = currentFilteredCatalog();
-  const listEl = document.getElementById('releaseChecklist');
-  document.getElementById('filterMatchCount').textContent = `${matches.length} voci corrispondenti`;
-
-  const MAX_RENDER = 350;
-  const toRender = matches.slice(0, MAX_RENDER);
-  listEl.innerHTML = '';
-
-  toRender.forEach(r => {
-    const meta = codeMetaDb[r.code];
-    const row = document.createElement('label');
-    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border);font-family:Inter,sans-serif;font-size:13px;cursor:pointer;margin:0;flex-wrap:wrap;';
-    const typeLabel = r.type === 'track' ? 'ISRC' : 'UPC';
-    const typeColor = r.type === 'track' ? 'var(--amber)' : 'var(--teal)';
-
-    let genreBadgeHtml = '';
-    if(!meta || !meta.genres || meta.genres.length === 0){
-      genreBadgeHtml = `<span class="genre-pill pending">da sincronizzare</span>`;
-    } else {
-      genreBadgeHtml = meta.genres.slice(0, 2).map(g => `<span class="genre-pill">${escapeHtml(g)}</span>`).join(' ');
-    }
-
-    row.innerHTML = `
-      <input type="checkbox" class="release-cb" value="${escapeHtml(r.code)}" style="width:auto;flex-shrink:0;">
-      <span style="flex:1;min-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-        <strong>${escapeHtml(r.title)}</strong>
-        ${r.artist ? `<span style="color:var(--text-dim)"> — ${escapeHtml(r.artist)}</span>` : ''}
-      </span>
-      <span style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;">${genreBadgeHtml}</span>
-      <span style="color:${typeColor};font-family:'JetBrains Mono',monospace;font-size:10px;flex-shrink:0;border:1px dashed ${typeColor};padding:1px 5px;border-radius:3px;">${typeLabel}</span>
-      <span style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:11px;flex-shrink:0;min-width:13ch;text-align:right;">${escapeHtml(r.code)}</span>
-    `;
-    listEl.appendChild(row);
-  });
-  updateSelectedCheckCount();
-}
-
-document.getElementById('catalogFilterBlock').addEventListener('input', (e) => {
-  if(e.target.classList.contains('release-cb')){
-    updateSelectedCheckCount();
-    return;
-  }
-  if(catalogData.length > 0) renderReleaseChecklist();
-});
-
-document.getElementById('selectAllBtn').addEventListener('click', () => {
-  document.querySelectorAll('.release-cb').forEach(cb => cb.checked = true);
-  updateSelectedCheckCount();
-});
-document.getElementById('deselectAllBtn').addEventListener('click', () => {
-  document.querySelectorAll('.release-cb').forEach(cb => cb.checked = false);
-  updateSelectedCheckCount();
-});
-document.getElementById('addSelectedBtn').addEventListener('click', () => {
-  const selected = [...document.querySelectorAll('.release-cb:checked')].map(cb => cb.value);
-  if(selected.length === 0){ alert('Seleziona almeno una voce.'); return; }
-  const textarea = document.getElementById('upcs');
-  const existing = textarea.value.split('\n').map(s=>s.trim()).filter(Boolean);
-  textarea.value = [...new Set([...existing, ...selected])].join('\n');
-});
-document.getElementById('clearUpcsBtn').addEventListener('click', () => {
-  document.getElementById('upcs').value = '';
-});
-document.getElementById('wipeCatalogDbBtn').addEventListener('click', () => {
-  if(!confirm('Svuotare il database del catalogo?')) return;
-  catalogData = [];
-  saveCatalogToStorage();
-  refreshCatalogUI();
-});
-
-document.getElementById('exportDbJsonBtn').addEventListener('click', () => {
-  const payload = { version: '4.1', catalogData, codeMetaDb, artistGenreDb: Object.fromEntries(artistGenreCache.entries()) };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `sala-stampa-db-v4.1-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-});
-document.getElementById('importDbJsonBtn').addEventListener('click', () => {
-  document.getElementById('importDbFileInput').click();
-});
-document.getElementById('importDbFileInput').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if(!file) return;
-  try{
-    const data = JSON.parse(await file.text());
-    if(Array.isArray(data.catalogData)){
-      catalogData = data.catalogData;
-      saveCatalogToStorage();
-    }
-    if(data.codeMetaDb){
-      codeMetaDb = { ...codeMetaDb, ...data.codeMetaDb };
-      saveCodeMetaToStorage();
-    }
-    if(data.artistGenreDb){
-      Object.entries(data.artistGenreDb).forEach(([k, v]) => artistGenreCache.set(k, v));
-      saveArtistCacheToStorage();
-    }
-    refreshCatalogUI();
-    alert('Database importato con successo!');
-  }catch(err){ alert('Errore import: ' + err.message); }
-});
-
-// ---------- Spotify Resolvers & Editorial Charts Hit Engine ----------
-function formatTrackObj(t, albumCoverFallback, kind, sourceGenre=''){
-  const cover = t.album?.images?.[t.album.images.length - 1]?.url || albumCoverFallback || '';
+function formatTrack(t, kind){
   return {
     uri: t.uri,
     name: t.name,
     artist: (t.artists || []).map(a => a.name).join(', '),
     kind,
-    cover,
+    cover: t.album?.images?.[t.album.images.length - 1]?.url || '',
     duration_ms: t.duration_ms || 0,
-    external_url: t.external_urls?.spotify || '#',
-    sourceGenre
+    external_url: t.external_urls?.spotify || '#'
   };
 }
 
-async function tracksFromUpc(upc, maxTracks = 50){
-  const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent('upc:'+upc)}&type=album&limit=5`);
-  const albums = data.albums?.items || [];
-  if(albums.length === 0) return { tracks: [], found:false, totalTracks: 0 };
-  const album = albums[0];
-  const cover = album.images?.[album.images.length - 1]?.url || '';
-  const albumData = await spotifyFetch(`https://api.spotify.com/v1/albums/${album.id}/tracks?limit=50`);
-  const allItems = albumData.items || [];
-  const slicedItems = allItems.slice(0, maxTracks);
-  const tracks = slicedItems.map(t => formatTrackObj(t, cover, 'catalog'));
-  const artistIds = [...new Set(allItems.flatMap(t => (t.artists || []).map(a => a.id)).filter(Boolean))].slice(0, 3);
-  return { tracks, found: true, artistIds, albumGenres: album.genres || [], releaseName: album.name, totalTracks: allItems.length };
-}
-
-async function trackFromIsrc(isrc){
-  const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent('isrc:'+isrc)}&type=track&limit=5`);
-  const items = data.tracks?.items || [];
-  if(items.length === 0) return { tracks: [], found:false, totalTracks: 0 };
-  const t = items[0];
-  const track = formatTrackObj(t, '', 'catalog');
-  const artistIds = [...new Set((t.artists || []).map(a => a.id).filter(Boolean))].slice(0, 3);
-  return { tracks: [track], found: true, artistIds, albumGenres: [], releaseName: t.name, totalTracks: 1 };
-}
-
-async function resolveCatalogCode(rawCode, maxTracks = 50){
-  const cleaned = cleanCatalogCode(rawCode);
-  const code = cleaned ? cleaned.code : rawCode.trim();
-  const isUpc = /^\d{12,14}$/.test(code);
-  return isUpc ? await tracksFromUpc(code, maxTracks) : await trackFromIsrc(code);
-}
-
-async function detectGenres(artistIds, albumGenres){
-  if(albumGenres && albumGenres.length > 0) return [...new Set(albumGenres)];
-  if(!artistIds || artistIds.length === 0) return [];
-  const allGenres = [];
-  let cacheChanged = false;
-
-  for(const id of artistIds){
-    if(artistGenreCache.has(id)){
-      allGenres.push(...artistGenreCache.get(id));
-      continue;
-    }
-    try{
-      const artist = await spotifyFetch(`https://api.spotify.com/v1/artists/${id}`);
-      const g = artist.genres || [];
-      artistGenreCache.set(id, g);
-      allGenres.push(...g);
-      cacheChanged = true;
-    }catch(e){}
-    await new Promise(r => setTimeout(r, 60));
-  }
-  if(cacheChanged) saveArtistCacheToStorage();
-  return [...new Set(allGenres)];
-}
-
-async function getEditorialChartTracks(genre){
-  const cacheKey = `editorial|${genre.toLowerCase()}`;
-  if(genreTrackPoolCache.has(cacheKey)) return genreTrackPoolCache.get(cacheKey);
-
-  const pool = [];
-  const seen = new Set();
-  const market = document.getElementById('hitMarket').value.trim().toUpperCase() || 'IT';
-  const excludeWords = document.getElementById('excludeKeywords').value
-    .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
-
-  try {
-    const searchRes = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(genre)}&type=playlist&limit=5&market=${market}`);
-    const playlists = searchRes.playlists?.items || [];
-
-    for(const pl of playlists){
-      if(!pl || !pl.id) continue;
-      try {
-        const tracksRes = await spotifyFetch(`https://api.spotify.com/v1/playlists/${pl.id}/tracks?limit=25&market=${market}`);
-        const items = tracksRes.items || [];
-        for(const item of items){
-          const t = item.track;
-          if(!t || !t.uri || seen.has(t.uri)) continue;
-          const lowerTitle = (t.name || '').toLowerCase();
-          if(excludeWords.some(w => lowerTitle.includes(w))) continue;
-          seen.add(t.uri);
-          pool.push(formatTrackObj(t, '', 'hit', genre));
-        }
-      } catch(ex){}
-    }
-  } catch(e){}
-
-  if(pool.length < 10){
-    const searchPool = await getSearchGenrePool(genre);
-    searchPool.forEach(t => {
-      if(!seen.has(t.uri)){
-        seen.add(t.uri);
-        pool.push(t);
-      }
-    });
-  }
-
-  genreTrackPoolCache.set(cacheKey, pool);
-  return pool;
-}
-
-async function getSearchGenrePool(genre){
-  const yearFilter = document.getElementById('hitYearFilter').value.trim();
-  const market = document.getElementById('hitMarket').value.trim().toUpperCase();
-  const excludeWords = document.getElementById('excludeKeywords').value
-    .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
-
-  const cacheKey = `search|${genre.toLowerCase()}|${yearFilter}|${market}`;
-  if(genreTrackPoolCache.has(cacheKey)) return genreTrackPoolCache.get(cacheKey);
-
-  const pool = [];
-  const seen = new Set();
-  let queryParts = [`genre:"${genre}"`];
-  if(yearFilter) queryParts.push(`year:${yearFilter}`);
-  const q = encodeURIComponent(queryParts.join(' '));
-  const marketParam = /^[A-Z]{2}$/.test(market) ? `&market=${market}` : '';
-
-  for(let offset=0; offset<40 && pool.length < 40; offset+=10){
-    const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${q}&type=track&limit=10&offset=${offset}${marketParam}`);
+async function resolveCode(code){
+  const trimmed = code.trim();
+  const isIsrc = /^[A-Z]{2}[A-Z0-9]{3}\d{7}$/.test(trimmed);
+  if(isIsrc){
+    const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent('isrc:'+trimmed)}&type=track&limit=1`);
     const items = data.tracks?.items || [];
-    if(items.length === 0) break;
-    for(const t of items){
-      if(seen.has(t.uri)) continue;
-      const lowerTitle = (t.name || '').toLowerCase();
-      if(excludeWords.some(w => lowerTitle.includes(w))) continue;
-      seen.add(t.uri);
-      pool.push(formatTrackObj(t, '', 'hit', genre));
-    }
-    if(items.length < 10) break;
-  }
-  genreTrackPoolCache.set(cacheKey, pool);
-  return pool;
-}
-
-async function sampleHitsFromGenre(genre, count, excludedUris){
-  const mode = document.getElementById('hitSourceMode').value;
-  const basePool = (mode === 'editorial') ? await getEditorialChartTracks(genre) : await getSearchGenrePool(genre);
-  const available = basePool.filter(t => !excludedUris.has(t.uri));
-  const copy = [...available];
-  for(let i=copy.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [copy[i],copy[j]] = [copy[j],copy[i]];
-  }
-  return copy.slice(0, count);
-}
-
-async function runCatalogGenreSync(){
-  if(!accessToken){ alert('Connettiti prima a Spotify.'); return; }
-  if(isSyncingGenres) return;
-
-  const pendingItems = catalogData.filter(item => !codeMetaDb[item.code]);
-  if(pendingItems.length === 0){ alert('Catalogo già sincronizzato!'); return; }
-
-  isSyncingGenres = true;
-  stopSyncRequested = false;
-
-  const syncBtn = document.getElementById('syncGenresBtn');
-  const stopBtn = document.getElementById('stopSyncBtn');
-  const statusPill = document.getElementById('syncStatusPill');
-  const progWrap = document.getElementById('syncProgressWrap');
-  const progBar = document.getElementById('syncProgressBar');
-  const progText = document.getElementById('syncProgressText');
-
-  syncBtn.classList.add('hidden');
-  stopBtn.classList.remove('hidden');
-  progWrap.classList.remove('hidden');
-  statusPill.textContent = 'Sincronizzazione in corso...';
-
-  try{
-    for(let i=0; i<pendingItems.length; i++){
-      if(stopSyncRequested) break;
-      const item = pendingItems[i];
-      const pct = Math.round(((i + 1) / pendingItems.length) * 100);
-      progBar.style.width = `${pct}%`;
-      progText.textContent = `[${i+1}/${pendingItems.length}] Sincronizzo ${item.code}...`;
-
-      try{
-        const res = await resolveCatalogCode(item.code, 50);
-        if(!res.found){
-          codeMetaDb[item.code] = { genres: [], status: 'not_found', updatedAt: Date.now() };
-        } else {
-          const genres = await detectGenres(res.artistIds, res.albumGenres);
-          codeMetaDb[item.code] = {
-            genres,
-            status: genres.length > 0 ? 'synced' : 'empty',
-            trackCount: res.totalTracks || 1,
-            updatedAt: Date.now()
-          };
-        }
-        saveCodeMetaToStorage();
-      }catch(err){}
-
-      if((i + 1) % 4 === 0 || i === pendingItems.length - 1){
-        refreshSyncMetricsAndGenreDropdown();
-        renderReleaseChecklist();
-      }
-      await new Promise(r => setTimeout(r, 70));
-    }
-  }finally{
-    isSyncingGenres = false;
-    stopBtn.classList.add('hidden');
-    syncBtn.classList.remove('hidden');
-    statusPill.textContent = 'Pronto';
-    refreshSyncMetricsAndGenreDropdown();
-    renderReleaseChecklist();
-    setTimeout(() => progWrap.classList.add('hidden'), 1500);
-  }
-}
-
-document.getElementById('syncGenresBtn').addEventListener('click', runCatalogGenreSync);
-document.getElementById('stopSyncBtn').addEventListener('click', () => { stopSyncRequested = true; });
-
-function interleaveSmartGlobal(catalogList, hitList){
-  if(catalogList.length === 0) return [...hitList];
-  if(hitList.length === 0) return [...catalogList];
-  const result = [];
-  const total = catalogList.length + hitList.length;
-  let cIdx = 0, hIdx = 0;
-
-  for(let i=0; i<total; i++){
-    const cRatio = cIdx / catalogList.length;
-    const hRatio = hIdx / hitList.length;
-    if(cIdx < catalogList.length && (cRatio <= hRatio || hIdx >= hitList.length)){
-      result.push(catalogList[cIdx++]);
-    } else if(hIdx < hitList.length){
-      result.push(hitList[hIdx++]);
+    if(items.length > 0) return [formatTrack(items[0], 'catalog')];
+  } else {
+    const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent('upc:'+trimmed)}&type=album&limit=1`);
+    const albums = data.albums?.items || [];
+    if(albums.length > 0){
+      const albumData = await spotifyFetch(`https://api.spotify.com/v1/albums/${albums[0].id}/tracks?limit=10`);
+      return (albumData.items || []).map(t => formatTrack(t, 'catalog'));
     }
   }
-  return result;
+  return [];
 }
 
 document.getElementById('buildBtn').addEventListener('click', async () => {
   const msgsBox = document.getElementById('buildMsgs');
-  const progWrap = document.getElementById('progressContainer');
-  const progBar = document.getElementById('progressBar');
-  const progText = document.getElementById('progressText');
-
   msgsBox.innerHTML = '';
-  const maxTracksPerUpc = parseInt(document.getElementById('maxTracksPerUpc').value, 10) || 50;
-  const famousPerRelease = parseInt(document.getElementById('famousCount').value, 10) || 0;
-  const fallbackGenre = document.getElementById('fallbackGenre').value.trim();
-  const upcList = document.getElementById('upcs').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  const mixOrder = document.getElementById('mixOrder').value;
+  const upcs = document.getElementById('upcs').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const famousCount = parseInt(document.getElementById('famousCount').value, 10) || 3;
+  const fallbackGenre = document.getElementById('fallbackGenre').value.trim() || 'dance';
 
-  if(upcList.length === 0){
-    alert('Inserisci almeno un codice UPC o ISRC nella coda.');
-    return;
-  }
+  if(upcs.length === 0){ alert('Inserisci almeno un codice.'); return; }
 
   buildBtn.disabled = true;
-  progWrap.classList.remove('hidden');
-  progBar.style.width = '2%';
-
-  const seenUri = new Set();
-  const combined = [];
-  const allCatalogGlobal = [];
-  const allHitsGlobal = [];
+  builtTracks = [];
+  const seen = new Set();
 
   try{
-    for(let i=0; i<upcList.length; i++){
-      const rawCode = upcList[i];
-      const cleaned = cleanCatalogCode(rawCode);
-      const normCode = cleaned ? cleaned.code : rawCode.trim();
-      const pct = Math.round(((i) / upcList.length) * 100);
-      progBar.style.width = `${Math.max(5, pct)}%`;
-      progText.textContent = `[${i+1}/${upcList.length}] Elaborazione ${normCode}...`;
-
-      try{
-        const { tracks, found, artistIds, albumGenres } = await resolveCatalogCode(normCode, maxTracksPerUpc);
-
-        if(!found){
-          addMsg(msgsBox, `Codice ${normCode} non trovato su Spotify.`, 'warn');
-          continue;
+    for(const code of upcs){
+      const tracks = await resolveCode(code);
+      for(const t of tracks){
+        if(!seen.has(t.uri)){
+          seen.add(t.uri);
+          builtTracks.push(t);
         }
-
-        const catalogTracks = tracks.filter(t => (seenUri.has(t.uri) ? false : (seenUri.add(t.uri), true)));
-        let famousTracks = [];
-
-        let genreCandidates = codeMetaDb[normCode]?.genres || [];
-        if(genreCandidates.length === 0){
-          genreCandidates = await detectGenres(artistIds, albumGenres);
-        }
-        if(genreCandidates.length === 0 && fallbackGenre){
-          genreCandidates = fallbackGenre.split(',').map(s=>s.trim()).filter(Boolean);
-        }
-
-        if(famousPerRelease > 0 && genreCandidates.length > 0){
-          for(const genre of genreCandidates){
-            if(famousTracks.length >= famousPerRelease) break;
-            const need = famousPerRelease - famousTracks.length;
-            const sampled = await sampleHitsFromGenre(genre, need, seenUri);
-            for(const t of sampled){
-              famousTracks.push(t);
-              seenUri.add(t.uri);
-            }
-          }
-        }
-
-        if(mixOrder === 'smart-global'){
-          allCatalogGlobal.push(...catalogTracks);
-          allHitsGlobal.push(...famousTracks);
-        } else if(mixOrder === 'catalog-first'){
-          combined.push(...catalogTracks, ...famousTracks);
-        } else if(mixOrder === 'hit-first'){
-          combined.push(...famousTracks, ...catalogTracks);
-        } else if(mixOrder === 'shuffle'){
-          const block = [...catalogTracks, ...famousTracks];
-          for(let k=block.length-1;k>0;k--){
-            const j = Math.floor(Math.random()*(k+1));
-            [block[k],block[j]] = [block[j],block[k]];
-          }
-          combined.push(...block);
-        } else {
-          const max = Math.max(catalogTracks.length, famousTracks.length);
-          for(let k=0;k<max;k++){
-            if(catalogTracks[k]) combined.push(catalogTracks[k]);
-            if(famousTracks[k]) combined.push(famousTracks[k]);
-          }
-        }
-      }catch(releaseErr){
-        addMsg(msgsBox, `Errore su ${rawCode}: ${releaseErr.message}`, 'warn');
       }
-      await new Promise(r => setTimeout(r, 60));
+      // Cerca hit per genere
+      const hitData = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent('genre:"'+fallbackGenre+'"')}&type=track&limit=${famousCount}`);
+      const hits = (hitData.tracks?.items || []).map(t => formatTrack(t, 'hit'));
+      for(const h of hits){
+        if(!seen.has(h.uri)){
+          seen.add(h.uri);
+          builtTracks.push(h);
+        }
+      }
     }
-
-    progBar.style.width = '100%';
-    progText.textContent = 'Completato!';
-
-    builtTracks = mixOrder === 'smart-global'
-      ? interleaveSmartGlobal(allCatalogGlobal, allHitsGlobal)
-      : combined;
 
     renderPreview();
-    if(builtTracks.length === 0){
-      addMsg(msgsBox, 'Nessun brano trovato.', 'warn');
-    } else {
-      addMsg(msgsBox, `Scaletta pronta: ${builtTracks.length} brani.`, 'ok');
-    }
+    msgsBox.innerHTML = `<div class="msg ok">Scaletta generata con successo (${builtTracks.length} brani)!</div>`;
   }catch(e){
-    addMsg(msgsBox, 'Errore: ' + e.message, 'warn');
+    msgsBox.innerHTML = `<div class="msg warn">Errore: ${e.message}</div>`;
   }finally{
     buildBtn.disabled = false;
-    setTimeout(() => progWrap.classList.add('hidden'), 1200);
   }
 });
-
-function addMsg(container, text, type){
-  const el = document.createElement('div');
-  el.className = 'msg ' + type;
-  el.textContent = text;
-  container.appendChild(el);
-}
-
-function formatDuration(ms){
-  if(!ms) return '--:--';
-  const totalSec = Math.round(ms / 1000);
-  const m = Math.floor(totalSec / 60);
-  const s = totalSec % 60;
-  return `${m}:${String(s).padStart(2,'0')}`;
-}
-
-function updateStatsBar(){
-  const total = builtTracks.length;
-  const catCount = builtTracks.filter(t => t.kind === 'catalog').length;
-  const hitCount = builtTracks.filter(t => t.kind === 'hit').length;
-  const manCount = builtTracks.filter(t => t.kind === 'manual').length;
-  const totalMs = builtTracks.reduce((acc, t) => acc + (t.duration_ms || 0), 0);
-
-  const totalMin = Math.floor(totalMs / 60000);
-  const hrs = Math.floor(totalMin / 60);
-  const mins = totalMin % 60;
-
-  document.getElementById('statTotalTracks').textContent = String(total);
-  document.getElementById('statTotalDuration').textContent = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
-  document.getElementById('statCatalogRatio').textContent = total > 0 ? `${Math.round((catCount / total) * 100)}%` : '0%';
-  document.getElementById('statBreakdown').textContent = `${catCount} CAT · ${hitCount} HIT${manCount > 0 ? ` · ${manCount} MAN` : ''}`;
-}
-
-let draggedIndex = null;
 
 function renderPreview(){
   const card = document.getElementById('previewCard');
   const list = document.getElementById('trackList');
   list.innerHTML = '';
-  updateStatsBar();
+  
+  document.getElementById('statTotalTracks').textContent = builtTracks.length;
+  const totalMs = builtTracks.reduce((acc, t) => acc + t.duration_ms, 0);
+  document.getElementById('statTotalDuration').textContent = Math.floor(totalMs / 60000) + 'm';
 
   builtTracks.forEach((t, idx) => {
     const row = document.createElement('div');
     row.className = 'track-row';
-    row.draggable = true;
-    row.dataset.idx = idx;
-
-    const stampClass = t.kind === 'hit' ? 'hit' : (t.kind === 'manual' ? 'manual' : 'catalog');
-    const stampLabel = t.kind === 'hit' ? 'CHART HIT' : (t.kind === 'manual' ? 'MANUALE' : 'CATALOGO');
-    const genreHint = t.sourceGenre ? ` · ${escapeHtml(t.sourceGenre)}` : '';
-
     row.innerHTML = `
-      <span class="drag-handle" title="Trascina">⋮⋮</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);width:24px;text-align:right;">${idx+1}</span>
-      ${t.cover ? `<img class="track-cover" src="${escapeHtml(t.cover)}" alt="">` : `<div class="track-cover"></div>`}
-      <span class="stamp ${stampClass}">${stampLabel}</span>
+      <span style="font-family:'JetBrains Mono';font-size:11px;color:var(--text-dim);width:24px;">${idx+1}</span>
+      ${t.cover ? `<img class="track-cover" src="${t.cover}">` : `<div class="track-cover"></div>`}
+      <span class="stamp ${t.kind}">${t.kind.toUpperCase()}</span>
       <div class="track-info">
-        <div class="track-title"><a href="${escapeHtml(t.external_url || '#')}" target="_blank" rel="noopener">${escapeHtml(t.name)}</a></div>
-        <div class="track-meta">${escapeHtml(t.artist)}${genreHint}</div>
+        <div class="track-title"><a href="${t.external_url}" target="_blank">${t.name}</a></div>
+        <div class="track-meta">${t.artist}</div>
       </div>
-      <span class="track-duration">${formatDuration(t.duration_ms)}</span>
-      <div style="display:flex;gap:4px;flex-shrink:0;">
-        ${t.kind === 'hit' && t.sourceGenre ? `<button class="row-btn reroll" data-action="reroll" data-idx="${idx}" title="Cambia Hit">↻</button>` : ''}
-        <button class="row-btn" data-action="up" data-idx="${idx}" ${idx===0?'disabled':''}>↑</button>
-        <button class="row-btn" data-action="down" data-idx="${idx}" ${idx===builtTracks.length-1?'disabled':''}>↓</button>
-        <button class="row-btn delete" data-action="remove" data-idx="${idx}">✕</button>
-      </div>
+      <span class="track-duration">${Math.floor(t.duration_ms/60000)}:${String(Math.floor((t.duration_ms%60000)/1000)).padStart(2,'0')}</span>
+      <button class="row-btn delete" onclick="removeTrack(${idx})">✕</button>
     `;
-
-    row.addEventListener('dragstart', () => { draggedIndex = idx; row.classList.add('dragging'); });
-    row.addEventListener('dragend', () => { draggedIndex = null; row.classList.remove('dragging'); document.querySelectorAll('.track-row').forEach(r => r.classList.remove('drag-over')); });
-    row.addEventListener('dragover', (e) => { e.preventDefault(); row.classList.add('drag-over'); });
-    row.addEventListener('dragleave', () => { row.classList.remove('drag-over'); });
-    row.addEventListener('drop', (e) => {
-      e.preventDefault();
-      row.classList.remove('drag-over');
-      if(draggedIndex === null || draggedIndex === idx) return;
-      const [moved] = builtTracks.splice(draggedIndex, 1);
-      builtTracks.splice(idx, 0, moved);
-      renderPreview();
-    });
-
     list.appendChild(row);
   });
   card.classList.remove('hidden');
 }
 
-document.getElementById('trackList').addEventListener('click', async (e) => {
-  const btn = e.target.closest('.row-btn');
-  if(!btn) return;
-  const idx = parseInt(btn.dataset.idx, 10);
-  const action = btn.dataset.action;
-
-  if(action === 'remove'){
-    builtTracks.splice(idx, 1);
-    renderPreview();
-  } else if(action === 'up' && idx > 0){
-    [builtTracks[idx-1], builtTracks[idx]] = [builtTracks[idx], builtTracks[idx-1]];
-    renderPreview();
-  } else if(action === 'down' && idx < builtTracks.length - 1){
-    [builtTracks[idx+1], builtTracks[idx]] = [builtTracks[idx], builtTracks[idx+1]];
-    renderPreview();
-  } else if(action === 'reroll'){
-    const current = builtTracks[idx];
-    if(!current || !current.sourceGenre) return;
-    btn.disabled = true;
-    const usedUris = new Set(builtTracks.map(t => t.uri));
-    const replacement = await sampleHitsFromGenre(current.sourceGenre, 1, usedUris);
-    if(replacement.length > 0){
-      builtTracks[idx] = replacement[0];
-      renderPreview();
-    } else {
-      alert('Nessun\'altra traccia disponibile.');
-      btn.disabled = false;
-    }
-  }
-});
-
-document.getElementById('reshufflePreviewBtn').addEventListener('click', () => {
-  for(let i=builtTracks.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [builtTracks[i],builtTracks[j]] = [builtTracks[j],builtTracks[i]];
-  }
+window.removeTrack = function(idx){
+  builtTracks.splice(idx, 1);
   renderPreview();
-});
+};
 
 document.getElementById('clearPreviewBtn').addEventListener('click', () => {
-  if(!confirm('Svuotare la scaletta?')) return;
   builtTracks = [];
-  renderPreview();
+  document.getElementById('previewCard').classList.add('hidden');
 });
-
-document.getElementById('exportCsvBtn').addEventListener('click', () => {
-  if(builtTracks.length === 0) return;
-  const header = ['Posizione','Tipo','Titolo','Artista','Genere Origine','Durata','Spotify URI','Link'];
-  const rows = builtTracks.map((t, i) => [
-    i + 1, t.kind.toUpperCase(), `"${(t.name||'').replace(/"/g,'""')}"`, `"${(t.artist||'').replace(/"/g,'""')}"`,
-    `"${(t.sourceGenre||'').replace(/"/g,'""')}"`, formatDuration(t.duration_ms), t.uri, t.external_url
-  ]);
-  const csv = [header.join(';'), ...rows.map(r => r.join(';'))].join('\n');
-  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `scaletta-chart-editorial-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-});
-
-async function runManualSearch(){
-  const input = document.getElementById('manualSearchInput');
-  const resultsBox = document.getElementById('manualSearchResults');
-  const btn = document.getElementById('manualSearchBtn');
-  const query = input.value.trim();
-  resultsBox.innerHTML = '';
-  if(!query) return;
-
-  btn.disabled = true;
-  btn.textContent = 'Cerco...';
-  try{
-    const data = await spotifyFetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=8`);
-    const results = (data.tracks?.items || []).map(t => formatTrackObj(t, '', 'manual'));
-    results.forEach(t => {
-      const row = document.createElement('div');
-      row.className = 'track-row';
-      const alreadyIn = builtTracks.some(x => x.uri === t.uri);
-      row.innerHTML = `
-        ${t.cover ? `<img class="track-cover" src="${escapeHtml(t.cover)}" alt="">` : ''}
-        <div class="track-info">
-          <div class="track-title">${escapeHtml(t.name)}</div>
-          <div class="track-meta">${escapeHtml(t.artist)} · ${formatDuration(t.duration_ms)}</div>
-        </div>
-      `;
-      const addBtn = document.createElement('button');
-      addBtn.className = 'secondary sm';
-      addBtn.type = 'button';
-      addBtn.textContent = alreadyIn ? 'Già presente ✓' : '+ Aggiungi';
-      addBtn.disabled = alreadyIn;
-      addBtn.addEventListener('click', () => {
-        if(!builtTracks.some(x => x.uri === t.uri)){
-          builtTracks.push(t);
-          renderPreview();
-          addBtn.textContent = 'Aggiunto ✓';
-          addBtn.disabled = true;
-        }
-      });
-      row.appendChild(addBtn);
-      resultsBox.appendChild(row);
-    });
-  }catch(e){}finally{
-    btn.disabled = false;
-    btn.textContent = 'Cerca';
-  }
-}
-
-document.getElementById('manualSearchBtn').addEventListener('click', runManualSearch);
-document.getElementById('manualSearchInput').addEventListener('keydown', (e) => {
-  if(e.key === 'Enter'){ e.preventDefault(); runManualSearch(); }
-});
-
-async function loadUserPlaylists(){
-  const select = document.getElementById('existingPlaylistSelect');
-  select.innerHTML = '<option value="">Caricamento...</option>';
-  try{
-    const data = await spotifyFetch('https://api.spotify.com/v1/me/playlists?limit=50');
-    const owned = (data.items || []).filter(p => !userId || p.owner?.id === userId);
-    select.innerHTML = owned.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} (${p.tracks?.total ?? 0} brani)</option>`).join('');
-  }catch(e){ select.innerHTML = '<option value="">Errore</option>'; }
-}
-
-document.getElementById('targetMode').addEventListener('change', (e) => {
-  const mode = e.target.value;
-  const isNew = mode === 'new';
-  document.getElementById('newPlaylistMetaWrap').classList.toggle('hidden', !isNew);
-  document.getElementById('newPlaylistVisibilityWrap').classList.toggle('hidden', !isNew);
-  document.getElementById('existingPlaylistWrap').classList.toggle('hidden', isNew);
-  if(!isNew) loadUserPlaylists();
-});
-
-async function pushPlaylistTracks(playlistId, uris, method='POST'){
-  try{
-    await spotifyFetch(`https://api.spotify.com/v1/playlists/${playlistId}/items`, { method, body: JSON.stringify({ uris }) });
-  }catch(err){
-    await spotifyFetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, { method, body: JSON.stringify({ uris }) });
-  }
-}
 
 document.getElementById('createBtn').addEventListener('click', async () => {
   const msgsBox = document.getElementById('createMsgs');
   msgsBox.innerHTML = '';
-  const mode = document.getElementById('targetMode').value;
-  const createBtn = document.getElementById('createBtn');
-
-  if(builtTracks.length === 0){
-    alert('La scaletta è vuota.');
-    return;
-  }
-
-  createBtn.disabled = true;
-  createBtn.textContent = 'Salvataggio su Spotify...';
+  if(builtTracks.length === 0){ alert('Scaletta vuota.'); return; }
 
   try{
-    let playlistId = '';
-    let playlistUrl = '';
+    const me = await spotifyFetch('https://api.spotify.com/v1/me');
+    const plName = document.getElementById('plName').value.trim() || 'Soulgem Selection';
+    
+    const pl = await spotifyFetch(`https://api.spotify.com/v1/users/${me.id}/playlists`, {
+      method: 'POST',
+      body: JSON.stringify({ name: plName, description: 'Generata con Sala Stampa', public: false })
+    });
+
     const uris = builtTracks.map(t => t.uri);
-
-    if(mode === 'new'){
-      const name = document.getElementById('plName').value.trim() || 'Chart Playlist Etichetta';
-      const description = document.getElementById('plDesc').value.trim() || 'Curata con Sala Stampa.';
-      const isPublic = document.getElementById('plVisibility').value === 'public';
-
-      const playlist = await spotifyFetch(`https://api.spotify.com/v1/me/playlists`, {
-        method: 'POST', body: JSON.stringify({ name, description, public: isPublic })
+    for(let i=0; i<uris.length; i+=100){
+      await spotifyFetch(`https://api.spotify.com/v1/playlists/${pl.id}/tracks`, {
+        method: 'POST',
+        body: JSON.stringify({ uris: uris.slice(i, i+100) })
       });
-      playlistId = playlist.id;
-      playlistUrl = playlist.external_urls?.spotify || `https://open.spotify.com/playlist/${playlistId}`;
-
-      for(let i=0; i<uris.length; i+=100){
-        await pushPlaylistTracks(playlistId, uris.slice(i, i+100), 'POST');
-      }
-    } else {
-      playlistId = document.getElementById('existingPlaylistSelect').value;
-      if(!playlistId){ alert('Seleziona una playlist esistente.'); return; }
-      playlistUrl = `https://open.spotify.com/playlist/${playlistId}`;
-
-      if(mode === 'replace'){
-        const firstChunk = uris.slice(0, 100);
-        await pushPlaylistTracks(playlistId, firstChunk, 'PUT');
-        for(let i=100; i<uris.length; i+=100){
-          await pushPlaylistTracks(playlistId, uris.slice(i, i+100), 'POST');
-        }
-      } else {
-        for(let i=0; i<uris.length; i+=100){
-          await pushPlaylistTracks(playlistId, uris.slice(i, i+100), 'POST');
-        }
-      }
     }
 
-    const okDiv = document.createElement('div');
-    okDiv.className = 'msg ok';
-    okDiv.innerHTML = `Playlist salvata con successo (${uris.length} brani)! <a href="${escapeHtml(playlistUrl)}" target="_blank" rel="noopener" style="font-weight:600;margin-left:8px;">Aprila su Spotify →</a>`;
-    msgsBox.appendChild(okDiv);
+    msgsBox.innerHTML = `<div class="msg ok">Playlist creata con successo! <a href="${pl.external_urls.spotify}" target="_blank">Aprila su Spotify →</a></div>`;
   }catch(e){
-    addMsg(msgsBox, 'Errore nel salvataggio: ' + e.message, 'warn');
-  }finally{
-    createBtn.disabled = false;
-    createBtn.textContent = 'Salva Playlist su Spotify';
+    msgsBox.innerHTML = `<div class="msg warn">Errore salvataggio: ${e.message}</div>`;
   }
 });
 
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s ?? '';
-  return d.innerHTML;
-}
-
-(async function initApp(){
-  loadPersistentDatabase();
-  refreshCatalogUI();
-
+(async function init(){
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
   if(code){
     try{
       await exchangeCodeForToken(code);
       window.history.replaceState({}, document.title, window.location.pathname);
-    }catch(e){ alert('Errore OAuth: ' + e.message); }
-  } else if(!accessToken && refreshToken){
-    await tryRefreshToken();
+    }catch(e){ alert(e.message); }
   }
   reflectConnectionState();
 })();
