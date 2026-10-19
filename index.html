@@ -393,7 +393,7 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v4.2 · ComfyUI Ready</div>
+      <div class="eyebrow">A&amp;R Automation Studio · v4.2 · ComfyUI GGUF Ready</div>
       <h1>Sala Stampa</h1>
       <p class="sub">Database persistente UPC/ISRC, classifiche internazionali, anteprima audio Spotify e Cover Art Studio collegato al tuo ComfyUI locale.</p>
     </div>
@@ -719,7 +719,7 @@
           <div>
             <label for="coverProvider">Motore Immagini AI</label>
             <select id="coverProvider">
-              <option value="comfyui">🖥️ ComfyUI Locale sul mio PC (Consigliato)</option>
+              <option value="comfyui">🖥️ ComfyUI Locale sul mio PC (FLUX GGUF / UNET / CKPT)</option>
               <option value="pollinations">🌐 Pollinations FLUX (Cloud gratuito, senza chiave)</option>
               <option value="openai">🔑 OpenAI GPT-Image (Cloud con chiave API)</option>
             </select>
@@ -748,25 +748,48 @@
           </div>
 
           <div class="row" style="margin-top:10px;">
-            <div style="flex:2;">
+            <div style="flex:1.4;">
               <label for="comfyMode">Modalità Workflow ComfyUI</label>
               <select id="comfyMode">
-                <option value="auto-ckpt">Automatica da Checkpoint (SDXL / FLUX Checkpoint / SD1.5)</option>
-                <option value="custom-json">Workflow API Personalizzato (.json esportato da ComfyUI)</option>
+                <option value="auto-ckpt" selected>Automatica (GGUF / UNET / Checkpoint)</option>
+                <option value="custom-json">Workflow API Personalizzato (.json)</option>
               </select>
             </div>
             <div id="comfyCkptWrap" style="flex:2;">
-              <label for="comfyCkptSelect">Modello Checkpoint rilevato su ComfyUI</label>
+              <label for="comfyCkptSelect">Modello principale (GGUF / UNET / Checkpoint)</label>
               <select id="comfyCkptSelect">
-                <option value="">Clicca "Connetti &amp; Leggi Modelli" oppure scrivi sotto...</option>
+                <option value="gguf:flux1-schnell-Q4_K_M.gguf" selected>⚡ [GGUF] flux1-schnell-Q4_K_M.gguf (Preimpostato)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="comfyFluxClipsWrap" class="row" style="margin-top:8px;">
+            <div>
+              <label for="comfyClip1Select">DualCLIP 1 (clip_l)</label>
+              <select id="comfyClip1Select">
+                <option value="clip_l.safetensors" selected>clip_l.safetensors</option>
+                <option value="t5xxl_fp16.safetensors">t5xxl_fp16.safetensors</option>
+              </select>
+            </div>
+            <div>
+              <label for="comfyClip2Select">DualCLIP 2 (t5xxl)</label>
+              <select id="comfyClip2Select">
+                <option value="t5xxl_fp16.safetensors" selected>t5xxl_fp16.safetensors</option>
+                <option value="clip_l.safetensors">clip_l.safetensors</option>
+              </select>
+            </div>
+            <div>
+              <label for="comfyVaeSelect">Modello VAE</label>
+              <select id="comfyVaeSelect">
+                <option value="ae.safetensors" selected>ae.safetensors</option>
               </select>
             </div>
           </div>
 
           <div id="comfyParamsWrap" class="row" style="margin-top:8px;">
             <div>
-              <label for="comfySteps">Steps</label>
-              <input type="number" id="comfySteps" value="22" min="1" max="100">
+              <label for="comfySteps">Steps (4 per Schnell)</label>
+              <input type="number" id="comfySteps" value="4" min="1" max="100">
             </div>
             <div>
               <label for="comfyCfg">CFG (1.0 per FLUX, 6-8 SDXL)</label>
@@ -819,7 +842,7 @@
         </div>
         <textarea id="coverCustomPrompt" style="margin-top:6px;min-height:74px;" placeholder="Lascia vuoto per generarlo in automatico dai generi della scaletta, oppure clicca 'Auto-compila' per modificarlo..."></textarea>
 
-        <label for="coverNegativePrompt">Negative Prompt (usato da ComfyUI Checkpoint)</label>
+        <label for="coverNegativePrompt">Negative Prompt (usato da Checkpoint SDXL/SD1.5; ignorato con CFG 1.0 su FLUX)</label>
         <input type="text" id="coverNegativePrompt" value="text, watermark, logo, letters, typography, blurry, low quality, deformed, ugly, bad anatomy">
 
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
@@ -851,7 +874,7 @@
     <p style="max-width:64ch;margin:0 auto 8px;">
       <strong>Redirect URI attivo per la tua Spotify Dashboard:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
     </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.2 — Persistent Genre DB · Apple Charts · Mini-Player · ComfyUI Cover Lab</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.2 — Persistent Genre DB · Apple Charts · Mini-Player · ComfyUI GGUF Cover Lab</p>
   </footer>
 
 </div>
@@ -2572,7 +2595,7 @@ document.getElementById('releaseChecklist').addEventListener('click', async (e) 
   openMiniPlayer(id, btn.dataset.label);
 });
 
-// ---------- Copertina AI della playlist (ComfyUI Locale + Pollinations + OpenAI) ----------
+// ---------- Copertina AI della playlist (ComfyUI Multi-Loader + Pollinations + OpenAI) ----------
 const COVER_SCENES = [
   [/lounge|chill|relax|ambient|easy listening|meditat|downtempo|sunset|cocktail/, 'an elegant lounge bar at golden hour, crystal cocktail glasses with citrus garnish on a polished counter, warm amber bokeh lights, plush velvet sofas, relaxed sophisticated atmosphere'],
   [/techno|hard techno|minimal|acid/, 'a dark industrial warehouse rave, strobing white and violet lights, thick fog, silhouettes of a dancing crowd'],
@@ -2620,7 +2643,7 @@ document.getElementById('regenPromptBtn').addEventListener('click', () => {
   document.getElementById('coverCustomPrompt').value = buildCoverPrompt(name);
 });
 
-// ---------- ComfyUI Connection & Workflow Builder ----------
+// ---------- ComfyUI Connection & Multi-Loader (GGUF / UNET / Checkpoint) ----------
 const savedComfyUrl = localStorage.getItem('ss_comfy_url');
 if(savedComfyUrl) document.getElementById('comfyUrl').value = savedComfyUrl;
 document.getElementById('comfyUrl').addEventListener('input', (e) => {
@@ -2633,7 +2656,7 @@ document.getElementById('comfyWorkflowFile').addEventListener('change', async (e
   if(!file) return;
   try{
     const txt = await file.text();
-    JSON.parse(txt); // validate JSON
+    JSON.parse(txt);
     customComfyWorkflowJson = txt;
     localStorage.setItem('ss_comfy_custom_wf', txt);
     addMsg(document.getElementById('coverMsgs'), `Workflow API "${file.name}" salvato correttamente nel browser!`, 'ok');
@@ -2642,12 +2665,27 @@ document.getElementById('comfyWorkflowFile').addEventListener('change', async (e
   }
 });
 
-document.getElementById('comfyMode').addEventListener('change', (e) => {
-  const isCustom = e.target.value === 'custom-json';
+function updateComfyClipsVisibility(){
+  const isCustom = document.getElementById('comfyMode').value === 'custom-json';
+  const selVal = document.getElementById('comfyCkptSelect').value || '';
+  const needsSeparateClips = !isCustom && (selVal.startsWith('gguf:') || selVal.startsWith('unet:'));
   document.getElementById('comfyCkptWrap').classList.toggle('hidden', isCustom);
+  document.getElementById('comfyFluxClipsWrap').classList.toggle('hidden', !needsSeparateClips);
   document.getElementById('comfyParamsWrap').classList.toggle('hidden', isCustom);
   document.getElementById('comfyCustomJsonWrap').classList.toggle('hidden', !isCustom);
+}
+
+document.getElementById('comfyMode').addEventListener('change', updateComfyClipsVisibility);
+document.getElementById('comfyCkptSelect').addEventListener('change', (e) => {
+  try{ localStorage.setItem('ss_comfy_ckpt', e.target.value); }catch(err){}
+  updateComfyClipsVisibility();
 });
+
+async function fetchJsonSafe(url){
+  const r = await fetch(url);
+  if(!r.ok) throw new Error(`HTTP ${r.status}`);
+  return await r.json();
+}
 
 async function connectAndFetchComfyModels(){
   const baseUrl = document.getElementById('comfyUrl').value.trim().replace(/\/+$/, '');
@@ -2657,31 +2695,80 @@ async function connectAndFetchComfyModels(){
   badge.textContent = 'Connessione a ComfyUI...';
 
   try{
-    const res = await fetch(`${baseUrl}/object_info/CheckpointLoaderSimple`);
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const ckpts = data?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] || [];
-    const sel = document.getElementById('comfyCkptSelect');
-    if(ckpts.length === 0){
-      sel.innerHTML = `<option value="">Nessun checkpoint in models/checkpoints (usa modalità Workflow API .json)</option>`;
-    } else {
-      const prev = localStorage.getItem('ss_comfy_ckpt') || '';
-      sel.innerHTML = ckpts.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-      if(prev && ckpts.includes(prev)) sel.value = prev;
+    // Verifica prima la connessione di base interrogando i 3 loader modelli in parallelo
+    const [ggufRes, unetRes, ckptRes, clipRes, vaeRes] = await Promise.allSettled([
+      fetchJsonSafe(`${baseUrl}/object_info/UnetLoaderGGUF`),
+      fetchJsonSafe(`${baseUrl}/object_info/UNETLoader`),
+      fetchJsonSafe(`${baseUrl}/object_info/CheckpointLoaderSimple`),
+      fetchJsonSafe(`${baseUrl}/object_info/DualCLIPLoader`),
+      fetchJsonSafe(`${baseUrl}/object_info/VAELoader`)
+    ]);
+
+    // Se tutte le chiamate sono fallite per rete/CORS, segnala il blocco CORS
+    if([ggufRes, unetRes, ckptRes].every(r => r.status === 'rejected')){
+      throw new Error(ggufRes.reason?.message || 'CORS / Offline');
     }
-    badge.textContent = `🟢 ComfyUI Online (${ckpts.length} modelli)`;
+
+    const ggufList = ggufRes.status === 'fulfilled'
+      ? (ggufRes.value?.UnetLoaderGGUF?.input?.required?.unet_name?.[0] || [])
+      : [];
+    const unetList = unetRes.status === 'fulfilled'
+      ? (unetRes.value?.UNETLoader?.input?.required?.unet_name?.[0] || [])
+      : [];
+    const ckptList = ckptRes.status === 'fulfilled'
+      ? (ckptRes.value?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] || [])
+      : [];
+
+    const options = [];
+    ggufList.forEach(m => options.push({ val: `gguf:${m}`, label: `⚡ [GGUF] ${m}` }));
+    unetList.forEach(m => options.push({ val: `unet:${m}`, label: `🔷 [UNET] ${m}` }));
+    ckptList.forEach(m => options.push({ val: `ckpt:${m}`, label: `📦 [CKPT] ${m}` }));
+
+    const sel = document.getElementById('comfyCkptSelect');
+    if(options.length > 0){
+      const prev = localStorage.getItem('ss_comfy_ckpt') || '';
+      sel.innerHTML = options.map(o => `<option value="${escapeHtml(o.val)}">${escapeHtml(o.label)}</option>`).join('');
+      if(prev && options.some(o => o.val === prev)) sel.value = prev;
+    }
+
+    // Popola DualCLIP 1 (clip_l) e DualCLIP 2 (t5xxl)
+    if(clipRes.status === 'fulfilled'){
+      const clips = clipRes.value?.DualCLIPLoader?.input?.required?.clip_name1?.[0] || [];
+      if(clips.length > 0){
+        const c1 = document.getElementById('comfyClip1Select');
+        const c2 = document.getElementById('comfyClip2Select');
+        c1.innerHTML = clips.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        c2.innerHTML = clips.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        const clipL = clips.find(c => /clip_l/i.test(c)) || clips[0];
+        const t5 = clips.find(c => /t5/i.test(c)) || clips[clips.length - 1];
+        c1.value = clipL;
+        c2.value = t5;
+      }
+    }
+
+    // Popola VAE (preferendo ae.safetensors)
+    if(vaeRes.status === 'fulfilled'){
+      const vaes = vaeRes.value?.VAELoader?.input?.required?.vae_name?.[0] || [];
+      if(vaes.length > 0){
+        const vSel = document.getElementById('comfyVaeSelect');
+        vSel.innerHTML = vaes.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+        const ae = vaes.find(v => /^ae\.safetensors$/i.test(v)) || vaes[0];
+        vSel.value = ae;
+      }
+    }
+
+    updateComfyClipsVisibility();
+    badge.textContent = `🟢 ComfyUI Online (${options.length} modelli rilevati)`;
     badge.style.color = 'var(--teal)';
+    addMsg(box, `Connesso a ComfyUI! Rilevati: ${ggufList.length} GGUF, ${unetList.length} UNET, ${ckptList.length} Checkpoint.`, 'ok');
   }catch(err){
     badge.textContent = '🔴 ComfyUI Offline / CORS';
     badge.style.color = 'var(--red)';
-    addMsg(box, `Impossibile contattare ComfyUI su ${baseUrl}. Verifica che ComfyUI sia aperto sul PC e avviato con il parametro --enable-cors-header *`, 'warn');
+    addMsg(box, `Il browser non riesce a contattare ${baseUrl}. Assicurati che: 1) ComfyUI sia avviato con --enable-cors-header * nel file .bat; 2) Se usi GitHub Pages (https), nelle Impostazioni sito del browser "Accesso alla rete locale" e "Contenuti non sicuri" siano su Consenti.`, 'warn');
   }
 }
 
 document.getElementById('comfyConnectBtn').addEventListener('click', connectAndFetchComfyModels);
-document.getElementById('comfyCkptSelect').addEventListener('change', (e) => {
-  try{ localStorage.setItem('ss_comfy_ckpt', e.target.value); }catch(err){}
-});
 
 function buildComfyPromptPayload(positivePrompt, negativePrompt){
   const mode = document.getElementById('comfyMode').value;
@@ -2701,7 +2788,6 @@ function buildComfyPromptPayload(positivePrompt, negativePrompt){
     for(const node of Object.values(wf)){
       if(!node || typeof node !== 'object' || !node.inputs) continue;
       const ct = String(node.class_type || '');
-      // Inietta il prompt nel primo nodo di testo positivo se non c'era %PROMPT%
       if(!promptInjected && (ct === 'CLIPTextEncode' || ct === 'CLIPTextEncodeFlux' || ct === 'PrimitiveString')){
         if(typeof node.inputs.text === 'string'){
           node.inputs.text = positivePrompt;
@@ -2712,23 +2798,81 @@ function buildComfyPromptPayload(positivePrompt, negativePrompt){
           promptInjected = true;
         }
       }
-      // Aggiorna sempre il seed per avere un'immagine nuova
       if('seed' in node.inputs && typeof node.inputs.seed === 'number') node.inputs.seed = randomSeed;
       if('noise_seed' in node.inputs && typeof node.inputs.noise_seed === 'number') node.inputs.noise_seed = randomSeed;
     }
     return wf;
   }
 
-  // Modalità automatica da CheckpointLoaderSimple
-  const ckpt = document.getElementById('comfyCkptSelect').value.trim();
-  if(!ckpt){
-    throw new Error('Clicca prima su "🔌 Connetti & Leggi Modelli" per selezionare un Checkpoint da ComfyUI (oppure passa a Workflow API Personalizzato).');
-  }
-  const steps = parseInt(document.getElementById('comfySteps').value, 10) || 20;
+  const rawModel = document.getElementById('comfyCkptSelect').value.trim() || 'gguf:flux1-schnell-Q4_K_M.gguf';
+  const colonIdx = rawModel.indexOf(':');
+  const loaderType = colonIdx > 0 ? rawModel.slice(0, colonIdx) : 'gguf';
+  const modelName = colonIdx > 0 ? rawModel.slice(colonIdx + 1) : rawModel;
+
+  const steps = parseInt(document.getElementById('comfySteps').value, 10) || 4;
   const cfg = parseFloat(document.getElementById('comfyCfg').value) || 1.0;
   const sampler_name = document.getElementById('comfySampler').value || 'euler';
   const scheduler = document.getElementById('comfyScheduler').value || 'simple';
 
+  // Caso 1: Modello GGUF (es. flux1-schnell-Q4_K_M.gguf) o UNET standard con DualCLIPLoader + VAELoader
+  if(loaderType === 'gguf' || loaderType === 'unet'){
+    const clip1 = document.getElementById('comfyClip1Select').value.trim() || 'clip_l.safetensors';
+    const clip2 = document.getElementById('comfyClip2Select').value.trim() || 't5xxl_fp16.safetensors';
+    const vae = document.getElementById('comfyVaeSelect').value.trim() || 'ae.safetensors';
+
+    const modelNode = loaderType === 'gguf'
+      ? { "class_type": "UnetLoaderGGUF", "inputs": { "unet_name": modelName } }
+      : { "class_type": "UNETLoader", "inputs": { "unet_name": modelName, "weight_dtype": "default" } };
+
+    return {
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "cfg": cfg,
+          "denoise": 1,
+          "latent_image": ["5", 0],
+          "model": ["4", 0],
+          "negative": ["7", 0],
+          "positive": ["6", 0],
+          "sampler_name": sampler_name,
+          "scheduler": scheduler,
+          "seed": randomSeed,
+          "steps": steps
+        }
+      },
+      "4": modelNode,
+      "5": {
+        "class_type": "EmptyLatentImage",
+        "inputs": { "batch_size": 1, "height": 1024, "width": 1024 }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": { "clip": ["10", 0], "text": positivePrompt }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": { "clip": ["10", 0], "text": cfg <= 1.5 ? "" : negativePrompt }
+      },
+      "8": {
+        "class_type": "VAEDecode",
+        "inputs": { "samples": ["3", 0], "vae": ["11", 0] }
+      },
+      "9": {
+        "class_type": "SaveImage",
+        "inputs": { "filename_prefix": "SalaStampa_Cover", "images": ["8", 0] }
+      },
+      "10": {
+        "class_type": "DualCLIPLoader",
+        "inputs": { "clip_name1": clip1, "clip_name2": clip2, "type": "flux" }
+      },
+      "11": {
+        "class_type": "VAELoader",
+        "inputs": { "vae_name": vae }
+      }
+    };
+  }
+
+  // Caso 2: Checkpoint classico (SDXL / SD1.5 / FLUX Checkpoint completo)
   return {
     "3": {
       "class_type": "KSampler",
@@ -2747,7 +2891,7 @@ function buildComfyPromptPayload(positivePrompt, negativePrompt){
     },
     "4": {
       "class_type": "CheckpointLoaderSimple",
-      "inputs": { "ckpt_name": ckpt }
+      "inputs": { "ckpt_name": modelName }
     },
     "5": {
       "class_type": "EmptyLatentImage",
@@ -2785,7 +2929,7 @@ async function generateWithComfyUI(prompt, negativePrompt){
       body: JSON.stringify({ prompt: workflow, client_id: clientId })
     });
   }catch(netErr){
-    throw new Error(`Connessione a ComfyUI (${baseUrl}) non riuscita. Verifica che ComfyUI sia attivo sul PC con --enable-cors-header *`);
+    throw new Error(`Connessione a ComfyUI (${baseUrl}) bloccata dal browser. Verifica che ComfyUI sia attivo con --enable-cors-header *`);
   }
 
   if(!queueRes.ok){
@@ -2796,7 +2940,6 @@ async function generateWithComfyUI(prompt, negativePrompt){
   const { prompt_id } = await queueRes.json();
   const badge = document.getElementById('comfyStatusBadge');
 
-  // Attende il completamento interrogando /history/{prompt_id}
   for(let sec = 1; sec <= 180; sec++){
     badge.textContent = `⏳ ComfyUI rendering (${sec}s)...`;
     await sleepMs(1000);
@@ -2892,7 +3035,6 @@ function drawCover(img, size, title, overlayStyle){
     x.fillStyle = g;
     x.fillRect(0, size * 0.48, size, size * 0.52);
 
-    // Top-left Soulgem Records Pill
     const pad = Math.round(size * 0.045);
     const pillH = Math.round(size * 0.048);
     x.font = `700 ${Math.round(size * 0.022)}px "JetBrains Mono", monospace`;
@@ -2908,7 +3050,6 @@ function drawCover(img, size, title, overlayStyle){
     x.textAlign = 'left';
     x.fillText(tagTxt, pad + pad * 0.45, pad + pillH / 2);
 
-    // Title bottom left
     const fs = Math.round(size * 0.08);
     x.font = `700 ${fs}px Inter, Arial, sans-serif`;
     x.fillStyle = '#ECE8DE';
@@ -2937,7 +3078,6 @@ function drawCover(img, size, title, overlayStyle){
       x.fillText(l, size / 2, y);
     });
   } else {
-    // gradient-bottom (default)
     const g = x.createLinearGradient(0, size * 0.55, 0, size);
     g.addColorStop(0, 'rgba(0,0,0,0)');
     g.addColorStop(1, 'rgba(0,0,0,0.78)');
