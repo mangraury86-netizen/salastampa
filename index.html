@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala Stampa 3.0 — A&R Playlist Studio & Genre DB</title>
+<title>Sala Stampa 4.2 — A&R Playlist Studio, Genre DB & ComfyUI Cover Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -26,7 +26,7 @@
     color:var(--text);
     font-family:'Inter', sans-serif;
     line-height:1.5;
-    padding:0 0 90px;
+    padding:0 0 96px;
   }
   .wrap{max-width:900px;margin:0 auto;padding:48px 24px 0;}
 
@@ -105,7 +105,7 @@
     letter-spacing:0.03em;
   }
   label:first-of-type{margin-top:0;}
-  input[type=text], input[type=number], input[type=date], textarea, select{
+  input[type=text], input[type=password], input[type=number], input[type=date], textarea, select{
     width:100%;
     background:var(--surface-alt);
     border:1px solid var(--border);
@@ -380,7 +380,6 @@
   }
 
   footer{text-align:center;color:var(--text-dim);font-size:12px;margin-top:40px;}
-  body{padding-bottom:96px;}
   .play-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--teal);font-size:11px;line-height:1;padding:0;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;}
   .play-btn:hover{background:var(--teal);color:#fff;}
   #miniPlayer{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--border);padding:8px 12px;display:flex;gap:10px;align-items:center;box-shadow:0 -4px 16px rgba(0,0,0,.25);}
@@ -394,9 +393,9 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v3.0</div>
+      <div class="eyebrow">A&amp;R Automation Studio · v4.2 · ComfyUI Ready</div>
       <h1>Sala Stampa</h1>
-      <p class="sub">Database persistente per UPC e ISRC con sincronizzazione intelligente dei generi da Spotify, filtri A&amp;R immediati e generatore scalette.</p>
+      <p class="sub">Database persistente UPC/ISRC, classifiche internazionali, anteprima audio Spotify e Cover Art Studio collegato al tuo ComfyUI locale.</p>
     </div>
     <div class="status-pill">
       <span class="dot" id="statusDot"></span>
@@ -706,28 +705,136 @@
         </div>
       </div>
 
-      <div style="margin-top:18px;padding:14px;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;">
-        <label style="margin:0;display:flex;gap:6px;align-items:center;font-family:Inter,sans-serif;font-size:13.5px;color:var(--text);"><input type="checkbox" id="coverEnable" checked style="width:auto;"> Genera una copertina AI quadrata e impostala come immagine della playlist (solo per nuove playlist)</label>
-        <div class="row" style="margin-top:8px;">
+      <!-- STUDIO COPERTINA AI (COMFYUI LOCALE / POLLINATIONS / OPENAI) -->
+      <div style="margin-top:18px;padding:18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:9px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <label style="margin:0;display:flex;gap:8px;align-items:center;font-family:Inter,sans-serif;font-weight:600;font-size:14px;color:var(--text);">
+            <input type="checkbox" id="coverEnable" checked style="width:auto;">
+            🎨 Cover Art Studio — Genera copertina 1:1 e caricala sulla playlist Spotify
+          </label>
+          <span class="count-badge" id="comfyStatusBadge">Motore pronto</span>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
           <div>
-            <label for="coverProvider">Motore immagini</label>
+            <label for="coverProvider">Motore Immagini AI</label>
             <select id="coverProvider">
-              <option value="pollinations">Pollinations (gratuito, senza chiave)</option>
-              <option value="openai">OpenAI (chiave API, qualità massima)</option>
+              <option value="comfyui">🖥️ ComfyUI Locale sul mio PC (Consigliato)</option>
+              <option value="pollinations">🌐 Pollinations FLUX (Cloud gratuito, senza chiave)</option>
+              <option value="openai">🔑 OpenAI GPT-Image (Cloud con chiave API)</option>
             </select>
           </div>
-          <div id="coverKeyWrap" class="hidden"><label for="coverApiKey">Chiave API OpenAI</label><input type="password" id="coverApiKey" placeholder="sk-..."></div>
-          <div id="coverModelWrap" class="hidden"><label for="coverModel">Modello</label><input type="text" id="coverModel" value="gpt-image-1"></div>
+          <div>
+            <label for="coverOverlayStyle">Stile Grafico Titolo su Copertina</label>
+            <select id="coverOverlayStyle">
+              <option value="gradient-bottom">Titolo in basso con sfumatura cinema</option>
+              <option value="soulgem-badge">Editoriale con bollino "SOULGEM RECORDS" + Titolo</option>
+              <option value="center-minimal">Box minimalista centrato</option>
+              <option value="none">Nessun testo (Solo artwork puro)</option>
+            </select>
+          </div>
         </div>
-        <label style="display:flex;gap:6px;align-items:center;font-family:Inter,sans-serif;font-size:13px;color:var(--text);"><input type="checkbox" id="coverTitleText" style="width:auto;"> Scrivi il titolo della playlist sulla copertina</label>
-        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-          <button class="secondary sm" type="button" id="coverPreviewBtn">🎨 Genera anteprima copertina</button>
+
+        <!-- PANNELLO CONFIGURAZIONE COMFYUI LOCALE -->
+        <div id="comfyConfigWrap" style="margin-top:12px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+          <div class="row" style="align-items:flex-end;">
+            <div style="flex:2;">
+              <label for="comfyUrl" style="margin-top:0;">Indirizzo Server ComfyUI Locale</label>
+              <input type="text" id="comfyUrl" value="http://127.0.0.1:8188" placeholder="http://127.0.0.1:8188">
+            </div>
+            <div style="flex:1;">
+              <button class="amber sm" type="button" id="comfyConnectBtn" style="width:100%;padding:10px 12px;">🔌 Connetti &amp; Leggi Modelli</button>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div style="flex:2;">
+              <label for="comfyMode">Modalità Workflow ComfyUI</label>
+              <select id="comfyMode">
+                <option value="auto-ckpt">Automatica da Checkpoint (SDXL / FLUX Checkpoint / SD1.5)</option>
+                <option value="custom-json">Workflow API Personalizzato (.json esportato da ComfyUI)</option>
+              </select>
+            </div>
+            <div id="comfyCkptWrap" style="flex:2;">
+              <label for="comfyCkptSelect">Modello Checkpoint rilevato su ComfyUI</label>
+              <select id="comfyCkptSelect">
+                <option value="">Clicca "Connetti &amp; Leggi Modelli" oppure scrivi sotto...</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="comfyParamsWrap" class="row" style="margin-top:8px;">
+            <div>
+              <label for="comfySteps">Steps</label>
+              <input type="number" id="comfySteps" value="22" min="1" max="100">
+            </div>
+            <div>
+              <label for="comfyCfg">CFG (1.0 per FLUX, 6-8 SDXL)</label>
+              <input type="number" id="comfyCfg" value="1.0" step="0.5" min="1" max="20">
+            </div>
+            <div>
+              <label for="comfySampler">Sampler</label>
+              <select id="comfySampler">
+                <option value="euler" selected>euler (ottimo per FLUX)</option>
+                <option value="dpmpp_2m">dpmpp_2m (ottimo per SDXL)</option>
+                <option value="dpmpp_2m_sde">dpmpp_2m_sde</option>
+                <option value="uni_pc">uni_pc</option>
+              </select>
+            </div>
+            <div>
+              <label for="comfyScheduler">Scheduler</label>
+              <select id="comfyScheduler">
+                <option value="simple" selected>simple (FLUX)</option>
+                <option value="karras">karras (SDXL)</option>
+                <option value="normal">normal</option>
+                <option value="sgm_uniform">sgm_uniform</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- CARICAMENTO WORKFLOW API JSON CUSTOM -->
+          <div id="comfyCustomJsonWrap" class="hidden" style="margin-top:10px;">
+            <label for="comfyWorkflowFile">Carica il tuo file <code>workflow_api.json</code> esportato da ComfyUI ("Save API Format")</label>
+            <input type="file" id="comfyWorkflowFile" accept=".json">
+            <p class="hint" style="margin:6px 0 0;font-size:12px;">
+              💡 Sala Stampa inietterà in automatico il Prompt della copertina nel primo nodo positivo (<code>CLIPTextEncode</code> / <code>%PROMPT%</code>) e genererà un nuovo Seed casuale a ogni clic. Il workflow resta salvato nel browser.
+            </p>
+          </div>
+
+          <p class="hint" style="margin:10px 0 0;font-size:11.5px;">
+            ℹ️ <strong>Nota CORS:</strong> Assicurati di avviare ComfyUI con <code>--enable-cors-header *</code> nel tuo file <code>.bat</code>.
+          </p>
+        </div>
+
+        <!-- PANNELLO OPENAI (NASCOSTO SE NON SELEZIONATO) -->
+        <div id="openaiConfigWrap" class="row hidden" style="margin-top:10px;">
+          <div id="coverKeyWrap"><label for="coverApiKey">Chiave API OpenAI</label><input type="password" id="coverApiKey" placeholder="sk-..."></div>
+          <div id="coverModelWrap"><label for="coverModel">Modello</label><input type="text" id="coverModel" value="gpt-image-1"></div>
+        </div>
+
+        <!-- EDITOR PROMPT VISIVO -->
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;">
+          <label for="coverCustomPrompt" style="margin:0;">Prompt Visivo Copertina (modificabile a piacere prima di generare)</label>
+          <button class="secondary sm" type="button" id="regenPromptBtn">✨ Auto-compila Prompt da Scaletta/Generi</button>
+        </div>
+        <textarea id="coverCustomPrompt" style="margin-top:6px;min-height:74px;" placeholder="Lascia vuoto per generarlo in automatico dai generi della scaletta, oppure clicca 'Auto-compila' per modificarlo..."></textarea>
+
+        <label for="coverNegativePrompt">Negative Prompt (usato da ComfyUI Checkpoint)</label>
+        <input type="text" id="coverNegativePrompt" value="text, watermark, logo, letters, typography, blurry, low quality, deformed, ugly, bad anatomy">
+
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+          <button class="amber sm" type="button" id="coverPreviewBtn">🎨 Genera Copertina Ora</button>
           <button class="secondary sm hidden" type="button" id="coverDownloadBtn">⬇ Scarica HD (1024 px)</button>
+          <button class="secondary sm hidden" type="button" id="coverApplyExistingBtn" title="Carica subito questa copertina sulla playlist selezionata">📤 Imposta su Playlist Esistente</button>
         </div>
-        <div id="coverPreviewWrap" class="hidden" style="margin-top:10px;">
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <img id="coverPreviewImg" alt="Anteprima copertina" style="width:180px;height:180px;border-radius:8px;object-fit:cover;">
-            <div id="coverPromptText" style="font-size:12px;color:var(--text-dim);"></div>
+
+        <div id="coverPreviewWrap" class="hidden" style="margin-top:14px;">
+          <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+            <img id="coverPreviewImg" alt="Anteprima copertina" style="width:210px;height:210px;border-radius:8px;object-fit:cover;border:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+            <div style="flex:1;min-width:200px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:4px;">PROMPT UTILIZZATO &amp; STATO</div>
+              <div id="coverPromptText" style="font-size:12.5px;color:var(--text-dim);"></div>
+            </div>
           </div>
         </div>
         <div id="coverMsgs"></div>
@@ -744,7 +851,7 @@
     <p style="max-width:64ch;margin:0 auto 8px;">
       <strong>Redirect URI attivo per la tua Spotify Dashboard:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
     </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v3.0 — Persistent Genre DB &amp; Delta Sync</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.2 — Persistent Genre DB · Apple Charts · Mini-Player · ComfyUI Cover Lab</p>
   </footer>
 
 </div>
@@ -1121,7 +1228,6 @@ function parseTabularCatalog(text){
     entries.push(e);
   }
 
-  // Grafia unica per generi che differiscono solo per maiuscole/minuscole
   const variants = new Map();
   entries.forEach(e => e.genres.forEach(g => {
     const k = g.toLowerCase();
@@ -1244,7 +1350,6 @@ function refreshCatalogUI(){
   }
   filterBlock.classList.remove('hidden');
 
-  // Preserve current checked labels if already rendered
   const prevChecked = new Set([...document.querySelectorAll('.label-cb:checked')].map(cb => cb.value));
   const hadCheckboxes = document.querySelectorAll('.label-cb').length > 0;
 
@@ -1296,7 +1401,6 @@ function refreshSyncMetricsAndGenreDropdown(){
     syncBtn.disabled = pending === 0;
   }
 
-  // Update Genre Select Dropdown preserving current selection
   const genreSelect = document.getElementById('genreFilterSelect');
   const currentVal = genreSelect.value || '__ALL__';
   if(catalogData.some(r => r.genres && r.genres.length)){
@@ -1462,7 +1566,7 @@ document.getElementById('wipeCatalogDbBtn').addEventListener('click', () => {
 // ---------- Database Backup Export / Import ----------
 document.getElementById('exportDbJsonBtn').addEventListener('click', () => {
   const payload = {
-    version: '3.0',
+    version: '4.2',
     exportedAt: new Date().toISOString(),
     catalogData,
     codeMetaDb,
@@ -1663,7 +1767,6 @@ async function runCatalogGenreSync(){
           };
         } else {
           const genres = await detectGenres(res.artistIds, res.albumGenres);
-          // Arricchisce anche titolo/artista nel catalogo se erano vuoti
           if(!item.title || item.title === 'Uscita UPC' || item.title === 'Traccia ISRC'){
             item.title = res.releaseName || item.title;
           }
@@ -1684,13 +1787,11 @@ async function runCatalogGenreSync(){
         console.warn('Errore sync su ' + item.code, itemErr);
       }
 
-      // Aggiorna la UI ogni 3 brani o all'ultimo per fluidità
       if((i + 1) % 3 === 0 || i === pendingItems.length - 1){
         refreshSyncMetricsAndGenreDropdown();
         renderReleaseChecklist();
       }
 
-      // Throttling anti-rate-limit
       await new Promise(r => setTimeout(r, 110));
     }
     saveCatalogToStorage();
@@ -1798,7 +1899,7 @@ async function fetchChartFeed(cc){
       if(!res.ok) continue;
       results = (await res.json()).feed?.results || [];
       if(results.length) break;
-    }catch(e){ /* host non raggiungibile: provo il successivo */ }
+    }catch(e){}
   }
   const out = results.map((r, i) => ({
     name: r.name || '', artist: r.artistName || '', rank: i + 1, cc: cc.toUpperCase(),
@@ -1843,7 +1944,7 @@ async function getChartPool(genre, market){
   cand.sort((a, b) => a.rank - b.rank);
   const pool = [];
   for(const it of cand.slice(0, 40)){
-    try{ const t = await resolveChartTrack(it, genre, market); if(t) pool.push(t); }catch(e){ /* brano non trovato */ }
+    try{ const t = await resolveChartTrack(it, genre, market); if(t) pool.push(t); }catch(e){}
     await sleepMs(60);
   }
   return pool;
@@ -1983,7 +2084,6 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
         const catalogTracks = tracks.filter(t => (seenUri.has(t.uri) ? false : (seenUri.add(t.uri), true)));
         let famousTracks = [];
 
-        // Usa i generi già presenti nel DB locale o li rileva e salva al volo
         const catEntry = catalogData.find(x => x.code === rawCode.trim()) || catalogData.find(x => x.code === normCode);
         let genreCandidates = (catEntry?.genres || []).slice();
         if(genreCandidates.length === 0) genreCandidates = codeMetaDb[normCode]?.genres || [];
@@ -2328,6 +2428,9 @@ document.getElementById('targetMode').addEventListener('change', (e) => {
   document.getElementById('newPlaylistMetaWrap').classList.toggle('hidden', !isNew);
   document.getElementById('newPlaylistVisibilityWrap').classList.toggle('hidden', !isNew);
   document.getElementById('existingPlaylistWrap').classList.toggle('hidden', isNew);
+  if(coverState){
+    document.getElementById('coverApplyExistingBtn').classList.toggle('hidden', isNew);
+  }
   if(!isNew) loadUserPlaylists();
 });
 
@@ -2400,16 +2503,18 @@ document.getElementById('createBtn').addEventListener('click', async () => {
       }
     }
 
-    if(mode === 'new' && document.getElementById('coverEnable').checked){
+    if(document.getElementById('coverEnable').checked){
       try{
-        createBtn.textContent = 'Genero la copertina...';
-        const wantName = document.getElementById('plName').value.trim() || 'Playlist Etichetta';
+        createBtn.textContent = 'Genero / Carico la copertina...';
+        const wantName = mode === 'new'
+          ? (document.getElementById('plName').value.trim() || 'Playlist Etichetta')
+          : (document.getElementById('existingPlaylistSelect').selectedOptions[0]?.textContent.replace(/\s*\(\d+\s*brani\)\s*$/, '') || 'Playlist Etichetta');
         if(!coverState || coverState.name !== wantName) await makeCover();
         await uploadPlaylistCover(playlistId);
         addMsg(msgsBox, 'Copertina AI impostata sulla playlist.', 'ok');
       }catch(coverErr){
         console.error(coverErr);
-        addMsg(msgsBox, 'Playlist creata, ma copertina non impostata: ' + coverErr.message, 'warn');
+        addMsg(msgsBox, 'Playlist salvata, ma copertina non impostata: ' + coverErr.message, 'warn');
       }
     }
     const okDiv = document.createElement('div');
@@ -2467,7 +2572,7 @@ document.getElementById('releaseChecklist').addEventListener('click', async (e) 
   openMiniPlayer(id, btn.dataset.label);
 });
 
-// ---------- Copertina AI della playlist ----------
+// ---------- Copertina AI della playlist (ComfyUI Locale + Pollinations + OpenAI) ----------
 const COVER_SCENES = [
   [/lounge|chill|relax|ambient|easy listening|meditat|downtempo|sunset|cocktail/, 'an elegant lounge bar at golden hour, crystal cocktail glasses with citrus garnish on a polished counter, warm amber bokeh lights, plush velvet sofas, relaxed sophisticated atmosphere'],
   [/techno|hard techno|minimal|acid/, 'a dark industrial warehouse rave, strobing white and violet lights, thick fog, silhouettes of a dancing crowd'],
@@ -2494,15 +2599,241 @@ function dominantGenres(){
   return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => e[0]);
 }
 
+function getCurrentPlaylistName(){
+  const mode = document.getElementById('targetMode').value;
+  if(mode !== 'new'){
+    const sel = document.getElementById('existingPlaylistSelect').selectedOptions[0];
+    if(sel && sel.value) return sel.textContent.replace(/\s*\(\d+\s*brani\)\s*$/, '').trim();
+  }
+  return document.getElementById('plName').value.trim() || 'Soulgem Selection';
+}
+
 function buildCoverPrompt(name){
   const genres = dominantGenres();
   const pick = (text) => (COVER_SCENES.find(([re]) => re.test(text.toLowerCase())) || [])[1];
   const scene = pick(name) || pick(genres.join(' ')) || DEFAULT_SCENE;
-  return `Square album cover artwork for a music playlist titled "${name}"${genres.length ? ` (genres: ${genres.join(', ')})` : ''}. Scene: ${scene}. Style: cinematic, ultra detailed, rich colour grading, centered composition, high definition. No text, no letters, no logos, no watermark.`;
+  return `Square album cover artwork for a music playlist titled "${name}"${genres.length ? ` (genres: ${genres.join(', ')})` : ''}. Scene: ${scene}. Style: cinematic photography, ultra detailed, rich colour grading, centered composition, 8k high definition. No text, no letters, no logos, no watermark.`;
+}
+
+document.getElementById('regenPromptBtn').addEventListener('click', () => {
+  const name = getCurrentPlaylistName();
+  document.getElementById('coverCustomPrompt').value = buildCoverPrompt(name);
+});
+
+// ---------- ComfyUI Connection & Workflow Builder ----------
+const savedComfyUrl = localStorage.getItem('ss_comfy_url');
+if(savedComfyUrl) document.getElementById('comfyUrl').value = savedComfyUrl;
+document.getElementById('comfyUrl').addEventListener('input', (e) => {
+  try{ localStorage.setItem('ss_comfy_url', e.target.value.trim()); }catch(err){}
+});
+
+let customComfyWorkflowJson = localStorage.getItem('ss_comfy_custom_wf') || null;
+document.getElementById('comfyWorkflowFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    const txt = await file.text();
+    JSON.parse(txt); // validate JSON
+    customComfyWorkflowJson = txt;
+    localStorage.setItem('ss_comfy_custom_wf', txt);
+    addMsg(document.getElementById('coverMsgs'), `Workflow API "${file.name}" salvato correttamente nel browser!`, 'ok');
+  }catch(err){
+    alert('File JSON non valido: assicurati di esportarlo da ComfyUI con "Save (API Format)".');
+  }
+});
+
+document.getElementById('comfyMode').addEventListener('change', (e) => {
+  const isCustom = e.target.value === 'custom-json';
+  document.getElementById('comfyCkptWrap').classList.toggle('hidden', isCustom);
+  document.getElementById('comfyParamsWrap').classList.toggle('hidden', isCustom);
+  document.getElementById('comfyCustomJsonWrap').classList.toggle('hidden', !isCustom);
+});
+
+async function connectAndFetchComfyModels(){
+  const baseUrl = document.getElementById('comfyUrl').value.trim().replace(/\/+$/, '');
+  const badge = document.getElementById('comfyStatusBadge');
+  const box = document.getElementById('coverMsgs');
+  box.innerHTML = '';
+  badge.textContent = 'Connessione a ComfyUI...';
+
+  try{
+    const res = await fetch(`${baseUrl}/object_info/CheckpointLoaderSimple`);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const ckpts = data?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] || [];
+    const sel = document.getElementById('comfyCkptSelect');
+    if(ckpts.length === 0){
+      sel.innerHTML = `<option value="">Nessun checkpoint in models/checkpoints (usa modalità Workflow API .json)</option>`;
+    } else {
+      const prev = localStorage.getItem('ss_comfy_ckpt') || '';
+      sel.innerHTML = ckpts.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      if(prev && ckpts.includes(prev)) sel.value = prev;
+    }
+    badge.textContent = `🟢 ComfyUI Online (${ckpts.length} modelli)`;
+    badge.style.color = 'var(--teal)';
+  }catch(err){
+    badge.textContent = '🔴 ComfyUI Offline / CORS';
+    badge.style.color = 'var(--red)';
+    addMsg(box, `Impossibile contattare ComfyUI su ${baseUrl}. Verifica che ComfyUI sia aperto sul PC e avviato con il parametro --enable-cors-header *`, 'warn');
+  }
+}
+
+document.getElementById('comfyConnectBtn').addEventListener('click', connectAndFetchComfyModels);
+document.getElementById('comfyCkptSelect').addEventListener('change', (e) => {
+  try{ localStorage.setItem('ss_comfy_ckpt', e.target.value); }catch(err){}
+});
+
+function buildComfyPromptPayload(positivePrompt, negativePrompt){
+  const mode = document.getElementById('comfyMode').value;
+  const randomSeed = Math.floor(Math.random() * 1e14);
+
+  if(mode === 'custom-json'){
+    if(!customComfyWorkflowJson){
+      throw new Error('Carica prima un file workflow_api.json esportato da ComfyUI.');
+    }
+    let wfStr = customComfyWorkflowJson;
+    if(wfStr.includes('%PROMPT%')){
+      wfStr = wfStr.replace(/%PROMPT%/g, () => JSON.stringify(positivePrompt).slice(1, -1));
+    }
+    const wf = JSON.parse(wfStr);
+    let promptInjected = wfStr.includes('%PROMPT%');
+
+    for(const node of Object.values(wf)){
+      if(!node || typeof node !== 'object' || !node.inputs) continue;
+      const ct = String(node.class_type || '');
+      // Inietta il prompt nel primo nodo di testo positivo se non c'era %PROMPT%
+      if(!promptInjected && (ct === 'CLIPTextEncode' || ct === 'CLIPTextEncodeFlux' || ct === 'PrimitiveString')){
+        if(typeof node.inputs.text === 'string'){
+          node.inputs.text = positivePrompt;
+          promptInjected = true;
+        } else if(typeof node.inputs.clip_l === 'string'){
+          node.inputs.clip_l = positivePrompt;
+          node.inputs.t5xxl = positivePrompt;
+          promptInjected = true;
+        }
+      }
+      // Aggiorna sempre il seed per avere un'immagine nuova
+      if('seed' in node.inputs && typeof node.inputs.seed === 'number') node.inputs.seed = randomSeed;
+      if('noise_seed' in node.inputs && typeof node.inputs.noise_seed === 'number') node.inputs.noise_seed = randomSeed;
+    }
+    return wf;
+  }
+
+  // Modalità automatica da CheckpointLoaderSimple
+  const ckpt = document.getElementById('comfyCkptSelect').value.trim();
+  if(!ckpt){
+    throw new Error('Clicca prima su "🔌 Connetti & Leggi Modelli" per selezionare un Checkpoint da ComfyUI (oppure passa a Workflow API Personalizzato).');
+  }
+  const steps = parseInt(document.getElementById('comfySteps').value, 10) || 20;
+  const cfg = parseFloat(document.getElementById('comfyCfg').value) || 1.0;
+  const sampler_name = document.getElementById('comfySampler').value || 'euler';
+  const scheduler = document.getElementById('comfyScheduler').value || 'simple';
+
+  return {
+    "3": {
+      "class_type": "KSampler",
+      "inputs": {
+        "cfg": cfg,
+        "denoise": 1,
+        "latent_image": ["5", 0],
+        "model": ["4", 0],
+        "negative": ["7", 0],
+        "positive": ["6", 0],
+        "sampler_name": sampler_name,
+        "scheduler": scheduler,
+        "seed": randomSeed,
+        "steps": steps
+      }
+    },
+    "4": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": { "ckpt_name": ckpt }
+    },
+    "5": {
+      "class_type": "EmptyLatentImage",
+      "inputs": { "batch_size": 1, "height": 1024, "width": 1024 }
+    },
+    "6": {
+      "class_type": "CLIPTextEncode",
+      "inputs": { "clip": ["4", 1], "text": positivePrompt }
+    },
+    "7": {
+      "class_type": "CLIPTextEncode",
+      "inputs": { "clip": ["4", 1], "text": negativePrompt }
+    },
+    "8": {
+      "class_type": "VAEDecode",
+      "inputs": { "samples": ["3", 0], "vae": ["4", 2] }
+    },
+    "9": {
+      "class_type": "SaveImage",
+      "inputs": { "filename_prefix": "SalaStampa_Cover", "images": ["8", 0] }
+    }
+  };
+}
+
+async function generateWithComfyUI(prompt, negativePrompt){
+  const baseUrl = document.getElementById('comfyUrl').value.trim().replace(/\/+$/, '');
+  const workflow = buildComfyPromptPayload(prompt, negativePrompt);
+  const clientId = 'salastampa_' + randomString(10);
+
+  let queueRes;
+  try{
+    queueRes = await fetch(`${baseUrl}/prompt`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: workflow, client_id: clientId })
+    });
+  }catch(netErr){
+    throw new Error(`Connessione a ComfyUI (${baseUrl}) non riuscita. Verifica che ComfyUI sia attivo sul PC con --enable-cors-header *`);
+  }
+
+  if(!queueRes.ok){
+    const errText = await queueRes.text();
+    throw new Error(`Errore ComfyUI (${queueRes.status}): ${errText.slice(0, 220)}`);
+  }
+
+  const { prompt_id } = await queueRes.json();
+  const badge = document.getElementById('comfyStatusBadge');
+
+  // Attende il completamento interrogando /history/{prompt_id}
+  for(let sec = 1; sec <= 180; sec++){
+    badge.textContent = `⏳ ComfyUI rendering (${sec}s)...`;
+    await sleepMs(1000);
+    const histRes = await fetch(`${baseUrl}/history/${prompt_id}`);
+    if(!histRes.ok) continue;
+    const histData = await histRes.json();
+    const job = histData?.[prompt_id];
+    if(!job) continue;
+
+    if(job.status?.status_str === 'error'){
+      throw new Error('ComfyUI ha restituito un errore durante l\'esecuzione del workflow.');
+    }
+
+    const outputs = job.outputs || {};
+    for(const nodeOut of Object.values(outputs)){
+      const imgInfo = nodeOut?.images?.[0];
+      if(imgInfo && imgInfo.filename){
+        const viewUrl = `${baseUrl}/view?filename=${encodeURIComponent(imgInfo.filename)}&subfolder=${encodeURIComponent(imgInfo.subfolder || '')}&type=${encodeURIComponent(imgInfo.type || 'output')}`;
+        const imgRes = await fetch(viewUrl);
+        if(!imgRes.ok) throw new Error('Impossibile scaricare l\'immagine finale da ComfyUI.');
+        badge.textContent = '🟢 Render ComfyUI completato!';
+        return URL.createObjectURL(await imgRes.blob());
+      }
+    }
+  }
+  throw new Error('Timeout ComfyUI (oltre 180 secondi).');
 }
 
 async function generateCoverSrc(prompt){
-  if(document.getElementById('coverProvider').value === 'openai'){
+  const provider = document.getElementById('coverProvider').value;
+  const negPrompt = document.getElementById('coverNegativePrompt').value.trim();
+
+  if(provider === 'comfyui'){
+    return await generateWithComfyUI(prompt, negPrompt);
+  }
+
+  if(provider === 'openai'){
     const key = document.getElementById('coverApiKey').value.trim();
     if(!key) throw new Error('Inserisci la chiave API OpenAI.');
     const res = await fetch('https://api.openai.com/v1/images/generations', {
@@ -2517,6 +2848,7 @@ async function generateCoverSrc(prompt){
     if(d?.url) return d.url;
     throw new Error('Risposta OpenAI senza immagine.');
   }
+
   const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${Math.floor(Math.random() * 1e6)}&nologo=true&model=flux`;
   const res = await fetch(url);
   if(!res.ok) throw new Error(`Pollinations (${res.status}): il servizio gratuito limita le richieste, riprova tra 15-20 secondi.`);
@@ -2533,45 +2865,117 @@ function loadImg(src){
   });
 }
 
-function drawCover(img, size, title){
+function wrapTextLines(ctx, text, maxWidth){
+  const lines = [];
+  let cur = '';
+  String(text || '').split(/\s+/).forEach(w => {
+    const t = cur ? cur + ' ' + w : w;
+    if(ctx.measureText(t).width > maxWidth && cur){ lines.push(cur); cur = w; }
+    else cur = t;
+  });
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+function drawCover(img, size, title, overlayStyle){
   const c = document.createElement('canvas');
   c.width = c.height = size;
   const x = c.getContext('2d');
   x.drawImage(img, 0, 0, size, size);
-  if(title){
+
+  if(!title || overlayStyle === 'none') return c;
+
+  if(overlayStyle === 'soulgem-badge'){
+    const g = x.createLinearGradient(0, size * 0.48, 0, size);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(10,12,18,0.85)');
+    x.fillStyle = g;
+    x.fillRect(0, size * 0.48, size, size * 0.52);
+
+    // Top-left Soulgem Records Pill
+    const pad = Math.round(size * 0.045);
+    const pillH = Math.round(size * 0.048);
+    x.font = `700 ${Math.round(size * 0.022)}px "JetBrains Mono", monospace`;
+    const tagTxt = 'SOULGEM RECORDS · OFFICIAL SELECTION';
+    const pillW = x.measureText(tagTxt).width + pad * 0.9;
+    x.fillStyle = 'rgba(18,20,26,0.82)';
+    x.fillRect(pad, pad, pillW, pillH);
+    x.strokeStyle = '#E3A73E';
+    x.lineWidth = Math.max(2, Math.round(size * 0.003));
+    x.strokeRect(pad, pad, pillW, pillH);
+    x.fillStyle = '#E3A73E';
+    x.textBaseline = 'middle';
+    x.textAlign = 'left';
+    x.fillText(tagTxt, pad + pad * 0.45, pad + pillH / 2);
+
+    // Title bottom left
+    const fs = Math.round(size * 0.08);
+    x.font = `700 ${fs}px Inter, Arial, sans-serif`;
+    x.fillStyle = '#ECE8DE';
+    x.textAlign = 'left';
+    x.textBaseline = 'bottom';
+    const lines = wrapTextLines(x, title, size * 0.88);
+    lines.slice(-3).reverse().forEach((l, i) => {
+      x.fillText(l, pad, size - pad - i * fs * 1.12);
+    });
+  } else if(overlayStyle === 'center-minimal'){
+    const fs = Math.round(size * 0.068);
+    x.font = `700 ${fs}px Inter, Arial, sans-serif`;
+    const lines = wrapTextLines(x, title.toUpperCase(), size * 0.76).slice(0, 3);
+    const boxH = lines.length * fs * 1.25 + size * 0.08;
+    const boxY = (size - boxH) / 2;
+    x.fillStyle = 'rgba(18,20,26,0.78)';
+    x.fillRect(size * 0.08, boxY, size * 0.84, boxH);
+    x.strokeStyle = 'rgba(227,167,62,0.75)';
+    x.lineWidth = Math.max(2, Math.round(size * 0.004));
+    x.strokeRect(size * 0.08, boxY, size * 0.84, boxH);
+    x.fillStyle = '#ffffff';
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    lines.forEach((l, i) => {
+      const y = boxY + size * 0.04 + (i + 0.5) * (fs * 1.25);
+      x.fillText(l, size / 2, y);
+    });
+  } else {
+    // gradient-bottom (default)
     const g = x.createLinearGradient(0, size * 0.55, 0, size);
-    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0.75)');
-    x.fillStyle = g; x.fillRect(0, size * 0.55, size, size * 0.45);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(0,0,0,0.78)');
+    x.fillStyle = g;
+    x.fillRect(0, size * 0.55, size, size * 0.45);
     const fs = Math.round(size * 0.085);
     x.font = `700 ${fs}px Inter, Arial, sans-serif`;
-    x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'bottom';
-    const lines = []; let cur = '';
-    title.split(/\s+/).forEach(w => {
-      const t = cur ? cur + ' ' + w : w;
-      if(x.measureText(t).width > size * 0.84 && cur){ lines.push(cur); cur = w; } else cur = t;
-    });
-    lines.push(cur);
+    x.fillStyle = '#fff';
+    x.textAlign = 'center';
+    x.textBaseline = 'bottom';
+    const lines = wrapTextLines(x, title, size * 0.84);
     lines.slice(-3).reverse().forEach((l, i) => x.fillText(l, size / 2, size - size * 0.06 - i * fs * 1.15));
   }
   return c;
 }
 
 async function makeCover(){
-  const name = document.getElementById('plName').value.trim() || 'Playlist Etichetta';
-  const prompt = buildCoverPrompt(name);
+  const name = getCurrentPlaylistName();
+  const customPromptEl = document.getElementById('coverCustomPrompt');
+  const prompt = customPromptEl.value.trim() || buildCoverPrompt(name);
+  customPromptEl.value = prompt;
+
+  const overlayStyle = document.getElementById('coverOverlayStyle').value;
   const img = await loadImg(await generateCoverSrc(prompt));
-  const title = document.getElementById('coverTitleText').checked ? name : '';
-  const hd = drawCover(img, 1024, title).toDataURL('image/jpeg', 0.95);
+  const title = overlayStyle !== 'none' ? name : '';
+  const hd = drawCover(img, 1024, title, overlayStyle).toDataURL('image/jpeg', 0.95);
   let b64 = '';
   for(const [s, q] of [[640, 0.85], [640, 0.7], [640, 0.55], [512, 0.6], [512, 0.45]]){
-    b64 = drawCover(img, s, title).toDataURL('image/jpeg', q).split(',')[1];
+    b64 = drawCover(img, s, title, overlayStyle).toDataURL('image/jpeg', q).split(',')[1];
     if(b64.length <= 240000) break;
   }
-  coverState = { name, prompt, hd, b64, title };
+  coverState = { name, prompt, hd, b64, title, overlayStyle };
   document.getElementById('coverPreviewImg').src = hd;
-  document.getElementById('coverPromptText').textContent = prompt;
+  document.getElementById('coverPromptText').textContent = `Motore: ${document.getElementById('coverProvider').value.toUpperCase()} — Peso JPEG Spotify: ${Math.round(b64.length * 0.75 / 1024)} KB (Max 256 KB).\nPrompt: ${prompt}`;
   document.getElementById('coverPreviewWrap').classList.remove('hidden');
   document.getElementById('coverDownloadBtn').classList.remove('hidden');
+  const isExistingMode = document.getElementById('targetMode').value !== 'new';
+  document.getElementById('coverApplyExistingBtn').classList.toggle('hidden', !isExistingMode);
 }
 
 async function uploadPlaylistCover(playlistId){
@@ -2580,31 +2984,60 @@ async function uploadPlaylistCover(playlistId){
       method: 'PUT', headers: { 'Content-Type': 'image/jpeg' }, body: coverState.b64
     });
   }catch(err){
-    if(/\((401|403)\)/.test(err.message)) throw new Error('permesso immagini mancante: premi "Disconnetti", poi riconnettiti a Spotify e accetta il nuovo permesso.');
+    if(/\((401\vert{}403)\)/.test(err.message)) throw new Error('permesso immagini mancante: premi "Disconnetti", poi riconnettiti a Spotify e accetta il nuovo permesso.');
     throw err;
   }
 }
 
 document.getElementById('coverProvider').addEventListener('change', (e) => {
-  const oa = e.target.value === 'openai';
-  document.getElementById('coverKeyWrap').classList.toggle('hidden', !oa);
-  document.getElementById('coverModelWrap').classList.toggle('hidden', !oa);
+  const val = e.target.value;
+  document.getElementById('comfyConfigWrap').classList.toggle('hidden', val !== 'comfyui');
+  document.getElementById('openaiConfigWrap').classList.toggle('hidden', val !== 'openai');
 });
+
 document.getElementById('coverApiKey').value = localStorage.getItem('ss_openai_key') || '';
 document.getElementById('coverApiKey').addEventListener('input', (e) => { try{ localStorage.setItem('ss_openai_key', e.target.value.trim()); }catch(err){} });
+
 document.getElementById('coverPreviewBtn').addEventListener('click', async () => {
   const box = document.getElementById('coverMsgs'), btn = document.getElementById('coverPreviewBtn');
   box.innerHTML = '';
-  btn.disabled = true; btn.textContent = 'Genero la copertina...';
-  try{ await makeCover(); }catch(err){ addMsg(box, 'Copertina non generata: ' + err.message, 'warn'); }
-  finally{ btn.disabled = false; btn.textContent = '🎨 Genera anteprima copertina'; }
+  btn.disabled = true; btn.textContent = '⏳ Generazione in corso...';
+  try{
+    await makeCover();
+    addMsg(box, 'Copertina generata e pronta per Spotify!', 'ok');
+  }catch(err){
+    addMsg(box, 'Copertina non generata: ' + err.message, 'warn');
+  }finally{
+    btn.disabled = false; btn.textContent = '🎨 Genera Copertina Ora';
+  }
 });
+
 document.getElementById('coverDownloadBtn').addEventListener('click', () => {
   if(!coverState) return;
   const a = document.createElement('a');
   a.href = coverState.hd;
   a.download = `copertina-${coverState.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.jpg`;
   a.click();
+});
+
+document.getElementById('coverApplyExistingBtn').addEventListener('click', async () => {
+  const box = document.getElementById('coverMsgs');
+  box.innerHTML = '';
+  const playlistId = document.getElementById('existingPlaylistSelect').value;
+  if(!playlistId){
+    addMsg(box, 'Seleziona prima una playlist dal menu a tendina sopra.', 'warn');
+    return;
+  }
+  if(!coverState){
+    addMsg(box, 'Genera prima l\'anteprima della copertina.', 'warn');
+    return;
+  }
+  try{
+    await uploadPlaylistCover(playlistId);
+    addMsg(box, 'Copertina caricata istantaneamente sulla playlist Spotify selezionata!', 'ok');
+  }catch(err){
+    addMsg(box, 'Errore upload copertina: ' + err.message, 'warn');
+  }
 });
 
 // ---------- Startup Initialization ----------
