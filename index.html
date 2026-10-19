@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala Stampa — A&R Playlist Studio & ComfyUI GGUF Lab</title>
+<title>Sala Stampa 4.2 — A&R Playlist Studio, Genre DB & ComfyUI Cover Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -173,6 +173,7 @@
   .dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;}
   .dot.ok{background:var(--teal);box-shadow:0 0 8px var(--teal);}
 
+  /* Pressing Stamps & Genre Tags */
   .stamp{
     display:inline-flex;
     align-items:center;
@@ -212,6 +213,7 @@
     border-color:rgba(227,167,62,0.3);
   }
 
+  /* DB Sync Panel */
   .db-sync-box{
     background:linear-gradient(180deg, rgba(35,39,51,0.9), rgba(27,30,38,0.9));
     border:1px solid var(--border);
@@ -237,6 +239,7 @@
   .db-metric span{color:var(--text-dim);}
   .db-metric strong{color:var(--text);margin-left:4px;}
 
+  /* Stats Bar in Preview */
   .stats-bar{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
@@ -251,6 +254,7 @@
   .stat-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);text-transform:uppercase;}
   .stat-val{font-size:16px;font-weight:600;color:var(--text);margin-top:2px;}
 
+  /* Progress Bar */
   .progress-wrap{
     margin-top:12px;
     background:var(--surface-alt);
@@ -272,6 +276,7 @@
     color:var(--text-dim);
   }
 
+  /* Track List & Drag-and-Drop */
   .track-row{
     display:flex;
     align-items:center;
@@ -388,9 +393,9 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v4.2 · ComfyUI GGUF Ready</div>
-      <h1>Salastampa</h1>
-      <p class="sub">Database persistente UPC/ISRC, classifiche internazionali, anteprima audio Spotify e Cover Art Studio collegato al tuo ComfyUI locale (GGUF).</p>
+      <div class="eyebrow">A&amp;R Automation Studio · v4.2 · ComfyUI Ready</div>
+      <h1>Sala Stampa</h1>
+      <p class="sub">Database persistente UPC/ISRC, classifiche internazionali, anteprima audio Spotify e Cover Art Studio collegato al tuo ComfyUI locale.</p>
     </div>
     <div class="status-pill">
       <span class="dot" id="statusDot"></span>
@@ -695,12 +700,12 @@
           </div>
           <div>
             <label for="plDesc">Descrizione Playlist</label>
-            <input type="text" id="plDesc" value="Selezione ufficiale curata con Salastampa.">
+            <input type="text" id="plDesc" value="Selezione ufficiale curata con Sala Stampa.">
           </div>
         </div>
       </div>
 
-      <!-- STUDIO COPERTINA AI (COMFYUI GGUF / POLLINATIONS / OPENAI) -->
+      <!-- STUDIO COPERTINA AI (COMFYUI LOCALE / POLLINATIONS / OPENAI) -->
       <div style="margin-top:18px;padding:18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:9px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
           <label style="margin:0;display:flex;gap:8px;align-items:center;font-family:Inter,sans-serif;font-weight:600;font-size:14px;color:var(--text);">
@@ -714,7 +719,7 @@
           <div>
             <label for="coverProvider">Motore Immagini AI</label>
             <select id="coverProvider">
-              <option value="comfyui">🖥️ ComfyUI Locale (GGUF FLUX / UNET) - Consigliato</option>
+              <option value="comfyui">🖥️ ComfyUI Locale sul mio PC (Consigliato)</option>
               <option value="pollinations">🌐 Pollinations FLUX (Cloud gratuito, senza chiave)</option>
               <option value="openai">🔑 OpenAI GPT-Image (Cloud con chiave API)</option>
             </select>
@@ -730,7 +735,7 @@
           </div>
         </div>
 
-        <!-- PANNELLO CONFIGURAZIONE COMFYUI LOCALE (GGUF / UNET) -->
+        <!-- PANNELLO CONFIGURAZIONE COMFYUI LOCALE -->
         <div id="comfyConfigWrap" style="margin-top:12px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
           <div class="row" style="align-items:flex-end;">
             <div style="flex:2;">
@@ -738,58 +743,66 @@
               <input type="text" id="comfyUrl" value="http://127.0.0.1:8188" placeholder="http://127.0.0.1:8188">
             </div>
             <div style="flex:1;">
-              <button class="amber sm" type="button" id="comfyConnectBtn" style="width:100%;padding:10px 12px;">🔌 Connetti &amp; Leggi Modelli GGUF</button>
+              <button class="amber sm" type="button" id="comfyConnectBtn" style="width:100%;padding:10px 12px;">🔌 Connetti &amp; Leggi Modelli</button>
             </div>
           </div>
 
           <div class="row" style="margin-top:10px;">
             <div style="flex:2;">
-              <label for="comfyUnetSelect">Modello UNET / GGUF rilevato (es. flux1-schnell-Q4_K_M.gguf)</label>
-              <select id="comfyUnetSelect">
-                <option value="flux1-schnell-Q4_K_M.gguf">flux1-schnell-Q4_K_M.gguf (Predefinito)</option>
+              <label for="comfyMode">Modalità Workflow ComfyUI</label>
+              <select id="comfyMode">
+                <option value="auto-ckpt">Automatica da Checkpoint (SDXL / FLUX Checkpoint / SD1.5)</option>
+                <option value="custom-json">Workflow API Personalizzato (.json esportato da ComfyUI)</option>
               </select>
             </div>
-            <div style="flex:2;">
-              <label for="comfyClipSelect">Modello CLIP (Dual)</label>
-              <select id="comfyClipSelect">
-                <option value="t5xxl_fp16.safetensors">t5xxl_fp16.safetensors</option>
+            <div id="comfyCkptWrap" style="flex:2;">
+              <label for="comfyCkptSelect">Modello Checkpoint rilevato su ComfyUI</label>
+              <select id="comfyCkptSelect">
+                <option value="">Clicca "Connetti &amp; Leggi Modelli" oppure scrivi sotto...</option>
               </select>
             </div>
           </div>
 
-          <div class="row" style="margin-top:8px;">
-            <div>
-              <label for="comfyVaeSelect">Modello VAE</label>
-              <select id="comfyVaeSelect">
-                <option value="ae.safetensors">ae.safetensors</option>
-              </select>
-            </div>
+          <div id="comfyParamsWrap" class="row" style="margin-top:8px;">
             <div>
               <label for="comfySteps">Steps</label>
-              <input type="number" id="comfySteps" value="4" min="1" max="50">
+              <input type="number" id="comfySteps" value="22" min="1" max="100">
             </div>
             <div>
-              <label for="comfyCfg">CFG (1.0 per Schnell)</label>
-              <input type="number" id="comfyCfg" value="1.0" step="0.5" min="1" max="10">
+              <label for="comfyCfg">CFG (1.0 per FLUX, 6-8 SDXL)</label>
+              <input type="number" id="comfyCfg" value="1.0" step="0.5" min="1" max="20">
             </div>
             <div>
               <label for="comfySampler">Sampler</label>
               <select id="comfySampler">
-                <option value="euler" selected>euler</option>
-                <option value="dpmpp_2m">dpmpp_2m</option>
+                <option value="euler" selected>euler (ottimo per FLUX)</option>
+                <option value="dpmpp_2m">dpmpp_2m (ottimo per SDXL)</option>
+                <option value="dpmpp_2m_sde">dpmpp_2m_sde</option>
+                <option value="uni_pc">uni_pc</option>
               </select>
             </div>
             <div>
               <label for="comfyScheduler">Scheduler</label>
               <select id="comfyScheduler">
-                <option value="simple" selected>simple</option>
-                <option value="karras">karras</option>
+                <option value="simple" selected>simple (FLUX)</option>
+                <option value="karras">karras (SDXL)</option>
+                <option value="normal">normal</option>
+                <option value="sgm_uniform">sgm_uniform</option>
               </select>
             </div>
           </div>
 
+          <!-- CARICAMENTO WORKFLOW API JSON CUSTOM -->
+          <div id="comfyCustomJsonWrap" class="hidden" style="margin-top:10px;">
+            <label for="comfyWorkflowFile">Carica il tuo file <code>workflow_api.json</code> esportato da ComfyUI ("Save API Format")</label>
+            <input type="file" id="comfyWorkflowFile" accept=".json">
+            <p class="hint" style="margin:6px 0 0;font-size:12px;">
+              💡 Sala Stampa inietterà in automatico il Prompt della copertina nel primo nodo positivo (<code>CLIPTextEncode</code> / <code>%PROMPT%</code>) e genererà un nuovo Seed casuale a ogni clic. Il workflow resta salvato nel browser.
+            </p>
+          </div>
+
           <p class="hint" style="margin:10px 0 0;font-size:11.5px;">
-            ℹ️ <strong>Nota CORS:</strong> Avvia ComfyUI con <code>--enable-cors-header *</code> nel tuo file <code>.bat</code>.
+            ℹ️ <strong>Nota CORS:</strong> Assicurati di avviare ComfyUI con <code>--enable-cors-header *</code> nel tuo file <code>.bat</code>.
           </p>
         </div>
 
@@ -801,13 +814,13 @@
 
         <!-- EDITOR PROMPT VISIVO -->
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;">
-          <label for="coverCustomPrompt" style="margin:0;">Prompt Visivo Copertina (modificabile a piacere)</label>
-          <button class="secondary sm" type="button" id="regenPromptBtn">✨ Auto-compila Prompt da Scaletta</button>
+          <label for="coverCustomPrompt" style="margin:0;">Prompt Visivo Copertina (modificabile a piacere prima di generare)</label>
+          <button class="secondary sm" type="button" id="regenPromptBtn">✨ Auto-compila Prompt da Scaletta/Generi</button>
         </div>
-        <textarea id="coverCustomPrompt" style="margin-top:6px;min-height:74px;" placeholder="Lascia vuoto per generarlo in automatico dai generi della scaletta..."></textarea>
+        <textarea id="coverCustomPrompt" style="margin-top:6px;min-height:74px;" placeholder="Lascia vuoto per generarlo in automatico dai generi della scaletta, oppure clicca 'Auto-compila' per modificarlo..."></textarea>
 
-        <label for="coverNegativePrompt">Negative Prompt</label>
-        <input type="text" id="coverNegativePrompt" value="text, watermark, logo, letters, typography, blurry, low quality">
+        <label for="coverNegativePrompt">Negative Prompt (usato da ComfyUI Checkpoint)</label>
+        <input type="text" id="coverNegativePrompt" value="text, watermark, logo, letters, typography, blurry, low quality, deformed, ugly, bad anatomy">
 
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
           <button class="amber sm" type="button" id="coverPreviewBtn">🎨 Genera Copertina Ora</button>
@@ -838,7 +851,7 @@
     <p style="max-width:64ch;margin:0 auto 8px;">
       <strong>Redirect URI attivo per la tua Spotify Dashboard:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
     </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Salastampa v4.2 — Persistent Genre DB · Apple Charts · Mini-Player · ComfyUI GGUF Cover Lab</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.2 — Persistent Genre DB · Apple Charts · Mini-Player · ComfyUI Cover Lab</p>
   </footer>
 
 </div>
@@ -1562,7 +1575,7 @@ document.getElementById('exportDbJsonBtn').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `salastampa-db-${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `sala-stampa-db-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
 });
 
@@ -1816,6 +1829,37 @@ document.getElementById('rescanEmptyGenresBtn').addEventListener('click', () => 
   refreshSyncMetricsAndGenreDropdown();
   renderReleaseChecklist();
 });
+
+// ---------- Generi del database CSV (menu a tendina con conteggi) ----------
+function genreFamily(g){ return String(g).split(' - ')[0].trim(); }
+
+function buildBelieveGenreOptions(){
+  const fam = new Map();
+  catalogData.forEach(r => (r.genres || []).forEach(g => {
+    const f = genreFamily(g);
+    if(!fam.has(f)) fam.set(f, { codes: new Set(), leaves: new Map() });
+    const o = fam.get(f);
+    o.codes.add(r.code);
+    o.leaves.set(g, (o.leaves.get(g) || 0) + 1);
+  }));
+  const withG = catalogData.filter(r => r.genres && r.genres.length).length;
+  let html = `<option value="__ALL__">Tutti i generi (${catalogData.length} brani)</option>`;
+  if(withG < catalogData.length) html += `<option value="__NO_GENRE__">Senza genere (${catalogData.length - withG})</option>`;
+  [...fam.entries()].sort((a, b) => b[1].codes.size - a[1].codes.size || a[0].localeCompare(b[0])).forEach(([f, o]) => {
+    const leaves = [...o.leaves.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    if(leaves.length === 1 && leaves[0][0] === f){
+      html += `<option value="g:${escapeHtml(f)}">${escapeHtml(f)} (${o.codes.size})</option>`;
+      return;
+    }
+    html += `<optgroup label="${escapeHtml(f)} — ${o.codes.size} brani"><option value="f:${escapeHtml(f)}">Tutto ${escapeHtml(f)} (${o.codes.size})</option>`;
+    leaves.forEach(([g, n]) => {
+      const label = g === f ? `${f} · senza sottogenere` : g.slice(f.length + 3);
+      html += `<option value="g:${escapeHtml(g)}">${escapeHtml(label)} (${n})</option>`;
+    });
+    html += `</optgroup>`;
+  });
+  return html;
+}
 
 // ---------- Hit da classifiche internazionali reali (Apple Music) → risolte su Spotify ----------
 const sleepMs = ms => new Promise(r => setTimeout(r, ms));
@@ -2298,7 +2342,7 @@ document.getElementById('exportCsvBtn').addEventListener('click', () => {
   const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `scaletta-salastampa-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `scaletta-sala-stampa-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
 });
 
@@ -2425,7 +2469,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
 
     if(mode === 'new'){
       const name = document.getElementById('plName').value.trim() || 'Playlist Etichetta';
-      const description = document.getElementById('plDesc').value.trim() || 'Generata con Salastampa.';
+      const description = document.getElementById('plDesc').value.trim() || 'Generata con Sala Stampa.';
       const isPublic = document.getElementById('plVisibility').value === 'public';
 
       const playlist = await spotifyFetch(`https://api.spotify.com/v1/me/playlists`, {
@@ -2528,7 +2572,7 @@ document.getElementById('releaseChecklist').addEventListener('click', async (e) 
   openMiniPlayer(id, btn.dataset.label);
 });
 
-// ---------- Copertina AI della playlist (ComfyUI GGUF / Pollinations / OpenAI) ----------
+// ---------- Copertina AI della playlist (ComfyUI Locale + Pollinations + OpenAI) ----------
 const COVER_SCENES = [
   [/lounge|chill|relax|ambient|easy listening|meditat|downtempo|sunset|cocktail/, 'an elegant lounge bar at golden hour, crystal cocktail glasses with citrus garnish on a polished counter, warm amber bokeh lights, plush velvet sofas, relaxed sophisticated atmosphere'],
   [/techno|hard techno|minimal|acid/, 'a dark industrial warehouse rave, strobing white and violet lights, thick fog, silhouettes of a dancing crowd'],
@@ -2576,11 +2620,33 @@ document.getElementById('regenPromptBtn').addEventListener('click', () => {
   document.getElementById('coverCustomPrompt').value = buildCoverPrompt(name);
 });
 
-// ---------- ComfyUI GGUF Connection & Workflow Builder ----------
+// ---------- ComfyUI Connection & Workflow Builder ----------
 const savedComfyUrl = localStorage.getItem('ss_comfy_url');
 if(savedComfyUrl) document.getElementById('comfyUrl').value = savedComfyUrl;
 document.getElementById('comfyUrl').addEventListener('input', (e) => {
   try{ localStorage.setItem('ss_comfy_url', e.target.value.trim()); }catch(err){}
+});
+
+let customComfyWorkflowJson = localStorage.getItem('ss_comfy_custom_wf') || null;
+document.getElementById('comfyWorkflowFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    const txt = await file.text();
+    JSON.parse(txt); // validate JSON
+    customComfyWorkflowJson = txt;
+    localStorage.setItem('ss_comfy_custom_wf', txt);
+    addMsg(document.getElementById('coverMsgs'), `Workflow API "${file.name}" salvato correttamente nel browser!`, 'ok');
+  }catch(err){
+    alert('File JSON non valido: assicurati di esportarlo da ComfyUI con "Save (API Format)".');
+  }
+});
+
+document.getElementById('comfyMode').addEventListener('change', (e) => {
+  const isCustom = e.target.value === 'custom-json';
+  document.getElementById('comfyCkptWrap').classList.toggle('hidden', isCustom);
+  document.getElementById('comfyParamsWrap').classList.toggle('hidden', isCustom);
+  document.getElementById('comfyCustomJsonWrap').classList.toggle('hidden', !isCustom);
 });
 
 async function connectAndFetchComfyModels(){
@@ -2591,53 +2657,77 @@ async function connectAndFetchComfyModels(){
   badge.textContent = 'Connessione a ComfyUI...';
 
   try{
-    const res = await fetch(`${baseUrl}/object_info/UnetLoaderGGUF`);
+    const res = await fetch(`${baseUrl}/object_info/CheckpointLoaderSimple`);
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    const unets = data?.UnetLoaderGGUF?.input?.required?.unet_name?.[0] || [];
-    const unetSel = document.getElementById('comfyUnetSelect');
-    if(unets.length > 0){
-      unetSel.innerHTML = unets.map(u => `<option value="${escapeHtml(u)}">${escapeHtml(u)}</option>`).join('');
+    const ckpts = data?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] || [];
+    const sel = document.getElementById('comfyCkptSelect');
+    if(ckpts.length === 0){
+      sel.innerHTML = `<option value="">Nessun checkpoint in models/checkpoints (usa modalità Workflow API .json)</option>`;
+    } else {
+      const prev = localStorage.getItem('ss_comfy_ckpt') || '';
+      sel.innerHTML = ckpts.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      if(prev && ckpts.includes(prev)) sel.value = prev;
     }
-
-    const clipRes = await fetch(`${baseUrl}/object_info/DualCLIPLoader`);
-    if(clipRes.ok){
-      const clipData = await clipRes.json();
-      const clips = clipData?.DualCLIPLoader?.input?.required?.clip_name1?.[0] || [];
-      if(clips.length > 0){
-        document.getElementById('comfyClipSelect').innerHTML = clips.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-      }
-    }
-
-    const vaeRes = await fetch(`${baseUrl}/object_info/VAELoader`);
-    if(vaeRes.ok){
-      const vaeData = await vaeRes.json();
-      const vaes = vaeData?.VAELoader?.input?.required?.vae_name?.[0] || [];
-      if(vaes.length > 0){
-        document.getElementById('comfyVaeSelect').innerHTML = vaes.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
-      }
-    }
-
-    badge.textContent = `🟢 ComfyUI Online (${unets.length} GGUF)`;
+    badge.textContent = `🟢 ComfyUI Online (${ckpts.length} modelli)`;
     badge.style.color = 'var(--teal)';
   }catch(err){
     badge.textContent = '🔴 ComfyUI Offline / CORS';
     badge.style.color = 'var(--red)';
-    addMsg(box, `Impossibile contattare ComfyUI su ${baseUrl}. Verifica che ComfyUI sia acceso e avviato con --enable-cors-header *`, 'warn');
+    addMsg(box, `Impossibile contattare ComfyUI su ${baseUrl}. Verifica che ComfyUI sia aperto sul PC e avviato con il parametro --enable-cors-header *`, 'warn');
   }
 }
 
 document.getElementById('comfyConnectBtn').addEventListener('click', connectAndFetchComfyModels);
+document.getElementById('comfyCkptSelect').addEventListener('change', (e) => {
+  try{ localStorage.setItem('ss_comfy_ckpt', e.target.value); }catch(err){}
+});
 
-function buildComfyGgufPayload(positivePrompt, negativePrompt){
-  const unet = document.getElementById('comfyUnetSelect').value.trim() || 'flux1-schnell-Q4_K_M.gguf';
-  const clip = document.getElementById('comfyClipSelect').value.trim() || 't5xxl_fp16.safetensors';
-  const vae = document.getElementById('comfyVaeSelect').value.trim() || 'ae.safetensors';
-  const steps = parseInt(document.getElementById('comfySteps').value, 10) || 4;
+function buildComfyPromptPayload(positivePrompt, negativePrompt){
+  const mode = document.getElementById('comfyMode').value;
+  const randomSeed = Math.floor(Math.random() * 1e14);
+
+  if(mode === 'custom-json'){
+    if(!customComfyWorkflowJson){
+      throw new Error('Carica prima un file workflow_api.json esportato da ComfyUI.');
+    }
+    let wfStr = customComfyWorkflowJson;
+    if(wfStr.includes('%PROMPT%')){
+      wfStr = wfStr.replace(/%PROMPT%/g, () => JSON.stringify(positivePrompt).slice(1, -1));
+    }
+    const wf = JSON.parse(wfStr);
+    let promptInjected = wfStr.includes('%PROMPT%');
+
+    for(const node of Object.values(wf)){
+      if(!node || typeof node !== 'object' || !node.inputs) continue;
+      const ct = String(node.class_type || '');
+      // Inietta il prompt nel primo nodo di testo positivo se non c'era %PROMPT%
+      if(!promptInjected && (ct === 'CLIPTextEncode' || ct === 'CLIPTextEncodeFlux' || ct === 'PrimitiveString')){
+        if(typeof node.inputs.text === 'string'){
+          node.inputs.text = positivePrompt;
+          promptInjected = true;
+        } else if(typeof node.inputs.clip_l === 'string'){
+          node.inputs.clip_l = positivePrompt;
+          node.inputs.t5xxl = positivePrompt;
+          promptInjected = true;
+        }
+      }
+      // Aggiorna sempre il seed per avere un'immagine nuova
+      if('seed' in node.inputs && typeof node.inputs.seed === 'number') node.inputs.seed = randomSeed;
+      if('noise_seed' in node.inputs && typeof node.inputs.noise_seed === 'number') node.inputs.noise_seed = randomSeed;
+    }
+    return wf;
+  }
+
+  // Modalità automatica da CheckpointLoaderSimple
+  const ckpt = document.getElementById('comfyCkptSelect').value.trim();
+  if(!ckpt){
+    throw new Error('Clicca prima su "🔌 Connetti & Leggi Modelli" per selezionare un Checkpoint da ComfyUI (oppure passa a Workflow API Personalizzato).');
+  }
+  const steps = parseInt(document.getElementById('comfySteps').value, 10) || 20;
   const cfg = parseFloat(document.getElementById('comfyCfg').value) || 1.0;
   const sampler_name = document.getElementById('comfySampler').value || 'euler';
   const scheduler = document.getElementById('comfyScheduler').value || 'simple';
-  const randomSeed = Math.floor(Math.random() * 1e14);
 
   return {
     "3": {
@@ -2656,8 +2746,8 @@ function buildComfyGgufPayload(positivePrompt, negativePrompt){
       }
     },
     "4": {
-      "class_type": "UnetLoaderGGUF",
-      "inputs": { "unet_name": unet }
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": { "ckpt_name": ckpt }
     },
     "5": {
       "class_type": "EmptyLatentImage",
@@ -2665,34 +2755,26 @@ function buildComfyGgufPayload(positivePrompt, negativePrompt){
     },
     "6": {
       "class_type": "CLIPTextEncode",
-      "inputs": { "clip": ["10", 0], "text": positivePrompt }
+      "inputs": { "clip": ["4", 1], "text": positivePrompt }
     },
     "7": {
       "class_type": "CLIPTextEncode",
-      "inputs": { "clip": ["10", 0], "text": negativePrompt }
+      "inputs": { "clip": ["4", 1], "text": negativePrompt }
     },
     "8": {
       "class_type": "VAEDecode",
-      "inputs": { "samples": ["3", 0], "vae": ["11", 0] }
+      "inputs": { "samples": ["3", 0], "vae": ["4", 2] }
     },
     "9": {
       "class_type": "SaveImage",
-      "inputs": { "filename_prefix": "Salastampa_FLUX", "images": ["8", 0] }
-    },
-    "10": {
-      "class_type": "DualCLIPLoader",
-      "inputs": { "clip_name1": clip, "clip_name2": clip, "type": "flux" }
-    },
-    "11": {
-      "class_type": "VAELoader",
-      "inputs": { "vae_name": vae }
+      "inputs": { "filename_prefix": "SalaStampa_Cover", "images": ["8", 0] }
     }
   };
 }
 
 async function generateWithComfyUI(prompt, negativePrompt){
   const baseUrl = document.getElementById('comfyUrl').value.trim().replace(/\/+$/, '');
-  const workflow = buildComfyGgufPayload(prompt, negativePrompt);
+  const workflow = buildComfyPromptPayload(prompt, negativePrompt);
   const clientId = 'salastampa_' + randomString(10);
 
   let queueRes;
@@ -2703,7 +2785,7 @@ async function generateWithComfyUI(prompt, negativePrompt){
       body: JSON.stringify({ prompt: workflow, client_id: clientId })
     });
   }catch(netErr){
-    throw new Error(`Connessione a ComfyUI (${baseUrl}) non riuscita. Verifica che ComfyUI sia attivo con --enable-cors-header *`);
+    throw new Error(`Connessione a ComfyUI (${baseUrl}) non riuscita. Verifica che ComfyUI sia attivo sul PC con --enable-cors-header *`);
   }
 
   if(!queueRes.ok){
@@ -2714,8 +2796,9 @@ async function generateWithComfyUI(prompt, negativePrompt){
   const { prompt_id } = await queueRes.json();
   const badge = document.getElementById('comfyStatusBadge');
 
+  // Attende il completamento interrogando /history/{prompt_id}
   for(let sec = 1; sec <= 180; sec++){
-    badge.textContent = `⏳ Rendering ComfyUI (${sec}s)...`;
+    badge.textContent = `⏳ ComfyUI rendering (${sec}s)...`;
     await sleepMs(1000);
     const histRes = await fetch(`${baseUrl}/history/${prompt_id}`);
     if(!histRes.ok) continue;
@@ -2724,7 +2807,7 @@ async function generateWithComfyUI(prompt, negativePrompt){
     if(!job) continue;
 
     if(job.status?.status_str === 'error'){
-      throw new Error('ComfyUI ha restituito un errore durante il rendering della copertina.');
+      throw new Error('ComfyUI ha restituito un errore durante l\'esecuzione del workflow.');
     }
 
     const outputs = job.outputs || {};
@@ -2772,13 +2855,147 @@ async function generateCoverSrc(prompt){
   return URL.createObjectURL(await res.blob());
 }
 
+function loadImg(src){
+  return new Promise((ok, ko) => {
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = () => ok(im);
+    im.onerror = () => ko(new Error('Immagine non leggibile.'));
+    im.src = src;
+  });
+}
+
+function wrapTextLines(ctx, text, maxWidth){
+  const lines = [];
+  let cur = '';
+  String(text || '').split(/\s+/).forEach(w => {
+    const t = cur ? cur + ' ' + w : w;
+    if(ctx.measureText(t).width > maxWidth && cur){ lines.push(cur); cur = w; }
+    else cur = t;
+  });
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+function drawCover(img, size, title, overlayStyle){
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const x = c.getContext('2d');
+  x.drawImage(img, 0, 0, size, size);
+
+  if(!title || overlayStyle === 'none') return c;
+
+  if(overlayStyle === 'soulgem-badge'){
+    const g = x.createLinearGradient(0, size * 0.48, 0, size);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(10,12,18,0.85)');
+    x.fillStyle = g;
+    x.fillRect(0, size * 0.48, size, size * 0.52);
+
+    // Top-left Soulgem Records Pill
+    const pad = Math.round(size * 0.045);
+    const pillH = Math.round(size * 0.048);
+    x.font = `700 ${Math.round(size * 0.022)}px "JetBrains Mono", monospace`;
+    const tagTxt = 'SOULGEM RECORDS · OFFICIAL SELECTION';
+    const pillW = x.measureText(tagTxt).width + pad * 0.9;
+    x.fillStyle = 'rgba(18,20,26,0.82)';
+    x.fillRect(pad, pad, pillW, pillH);
+    x.strokeStyle = '#E3A73E';
+    x.lineWidth = Math.max(2, Math.round(size * 0.003));
+    x.strokeRect(pad, pad, pillW, pillH);
+    x.fillStyle = '#E3A73E';
+    x.textBaseline = 'middle';
+    x.textAlign = 'left';
+    x.fillText(tagTxt, pad + pad * 0.45, pad + pillH / 2);
+
+    // Title bottom left
+    const fs = Math.round(size * 0.08);
+    x.font = `700 ${fs}px Inter, Arial, sans-serif`;
+    x.fillStyle = '#ECE8DE';
+    x.textAlign = 'left';
+    x.textBaseline = 'bottom';
+    const lines = wrapTextLines(x, title, size * 0.88);
+    lines.slice(-3).reverse().forEach((l, i) => {
+      x.fillText(l, pad, size - pad - i * fs * 1.12);
+    });
+  } else if(overlayStyle === 'center-minimal'){
+    const fs = Math.round(size * 0.068);
+    x.font = `700 ${fs}px Inter, Arial, sans-serif`;
+    const lines = wrapTextLines(x, title.toUpperCase(), size * 0.76).slice(0, 3);
+    const boxH = lines.length * fs * 1.25 + size * 0.08;
+    const boxY = (size - boxH) / 2;
+    x.fillStyle = 'rgba(18,20,26,0.78)';
+    x.fillRect(size * 0.08, boxY, size * 0.84, boxH);
+    x.strokeStyle = 'rgba(227,167,62,0.75)';
+    x.lineWidth = Math.max(2, Math.round(size * 0.004));
+    x.strokeRect(size * 0.08, boxY, size * 0.84, boxH);
+    x.fillStyle = '#ffffff';
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    lines.forEach((l, i) => {
+      const y = boxY + size * 0.04 + (i + 0.5) * (fs * 1.25);
+      x.fillText(l, size / 2, y);
+    });
+  } else {
+    // gradient-bottom (default)
+    const g = x.createLinearGradient(0, size * 0.55, 0, size);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(0,0,0,0.78)');
+    x.fillStyle = g;
+    x.fillRect(0, size * 0.55, size, size * 0.45);
+    const fs = Math.round(size * 0.085);
+    x.font = `700 ${fs}px Inter, Arial, sans-serif`;
+    x.fillStyle = '#fff';
+    x.textAlign = 'center';
+    x.textBaseline = 'bottom';
+    const lines = wrapTextLines(x, title, size * 0.84);
+    lines.slice(-3).reverse().forEach((l, i) => x.fillText(l, size / 2, size - size * 0.06 - i * fs * 1.15));
+  }
+  return c;
+}
+
+async function makeCover(){
+  const name = getCurrentPlaylistName();
+  const customPromptEl = document.getElementById('coverCustomPrompt');
+  const prompt = customPromptEl.value.trim() || buildCoverPrompt(name);
+  customPromptEl.value = prompt;
+
+  const overlayStyle = document.getElementById('coverOverlayStyle').value;
+  const img = await loadImg(await generateCoverSrc(prompt));
+  const title = overlayStyle !== 'none' ? name : '';
+  const hd = drawCover(img, 1024, title, overlayStyle).toDataURL('image/jpeg', 0.95);
+  let b64 = '';
+  for(const [s, q] of [[640, 0.85], [640, 0.7], [640, 0.55], [512, 0.6], [512, 0.45]]){
+    b64 = drawCover(img, s, title, overlayStyle).toDataURL('image/jpeg', q).split(',')[1];
+    if(b64.length <= 240000) break;
+  }
+  coverState = { name, prompt, hd, b64, title, overlayStyle };
+  document.getElementById('coverPreviewImg').src = hd;
+  document.getElementById('coverPromptText').textContent = `Motore: ${document.getElementById('coverProvider').value.toUpperCase()} — Peso JPEG Spotify: ${Math.round(b64.length * 0.75 / 1024)} KB (Max 256 KB).\nPrompt: ${prompt}`;
+  document.getElementById('coverPreviewWrap').classList.remove('hidden');
+  document.getElementById('coverDownloadBtn').classList.remove('hidden');
+  const isExistingMode = document.getElementById('targetMode').value !== 'new';
+  document.getElementById('coverApplyExistingBtn').classList.toggle('hidden', !isExistingMode);
+}
+
+async function uploadPlaylistCover(playlistId){
+  try{
+    await spotifyFetch(`https://api.spotify.com/v1/playlists/${playlistId}/images`, {
+      method: 'PUT', headers: { 'Content-Type': 'image/jpeg' }, body: coverState.b64
+    });
+  }catch(err){
+    if(/\((401|403)\)/.test(err.message)) throw new Error('permesso immagini mancante: premi "Disconnetti", poi riconnettiti a Spotify e accetta il nuovo permesso.');
+    throw err;
+  }
+}
+
 document.getElementById('coverProvider').addEventListener('change', (e) => {
   const val = e.target.value;
   document.getElementById('comfyConfigWrap').classList.toggle('hidden', val !== 'comfyui');
   document.getElementById('openaiConfigWrap').classList.toggle('hidden', val !== 'openai');
 });
 
-document.getElementById('coverApiKey').value = localStorage.getItem('ss_openai_key'] || '';
+document.getElementById('coverApiKey').value = localStorage.getItem('ss_openai_key') || '';
 document.getElementById('coverApiKey').addEventListener('input', (e) => { try{ localStorage.setItem('ss_openai_key', e.target.value.trim()); }catch(err){} });
 
 document.getElementById('coverPreviewBtn').addEventListener('click', async () => {
