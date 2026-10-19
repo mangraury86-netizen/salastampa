@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala Stampa 4.2 — A&R Playlist Studio, Genre DB & ComfyUI FLUX Lab</title>
+<title>Sala Stampa — A&R Playlist Studio & ComfyUI GGUF Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -388,8 +388,8 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v4.2 · ComfyUI FLUX GGUF Ready</div>
-      <h1>Sala Stampa</h1>
+      <div class="eyebrow">A&amp;R Automation Studio · v4.2 · ComfyUI GGUF Ready</div>
+      <h1>Salastampa</h1>
       <p class="sub">Database persistente UPC/ISRC, classifiche internazionali, anteprima audio Spotify e Cover Art Studio collegato al tuo ComfyUI locale (GGUF).</p>
     </div>
     <div class="status-pill">
@@ -695,7 +695,7 @@
           </div>
           <div>
             <label for="plDesc">Descrizione Playlist</label>
-            <input type="text" id="plDesc" value="Selezione ufficiale curata con Sala Stampa.">
+            <input type="text" id="plDesc" value="Selezione ufficiale curata con Salastampa.">
           </div>
         </div>
       </div>
@@ -838,7 +838,7 @@
     <p style="max-width:64ch;margin:0 auto 8px;">
       <strong>Redirect URI attivo per la tua Spotify Dashboard:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
     </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.2 — Persistent Genre DB · Apple Charts · Mini-Player · ComfyUI GGUF Cover Lab</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Salastampa v4.2 — Persistent Genre DB · Apple Charts · Mini-Player · ComfyUI GGUF Cover Lab</p>
   </footer>
 
 </div>
@@ -858,9 +858,10 @@ const SCOPES = "playlist-modify-public playlist-modify-private playlist-read-pri
 
 // ---------- Persistent Database Keys (localStorage) ----------
 const LS_CATALOG_KEY = 'ss_catalog_db_v3';
-const LS_CODE_META_KEY = 'ss_code_meta_db_v3';
-const LS_ARTIST_GENRE_KEY = 'ss_artist_genre_db_v3';
+const LS_CODE_META_KEY = 'ss_code_meta_db_v3';   // code -> { genres: string[], status: 'synced'|'empty'|'not_found', trackCount: number, updatedAt: number }
+const LS_ARTIST_GENRE_KEY = 'ss_artist_genre_db_v3'; // artistId -> string[]
 
+// In-Memory Stores hydrated from localStorage
 let catalogData = [];
 let codeMetaDb = {};
 let artistGenreCache = new Map();
@@ -909,6 +910,7 @@ function updateCacheBadge(){
     `DB: ${catalogData.length} uscite · ${artistGenreCache.size} artisti`;
 }
 
+// ---------- Auth & Session State ----------
 let accessToken = sessionStorage.getItem('sp_access_token') || null;
 let refreshToken = localStorage.getItem('sp_refresh_token') || null;
 let tokenExpiresAt = parseInt(sessionStorage.getItem('sp_expires_at') || '0', 10);
@@ -922,6 +924,7 @@ let stopSyncRequested = false;
 const savedClientId = localStorage.getItem('sp_client_id') || sessionStorage.getItem('sp_client_id') || '';
 if(savedClientId) document.getElementById('clientId').value = savedClientId;
 
+// ---------- PKCE Helpers ----------
 function randomString(len){
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const arr = new Uint8Array(len);
@@ -935,6 +938,7 @@ async function sha256base64url(str){
   return b.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 
+// ---------- UI Connection State ----------
 const statusDot = document.getElementById('statusDot');
 const statusText = document.getElementById('statusText');
 const connectForm = document.getElementById('connectForm');
@@ -1558,7 +1562,7 @@ document.getElementById('exportDbJsonBtn').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `sala-stampa-db-${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `salastampa-db-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
 });
 
@@ -1813,7 +1817,7 @@ document.getElementById('rescanEmptyGenresBtn').addEventListener('click', () => 
   renderReleaseChecklist();
 });
 
-// ---------- Hit Pool Sampling (Apple Music Charts + Spotify) ----------
+// ---------- Hit da classifiche internazionali reali (Apple Music) → risolte su Spotify ----------
 const sleepMs = ms => new Promise(r => setTimeout(r, ms));
 const chartFeedCache = new Map();
 const APPLE_GENRE_MAP = [
@@ -1902,6 +1906,7 @@ async function getChartPool(genre, market){
   return pool;
 }
 
+// ---------- Hit Pool Sampling ----------
 async function getGenrePool(genre){
   const yearFilter = document.getElementById('hitYearFilter').value.trim();
   const market = document.getElementById('hitMarket').value.trim().toUpperCase();
@@ -1917,7 +1922,7 @@ async function getGenrePool(genre){
     try{
       const chartPool = await getChartPool(genre, market);
       if(chartPool.length){ genreTrackPoolCache.set(cacheKey, chartPool); return chartPool; }
-    }catch(e){ console.warn('Classifiche non disponibili, uso la ricerca Spotify', e); }
+    }catch(e){ console.warn('Classifiche non disponibili, uso la ricerca Spotify per genere', e); }
   }
 
   const pool = [];
@@ -2068,6 +2073,11 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
                 seenUri.add(t.uri);
               }
             }
+            if(famousTracks.length < famousPerRelease && hitsTotal < hitCap){
+              addMsg(msgsBox, `"${releaseName}": trovati ${famousTracks.length}/${famousPerRelease} brani per (${genreCandidates.join(', ')}).`, 'warn');
+            }
+          } else {
+            addMsg(msgsBox, `"${releaseName}": nessun genere rilevato su Spotify e nessun genere di riserva impostato.`, 'warn');
           }
         }
 
@@ -2288,7 +2298,7 @@ document.getElementById('exportCsvBtn').addEventListener('click', () => {
   const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `scaletta-sala-stampa-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `scaletta-salastampa-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
 });
 
@@ -2415,7 +2425,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
 
     if(mode === 'new'){
       const name = document.getElementById('plName').value.trim() || 'Playlist Etichetta';
-      const description = document.getElementById('plDesc').value.trim() || 'Generata con Sala Stampa.';
+      const description = document.getElementById('plDesc').value.trim() || 'Generata con Salastampa.';
       const isPublic = document.getElementById('plVisibility').value === 'public';
 
       const playlist = await spotifyFetch(`https://api.spotify.com/v1/me/playlists`, {
@@ -2590,7 +2600,6 @@ async function connectAndFetchComfyModels(){
       unetSel.innerHTML = unets.map(u => `<option value="${escapeHtml(u)}">${escapeHtml(u)}</option>`).join('');
     }
 
-    // Leggi anche CLIP e VAE disponibili
     const clipRes = await fetch(`${baseUrl}/object_info/DualCLIPLoader`);
     if(clipRes.ok){
       const clipData = await clipRes.json();
@@ -2668,7 +2677,7 @@ function buildComfyGgufPayload(positivePrompt, negativePrompt){
     },
     "9": {
       "class_type": "SaveImage",
-      "inputs": { "filename_prefix": "SalaStampa_FLUX", "images": ["8", 0] }
+      "inputs": { "filename_prefix": "Salastampa_FLUX", "images": ["8", 0] }
     },
     "10": {
       "class_type": "DualCLIPLoader",
@@ -2769,7 +2778,7 @@ document.getElementById('coverProvider').addEventListener('change', (e) => {
   document.getElementById('openaiConfigWrap').classList.toggle('hidden', val !== 'openai');
 });
 
-document.getElementById('coverApiKey').value = localStorage.getItem('ss_openai_key') || '';
+document.getElementById('coverApiKey').value = localStorage.getItem('ss_openai_key'] || '';
 document.getElementById('coverApiKey').addEventListener('input', (e) => { try{ localStorage.setItem('ss_openai_key', e.target.value.trim()); }catch(err){} });
 
 document.getElementById('coverPreviewBtn').addEventListener('click', async () => {
