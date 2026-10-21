@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala Stampa 4.3 — A&R ISRC Studio & ComfyUI Cover Lab</title>
+<title>Sala Stampa 4.4 — A&R ISRC Studio, Playlist Heatmap & ComfyUI Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
@@ -29,7 +29,7 @@
     line-height:1.5;
     padding:0 0 105px;
   }
-  .wrap{max-width:920px;margin:0 auto;padding:48px 24px 0;}
+  .wrap{max-width:940px;margin:0 auto;padding:48px 24px 0;}
 
   header.hero{
     margin-bottom:40px;
@@ -65,7 +65,7 @@
     letter-spacing:-0.01em;
     line-height:1.1;
   }
-  .sub{color:var(--text-dim);font-size:15px;max-width:62ch;margin:0;}
+  .sub{color:var(--text-dim);font-size:15px;max-width:64ch;margin:0;}
 
   .card{
     background:var(--surface);
@@ -222,6 +222,29 @@
     color:var(--amber);
     border:1px solid rgba(227,167,62,0.3);
     margin-left:6px;
+  }
+
+  /* Badge Contatore Utilizzo Playlist (Scala Verde -> Rosso) */
+  .usage-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+    flex-shrink:0;
+    cursor:help;
+    transition:transform .1s ease;
+  }
+  .usage-pill:hover{transform:scale(1.05);}
+  .usage-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    flex-shrink:0;
   }
 
   .db-sync-box{
@@ -400,9 +423,9 @@
 
   <header class="hero">
     <div>
-      <div class="eyebrow">A&amp;R Automation Studio · v4.3 · ISRC &amp; ComfyUI Lab</div>
+      <div class="eyebrow">A&amp;R Automation Studio · v4.4 · Heatmap &amp; Dynamic Cover Lab</div>
       <h1>Sala Stampa</h1>
-      <p class="sub">Database persistente ISRC (Titolo, Versione, Genere), autoplay immediato e Cover Art Studio textless collegato al tuo ComfyUI locale.</p>
+      <p class="sub">Database ISRC con contatore utilizzo nelle playlist (scala Verde → Rosso), autoplay immediato e generatore di prompt copertina sempre diversi per ComfyUI.</p>
     </div>
     <div class="status-pill">
       <span class="dot" id="statusDot"></span>
@@ -434,13 +457,13 @@
     </div>
   </section>
 
-  <!-- STEP 2: DATABASE CATALOGO ISRC, SYNC GENERI & REGOLE -->
+  <!-- STEP 2: DATABASE CATALOGO ISRC, UTILIZZO PLAYLIST & REGOLE -->
   <section class="card">
     <div class="card-header">
-      <h2><span class="num">02</span> Database Repertorio ISRC &amp; Generi</h2>
+      <h2><span class="num">02</span> Database Repertorio ISRC &amp; Utilizzo Playlist</h2>
       <span class="count-badge" id="cacheStatsBadge" title="Salvati nella memoria permanente del browser">DB: 0 brani · 0 artisti</span>
     </div>
-    <p class="hint">Il tuo repertorio ISRC (Titolo, Versione, Genere, Codice ISRC) resta salvato in automatico nel browser. Carica il CSV di Believe per aggiornare i brani.</p>
+    <p class="hint">Ogni brano mostra in tempo reale in quante playlist è stato inserito (scala colore dal <strong>Verde = 0</strong> al <strong>Rosso = 5+</strong>). Passa col mouse sul badge per leggere i nomi delle playlist.</p>
 
     <div class="row" style="align-items:center;">
       <div style="flex:2;">
@@ -450,10 +473,10 @@
       <div style="flex:1;">
         <label style="margin-top:0;">Backup Database &amp; Export</label>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="secondary sm" type="button" id="exportDbJsonBtn" title="Salva su PC il database completo">💾 Backup DB (.json)</button>
+          <button class="secondary sm" type="button" id="exportDbJsonBtn" title="Salva su PC il database completo (inclusi contatori playlist)">💾 Backup DB (.json)</button>
           <button class="secondary sm" type="button" id="importDbJsonBtn" title="Ripristina un file .json di backup">📂 Importa DB</button>
           <input type="file" id="importDbFileInput" accept=".json" class="hidden">
-          <button class="secondary sm" type="button" id="exportCatalogCsvBtn" title="Esporta tabella CSV con i generi per Excel">📊 CSV + Generi</button>
+          <button class="secondary sm" type="button" id="exportCatalogCsvBtn" title="Esporta tabella CSV con generi e numero playlist per Excel">📊 CSV + Utilizzo</button>
         </div>
       </div>
     </div>
@@ -462,19 +485,20 @@
     <!-- BLOCCO DATABASE E FILTRI CATALOGO -->
     <div id="catalogFilterBlock" class="hidden" style="margin-top:16px;padding:18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:9px;">
 
-      <!-- PANNELLO SINCRONIZZAZIONE GENERI SPOTIFY -->
+      <!-- PANNELLO SINCRONIZZAZIONE GENERI + SCANSIONE PLAYLIST SPOTIFY -->
       <div class="db-sync-box">
         <div class="db-sync-header">
           <div>
             <div style="font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:8px;">
-              <span>⚡ Sincronizzazione Generi Spotify</span>
+              <span>⚡ Sincronizzazione Generi &amp; Utilizzo Playlist Spotify</span>
               <span class="count-badge" id="syncStatusPill">Pronto</span>
             </div>
             <div style="font-size:12.5px;color:var(--text-dim);margin-top:2px;">
-              Interroga Spotify solo per gli ISRC che non hanno ancora un genere nel CSV o nel DB.
+              Sincronizza i generi mancanti oppure scansiona le tue playlist Spotify per contare in quante playlist compare già ogni canzone.
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="primary sm" type="button" id="scanPlaylistsUsageBtn" title="Legge tutte le tue playlist su Spotify e aggiorna il contatore Verde->Rosso di ogni canzone">📊 Scansiona mie Playlist Spotify</button>
             <button class="amber sm" type="button" id="syncGenresBtn">🔄 Sincronizza Generi Mancanti</button>
             <button class="danger sm hidden" type="button" id="stopSyncBtn">⏹ Metti in Pausa</button>
             <button class="secondary sm" type="button" id="rescanEmptyGenresBtn" title="Ripeti il controllo sui codici che non avevano generi">🔁 Riprova "Senza genere"</button>
@@ -484,8 +508,9 @@
         <div class="db-metrics">
           <div class="db-metric"><span>Totale Brani ISRC:</span><strong id="metricTotal">0</strong></div>
           <div class="db-metric"><span>Con Genere:</span><strong id="metricWithGenre" style="color:var(--teal);">0</strong></div>
-          <div class="db-metric"><span>Senza Genere:</span><strong id="metricNoGenre">0</strong></div>
-          <div class="db-metric"><span>Da Scansionare:</span><strong id="metricPending" style="color:var(--amber);">0</strong></div>
+          <div class="db-metric"><span>Mai usati (🟢 0 PL):</span><strong id="metricUnused" style="color:#2ecc71;">0</strong></div>
+          <div class="db-metric"><span>Già in Playlist (1+ PL):</span><strong id="metricUsed" style="color:var(--amber);">0</strong></div>
+          <div class="db-metric"><span>Da Scansionare (Genere):</span><strong id="metricPending" style="color:var(--text-dim);">0</strong></div>
         </div>
 
         <div id="syncProgressWrap" class="progress-wrap hidden">
@@ -500,24 +525,37 @@
         <div style="display:flex;gap:8px;">
           <button class="secondary sm" type="button" onclick="toggleAllLabels(true)">Tutte</button>
           <button class="secondary sm" type="button" onclick="toggleAllLabels(false)">Nessuna</button>
+          <button class="danger sm" type="button" id="resetUsageDbBtn" title="Azzera a 0 tutti i contatori di utilizzo playlist">🔄 Azzera Contatori PL</button>
           <button class="danger sm" type="button" id="wipeCatalogDbBtn" title="Cancella il catalogo salvato nel browser">🗑️ Svuota Catalogo</button>
         </div>
       </div>
       <div id="labelCheckboxes" style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;"></div>
 
-      <!-- FILTRI GENERE E DATE (SOLO ISRC) -->
+      <!-- FILTRI GENERE, UTILIZZO PLAYLIST E DATE -->
       <div class="row">
-        <div style="flex:2;">
+        <div style="flex:1.8;">
           <label for="genreFilterSelect">Filtra per Genere (dal database CSV / Spotify)</label>
           <select id="genreFilterSelect">
             <option value="__ALL__">Tutti i generi</option>
           </select>
         </div>
-        <div>
+        <div style="flex:1.5;">
+          <label for="usageFilterSelect">Filtra / Ordina per Utilizzo nelle Playlist (🟢 → 🔴)</label>
+          <select id="usageFilterSelect">
+            <option value="all">Tutti i brani (ordine catalogo)</option>
+            <option value="sort-asc">⬆️ Ordina: Meno utilizzati prima (Verde → Rosso)</option>
+            <option value="sort-desc">⬇️ Ordina: Più utilizzati prima (Rosso → Verde)</option>
+            <option value="only-0">🟢 Solo brani mai usati (0 PL)</option>
+            <option value="only-low">🟢 Poco usati (0 - 1 PL)</option>
+            <option value="only-mid">🟡 Mediamente usati (2 - 3 PL)</option>
+            <option value="only-high">🔴 Molto usati (4+ PL)</option>
+          </select>
+        </div>
+        <div style="flex:0.9;">
           <label for="dateFrom">Uscite dal</label>
           <input type="date" id="dateFrom">
         </div>
-        <div>
+        <div style="flex:0.9;">
           <label for="dateTo">Uscite al</label>
           <input type="date" id="dateTo">
         </div>
@@ -534,7 +572,7 @@
         </div>
       </div>
 
-      <div id="releaseChecklist" style="max-height:340px;overflow-y:auto;margin-top:10px;border-top:1px solid var(--border);"></div>
+      <div id="releaseChecklist" style="max-height:350px;overflow-y:auto;margin-top:10px;border-top:1px solid var(--border);"></div>
 
       <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
         <button class="primary" id="addSelectedBtn" type="button">Aggiungi ISRC selezionati alla coda ↓</button>
@@ -694,7 +732,7 @@
         </div>
       </div>
 
-      <!-- STUDIO COPERTINA AI (COMFYUI LOCALE TEXTLESS + LORA OPZIONALE) -->
+      <!-- STUDIO COPERTINA AI (COMFYUI LOCALE TEXTLESS + PROMPT REFRESH DINAMICO) -->
       <div style="margin-top:18px;padding:18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:9px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
           <label style="margin:0;display:flex;gap:8px;align-items:center;font-family:Inter,sans-serif;font-weight:600;font-size:14px;color:var(--text);">
@@ -711,6 +749,23 @@
               <option value="comfyui">🖥️ ComfyUI Locale sul mio PC (FLUX GGUF / UNET / CKPT)</option>
               <option value="pollinations">🌐 Pollinations FLUX (Cloud gratuito, senza chiave)</option>
               <option value="openai">🔑 OpenAI GPT-Image (Cloud con chiave API)</option>
+            </select>
+          </div>
+          <div>
+            <label for="coverThemeSelect">Tema / Genere Visivo per il Prompt Automatico</label>
+            <select id="coverThemeSelect">
+              <option value="auto" selected>🎯 Automatico (Rileva dal genere dei brani in scaletta)</option>
+              <option value="house">🪩 House / Tech House / Clubbing / DJ Booth</option>
+              <option value="deep">🌅 Deep House / Lounge / Sunset Terrace / Cocktail</option>
+              <option value="techno">⚡ Techno / Hard Techno / Industrial Warehouse / Laser</option>
+              <option value="afro">🥁 Afro House / Tribal / Desert &amp; Jungle Sunset</option>
+              <option value="hiphop">🏙️ Hip Hop / Trap / Urban Night / Streetwear</option>
+              <option value="pop">✨ Pop / Dance / Electro / Colori Neon &amp; Rooftop</option>
+              <option value="latin">🌴 Latin / Reggaeton / Tropical Beach Party</option>
+              <option value="rock">🎸 Rock / Metal / Alternative / Dark Stage</option>
+              <option value="chill">🌊 Chillout / Ambient / Relax / Paesaggi Naturali</option>
+              <option value="jazz">🥃 Jazz / Blues / R&amp;B / Vinyl &amp; Velvet Club</option>
+              <option value="abstract">💎 Astratto 3D / Sculture di Vetro &amp; Luce</option>
             </select>
           </div>
           <div>
@@ -775,10 +830,10 @@
             </div>
           </div>
 
-          <!-- SUPPORTO LORA (PER STILE O TIPOGRAFIA SU COMFYUI) -->
+          <!-- SUPPORTO LORA -->
           <div id="comfyLoraWrap" class="row" style="margin-top:8px;">
             <div style="flex:2;">
-              <label for="comfyLoraSelect">LoRA Opzionale da <code>models/loras</code> (es. Textoon / Graphic Design / Stile)</label>
+              <label for="comfyLoraSelect">LoRA Opzionale da <code>models/loras</code></label>
               <select id="comfyLoraSelect">
                 <option value="">Nessun LoRA attivo</option>
               </select>
@@ -822,25 +877,29 @@
             </div>
           </div>
 
-          <!-- CARICAMENTO WORKFLOW API JSON CUSTOM -->
           <div id="comfyCustomJsonWrap" class="hidden" style="margin-top:10px;">
             <label for="comfyWorkflowFile">Carica il tuo file <code>workflow_api.json</code> esportato da ComfyUI ("Save API Format")</label>
             <input type="file" id="comfyWorkflowFile" accept=".json">
           </div>
         </div>
 
-        <!-- PANNELLO OPENAI (NASCOSTO SE NON SELEZIONATO) -->
+        <!-- PANNELLO OPENAI -->
         <div id="openaiConfigWrap" class="row hidden" style="margin-top:10px;">
           <div id="coverKeyWrap"><label for="coverApiKey">Chiave API OpenAI</label><input type="password" id="coverApiKey" placeholder="sk-..."></div>
           <div id="coverModelWrap"><label for="coverModel">Modello</label><input type="text" id="coverModel" value="gpt-image-1"></div>
         </div>
 
-        <!-- EDITOR PROMPT VISIVO -->
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;">
-          <label for="coverCustomPrompt" style="margin:0;">Prompt Visivo Copertina (Puro soggetto fotografico senza scritte)</label>
-          <button class="secondary sm" type="button" id="regenPromptBtn">✨ Auto-compila Prompt da Scaletta/Generi</button>
+        <!-- EDITOR PROMPT VISIVO CON REFRESH INFINITO -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:8px;">
+          <label for="coverCustomPrompt" style="margin:0;">Prompt Visivo Copertina <span id="promptVariantBadge" style="color:var(--amber);font-weight:600;"></span></label>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <label style="margin:0;display:flex;gap:5px;align-items:center;font-family:Inter,sans-serif;font-size:12px;color:var(--text-dim);cursor:pointer;">
+              <input type="checkbox" id="autoRotatePrompt" checked style="width:auto;"> Cambia soggetto automaticamente a ogni generazione
+            </label>
+            <button class="primary sm" type="button" id="regenPromptBtn">🔄 Genera Nuovo Prompt Diverso</button>
+          </div>
         </div>
-        <textarea id="coverCustomPrompt" style="margin-top:6px;min-height:74px;" placeholder="Lascia vuoto per generarlo in automatico dai generi della scaletta (100% senza scritte)..."></textarea>
+        <textarea id="coverCustomPrompt" style="margin-top:6px;min-height:78px;" placeholder="Clicca '🔄 Genera Nuovo Prompt Diverso' per esplorare infinite idee fotografiche basate sul genere della playlist..."></textarea>
 
         <label for="coverNegativePrompt">Negative Prompt</label>
         <input type="text" id="coverNegativePrompt" value="text, words, letters, typography, title, watermark, logo, signature, label, sticker, writing, alphabet, numbers, blurry, low quality">
@@ -856,7 +915,7 @@
             <img id="coverPreviewImg" alt="Anteprima copertina" style="width:210px;height:210px;border-radius:8px;object-fit:cover;border:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,0.4);">
             <div style="flex:1;min-width:200px;">
               <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:4px;">PROMPT UTILIZZATO &amp; STATO</div>
-              <div id="coverPromptText" style="font-size:12.5px;color:var(--text-dim);"></div>
+              <div id="coverPromptText" style="font-size:12.5px;color:var(--text-dim);white-space:pre-line;"></div>
             </div>
           </div>
         </div>
@@ -874,7 +933,7 @@
     <p style="max-width:64ch;margin:0 auto 8px;">
       <strong>Redirect URI attivo per la tua Spotify Dashboard:</strong> <code id="currentRedirectUri" style="color:var(--amber);"></code>
     </p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.3 — ISRC Database · Autoplay Spotify Controller · ComfyUI Textless Cover Lab</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.5;margin-top:16px;">Sala Stampa v4.4 — ISRC Database · Playlist Usage Heatmap · Autoplay · Dynamic ComfyUI Cover Lab</p>
   </footer>
 
 </div>
@@ -897,10 +956,12 @@ const SCOPES = "playlist-modify-public playlist-modify-private playlist-read-pri
 const LS_CATALOG_KEY = 'ss_catalog_db_v3';
 const LS_CODE_META_KEY = 'ss_code_meta_db_v3';
 const LS_ARTIST_GENRE_KEY = 'ss_artist_genre_db_v3';
+const LS_PLAYLIST_USAGE_KEY = 'ss_playlist_usage_v44'; // isrc -> { playlists: { [id]: name } }
 
 let catalogData = [];
 let codeMetaDb = {};
 let artistGenreCache = new Map();
+let playlistUsageDb = {}; // { [cleanIsrc]: { playlists: { [playlistId]: playlistName } } }
 const genreTrackPoolCache = new Map();
 
 function loadPersistentDatabase(){
@@ -908,7 +969,6 @@ function loadPersistentDatabase(){
     const rawCat = localStorage.getItem(LS_CATALOG_KEY);
     if(rawCat){
       const parsed = JSON.parse(rawCat) || [];
-      // Filtra solo codici ISRC validi
       catalogData = parsed.filter(item => {
         const c = cleanCatalogCode(item.isrc || item.code);
         return c && c.type === 'track';
@@ -928,6 +988,11 @@ function loadPersistentDatabase(){
       Object.entries(obj).forEach(([k, v]) => artistGenreCache.set(k, v));
     }
   }catch(e){}
+
+  try{
+    const rawUsage = localStorage.getItem(LS_PLAYLIST_USAGE_KEY);
+    if(rawUsage) playlistUsageDb = JSON.parse(rawUsage) || {};
+  }catch(e){ playlistUsageDb = {}; }
 }
 
 function saveCatalogToStorage(){
@@ -948,9 +1013,83 @@ function saveArtistCacheToStorage(){
   updateCacheBadge();
 }
 
+function saveUsageDbToStorage(){
+  try{ localStorage.setItem(LS_PLAYLIST_USAGE_KEY, JSON.stringify(playlistUsageDb)); }catch(e){}
+  updateCacheBadge();
+}
+
+// ---------- Helpers Contatore Utilizzo Playlist (Scala Verde -> Rosso) ----------
+function normalizeIsrcKey(raw){
+  return String(raw || '').split('~')[0].replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+}
+
+function getTrackUsageInfo(rawCode){
+  const isrc = normalizeIsrcKey(rawCode);
+  const entry = playlistUsageDb[isrc];
+  if(!entry || !entry.playlists) return { count: 0, names: [] };
+  const names = Object.values(entry.playlists).filter(Boolean);
+  return { count: names.length, names };
+}
+
+function buildUsageBadgeHtml(rawCode){
+  const { count, names } = getTrackUsageInfo(rawCode);
+  // Scala HSL progressiva: 0 = 145° (Verde Smeraldo), 1 = 108° (Verde Lime), 2 = 68° (Giallo-Verde), 3 = 42° (Ambra), 4 = 20° (Arancio), 5+ = 0° (Rosso)
+  const hues = [145, 108, 68, 42, 20, 0];
+  const h = hues[Math.min(count, 5)];
+  const bgAlpha = count === 0 ? 0.13 : Math.min(0.26, 0.14 + count * 0.025);
+  const borderAlpha = count === 0 ? 0.40 : 0.58;
+  const textLightness = count === 0 ? '62%' : (count >= 4 ? '66%' : '62%');
+
+  const style = `background:hsla(${h}, 78%, 48%, ${bgAlpha});color:hsl(${h}, 88%, ${textLightness});border:1px solid hsla(${h}, 80%, 52%, ${borderAlpha});`;
+  const dotStyle = `background:hsl(${h}, 85%, 55%);box-shadow:0 0 6px hsla(${h}, 85%, 55%, 0.7);`;
+  const tooltip = count === 0
+    ? 'Mai inserito in nessuna playlist (0 playlist)'
+    : `Presente in ${count} playlist:\n• ${names.join('\n• ')}`;
+
+  return `<span class="usage-pill" style="${style}" title="${escapeHtml(tooltip)}"><span class="usage-dot" style="${dotStyle}"></span>${count} PL</span>`;
+}
+
+function recordPlaylistUsageLocal(playlistId, playlistName, mode, tracksInPlaylist){
+  if(!playlistId) return;
+  const plTitle = playlistName || `Playlist ${playlistId.slice(0, 6)}`;
+
+  // Se la modalità è 'replace' (sovrascrivi), rimuove prima questa playlist da tutti gli ISRC che la contenevano
+  if(mode === 'replace'){
+    Object.values(playlistUsageDb).forEach(entry => {
+      if(entry && entry.playlists && playlistId in entry.playlists){
+        delete entry.playlists[playlistId];
+      }
+    });
+  }
+
+  // Indice rapido per trovare l'ISRC anche tramite Titolo+Artista se necessario
+  const byTitleArtist = new Map();
+  catalogData.forEach(item => {
+    const k = `${(item.title||'').toLowerCase().trim()}|${(item.artist||'').toLowerCase().trim()}`;
+    byTitleArtist.set(k, normalizeIsrcKey(item.isrc || item.code));
+  });
+
+  tracksInPlaylist.forEach(t => {
+    let isrc = t.isrc ? normalizeIsrcKey(t.isrc) : '';
+    if(!isrc && t.kind === 'catalog'){
+      const k = `${(t.name||'').toLowerCase().trim()}|${(t.artist||'').toLowerCase().trim()}`;
+      isrc = byTitleArtist.get(k) || '';
+    }
+    if(!isrc) return;
+    if(!playlistUsageDb[isrc]) playlistUsageDb[isrc] = { playlists: {} };
+    if(!playlistUsageDb[isrc].playlists) playlistUsageDb[isrc].playlists = {};
+    playlistUsageDb[isrc].playlists[playlistId] = plTitle;
+  });
+
+  saveUsageDbToStorage();
+  refreshSyncMetricsAndGenreDropdown();
+  renderReleaseChecklist();
+}
+
 function updateCacheBadge(){
+  const usedCount = catalogData.filter(r => getTrackUsageInfo(r.isrc || r.code).count > 0).length;
   document.getElementById('cacheStatsBadge').textContent =
-    `DB: ${catalogData.length} brani ISRC · ${artistGenreCache.size} artisti`;
+    `DB: ${catalogData.length} brani ISRC · ${usedCount} in playlist`;
 }
 
 // ---------- Auth & Session State ----------
@@ -1164,7 +1303,7 @@ function cleanCatalogCode(raw){
   return null;
 }
 
-// ---------- File Parser & Catalog Merger (Solo ISRC + Titolo + Versione + Genere) ----------
+// ---------- File Parser & Catalog Merger ----------
 function parseDelimited(text, delimiter){
   const rows = [];
   let row = [], field = '', inQuotes = false;
@@ -1405,7 +1544,7 @@ function refreshCatalogUI(){
 }
 
 function refreshSyncMetricsAndGenreDropdown(){
-  let withGenre = 0, noGenre = 0, pending = 0;
+  let withGenre = 0, noGenre = 0, pending = 0, unusedCount = 0, usedCount = 0;
   const genreCounts = {};
 
   catalogData.forEach(item => {
@@ -1420,11 +1559,16 @@ function refreshSyncMetricsAndGenreDropdown(){
     } else {
       noGenre++;
     }
+
+    const u = getTrackUsageInfo(item.isrc || item.code);
+    if(u.count === 0) unusedCount++;
+    else usedCount++;
   });
 
   document.getElementById('metricTotal').textContent = String(catalogData.length);
   document.getElementById('metricWithGenre').textContent = String(withGenre);
-  document.getElementById('metricNoGenre').textContent = String(noGenre);
+  document.getElementById('metricUnused').textContent = String(unusedCount);
+  document.getElementById('metricUsed').textContent = String(usedCount);
   document.getElementById('metricPending').textContent = String(pending);
 
   const syncBtn = document.getElementById('syncGenresBtn');
@@ -1471,11 +1615,12 @@ window.toggleAllLabels = function(state){
 function currentFilteredCatalog(){
   const checkedLabels = [...document.querySelectorAll('.label-cb:checked')].map(cb => cb.value);
   const genreFilter = document.getElementById('genreFilterSelect').value;
+  const usageFilter = document.getElementById('usageFilterSelect').value;
   const dateFrom = document.getElementById('dateFrom').value.trim();
   const dateTo = document.getElementById('dateTo').value.trim();
   const search = document.getElementById('titleSearch').value.trim().toLowerCase();
 
-  return catalogData.filter(r => {
+  let list = catalogData.filter(r => {
     if(checkedLabels.length === 0) return false;
     if(!checkedLabels.includes(r.label)) return false;
     if(dateFrom && (!r.release_date || r.release_date < dateFrom)) return false;
@@ -1491,12 +1636,26 @@ function currentFilteredCatalog(){
     else if(genreFilter.startsWith('g:')){ if(!genres.includes(genreFilter.slice(2))) return false; }
     else if(!genreFilter.startsWith('__') && !genres.includes(genreFilter)) return false;
 
+    const uCount = getTrackUsageInfo(r.isrc || r.code).count;
+    if(usageFilter === 'only-0' && uCount !== 0) return false;
+    if(usageFilter === 'only-low' && uCount > 1) return false;
+    if(usageFilter === 'only-mid' && (uCount < 2 || uCount > 3)) return false;
+    if(usageFilter === 'only-high' && uCount < 4) return false;
+
     if(search){
       const haystack = `${r.title} ${r.version || ''} ${r.artist} ${r.isrc || r.code} ${genres.join(' ')}`.toLowerCase();
       if(!haystack.includes(search)) return false;
     }
     return true;
   });
+
+  if(usageFilter === 'sort-asc'){
+    list = [...list].sort((a, b) => getTrackUsageInfo(a.isrc || a.code).count - getTrackUsageInfo(b.isrc || b.code).count);
+  } else if(usageFilter === 'sort-desc'){
+    list = [...list].sort((a, b) => getTrackUsageInfo(b.isrc || b.code).count - getTrackUsageInfo(a.isrc || a.code).count);
+  }
+
+  return list;
 }
 
 function updateSelectedCheckCount(){
@@ -1536,12 +1695,14 @@ function renderReleaseChecklist(){
       genreBadgeHtml = `<span class="genre-pill empty">nessun genere</span>`;
     }
 
+    const usageBadgeHtml = buildUsageBadgeHtml(displayIsrc);
     const fullLabel = `${displayTitle}${displayVersion ? ' (' + displayVersion + ')' : ''}${displayArtist ? ' — ' + displayArtist : ''}`;
 
     row.innerHTML = `
       <input type="checkbox" class="release-cb" value="${escapeHtml(r.code)}" style="width:auto;flex-shrink:0;">
       <button type="button" class="play-btn" data-play="${escapeHtml(r.code)}" data-label="${escapeHtml(fullLabel)}" title="Riproduci subito anteprima">▶</button>
-      <span style="flex:1;min-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+      ${usageBadgeHtml}
+      <span style="flex:1;min-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
         <strong>${escapeHtml(displayTitle)}</strong>${displayVersion ? `<span class="version-pill">${escapeHtml(displayVersion)}</span>` : ''}
         ${displayArtist ? `<span style="color:var(--text-dim)"> · ${escapeHtml(displayArtist)}</span>` : ''}
       </span>
@@ -1587,6 +1748,14 @@ document.getElementById('clearUpcsBtn').addEventListener('click', () => {
   document.getElementById('upcs').value = '';
 });
 
+document.getElementById('resetUsageDbBtn').addEventListener('click', () => {
+  if(!confirm('Vuoi azzerare tutti i contatori di utilizzo nelle playlist (riportando tutti i brani a 0 PL)?')) return;
+  playlistUsageDb = {};
+  saveUsageDbToStorage();
+  refreshSyncMetricsAndGenreDropdown();
+  renderReleaseChecklist();
+});
+
 document.getElementById('wipeCatalogDbBtn').addEventListener('click', () => {
   if(!confirm('Vuoi svuotare l\'elenco del catalogo salvato nel browser?')) return;
   catalogData = [];
@@ -1594,13 +1763,124 @@ document.getElementById('wipeCatalogDbBtn').addEventListener('click', () => {
   refreshCatalogUI();
 });
 
+// ---------- Scansione Live delle Playlist Spotify dell'Utente (Popola il Contatore Verde->Rosso) ----------
+async function scanUserSpotifyPlaylistsForUsage(){
+  if(!accessToken){
+    alert('Connettiti prima a Spotify nello Step 01 per scansionare le tue playlist.');
+    return;
+  }
+  if(isSyncingGenres) return;
+  isSyncingGenres = true;
+  stopSyncRequested = false;
+
+  const scanBtn = document.getElementById('scanPlaylistsUsageBtn');
+  const stopBtn = document.getElementById('stopSyncBtn');
+  const statusPill = document.getElementById('syncStatusPill');
+  const progWrap = document.getElementById('syncProgressWrap');
+  const progBar = document.getElementById('syncProgressBar');
+  const progText = document.getElementById('syncProgressText');
+
+  scanBtn.disabled = true;
+  stopBtn.classList.remove('hidden');
+  progWrap.classList.remove('hidden');
+  statusPill.textContent = 'Scansione playlist...';
+
+  // Mappa rapida di tutti gli ISRC e Titolo+Artista del catalogo Soulgem
+  const catalogIsrcSet = new Set();
+  const titleArtistToIsrc = new Map();
+  catalogData.forEach(item => {
+    const clean = normalizeIsrcKey(item.isrc || item.code);
+    if(clean) catalogIsrcSet.add(clean);
+    const tKey = `${(item.title||'').toLowerCase().trim()}|${(item.artist||'').toLowerCase().trim()}`;
+    if(item.title) titleArtistToIsrc.set(tKey, clean);
+  });
+
+  try{
+    progText.textContent = 'Recupero elenco delle tue playlist Spotify...';
+    let allPlaylists = [];
+    let nextUrl = 'https://api.spotify.com/v1/me/playlists?limit=50';
+    while(nextUrl && allPlaylists.length < 250){
+      const data = await spotifyFetch(nextUrl);
+      const items = data?.items || [];
+      const owned = items.filter(p => !userId || p.owner?.id === userId);
+      allPlaylists.push(...owned);
+      nextUrl = data?.next || null;
+    }
+
+    const freshUsage = {};
+    let matchedOccurrences = 0;
+
+    for(let i = 0; i < allPlaylists.length; i++){
+      if(stopSyncRequested) break;
+      const pl = allPlaylists[i];
+      const pct = Math.round(((i + 1) / Math.max(1, allPlaylists.length)) * 100);
+      progBar.style.width = `${pct}%`;
+      progText.textContent = `[${i+1}/${allPlaylists.length}] Analizzo playlist "${pl.name}"...`;
+
+      try{
+        let tracksUrl = `https://api.spotify.com/v1/playlists/${pl.id}/tracks?limit=100`;
+        while(tracksUrl){
+          const tData = await spotifyFetch(tracksUrl);
+          const tItems = tData?.items || [];
+          for(const row of tItems){
+            const tr = row?.track || row?.item;
+            if(!tr) continue;
+            let rawIsrc = tr.external_ids?.isrc ? normalizeIsrcKey(tr.external_ids.isrc) : '';
+            if(!rawIsrc || !catalogIsrcSet.has(rawIsrc)){
+              const trArtists = (tr.artists || []).map(a => a.name).join(', ').toLowerCase().trim();
+              const trName = (tr.name || '').toLowerCase().trim();
+              const candidate = titleArtistToIsrc.get(`${trName}|${trArtists}`);
+              if(candidate) rawIsrc = candidate;
+            }
+            if(rawIsrc && catalogIsrcSet.has(rawIsrc)){
+              if(!freshUsage[rawIsrc]) freshUsage[rawIsrc] = { playlists: {} };
+              freshUsage[rawIsrc].playlists[pl.id] = pl.name;
+              matchedOccurrences++;
+            }
+          }
+          tracksUrl = tData?.next || null;
+          if(tracksUrl) await sleepMs(50);
+        }
+      }catch(plErr){
+        console.warn('Impossibile leggere playlist ' + pl.name, plErr);
+      }
+      await sleepMs(75);
+    }
+
+    if(!stopSyncRequested){
+      playlistUsageDb = freshUsage;
+    } else {
+      // Merge parziale se interrotto
+      Object.entries(freshUsage).forEach(([k, v]) => {
+        if(!playlistUsageDb[k]) playlistUsageDb[k] = { playlists: {} };
+        Object.assign(playlistUsageDb[k].playlists, v.playlists);
+      });
+    }
+    saveUsageDbToStorage();
+    refreshSyncMetricsAndGenreDropdown();
+    renderReleaseChecklist();
+    if(builtTracks.length > 0) renderPreview();
+    statusPill.textContent = `Scansionate ${allPlaylists.length} playlist (${matchedOccurrences} presenze)`;
+  }catch(err){
+    alert('Errore durante la scansione delle playlist: ' + err.message);
+  }finally{
+    isSyncingGenres = false;
+    scanBtn.disabled = false;
+    stopBtn.classList.add('hidden');
+    setTimeout(() => { if(!isSyncingGenres) progWrap.classList.add('hidden'); }, 1800);
+  }
+}
+
+document.getElementById('scanPlaylistsUsageBtn').addEventListener('click', scanUserSpotifyPlaylistsForUsage);
+
 // ---------- Database Backup Export / Import ----------
 document.getElementById('exportDbJsonBtn').addEventListener('click', () => {
   const payload = {
-    version: '4.3',
+    version: '4.4',
     exportedAt: new Date().toISOString(),
     catalogData,
     codeMetaDb,
+    playlistUsageDb,
     artistGenreDb: Object.fromEntries(artistGenreCache.entries())
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
@@ -1626,12 +1906,16 @@ document.getElementById('importDbFileInput').addEventListener('change', async (e
       codeMetaDb = { ...codeMetaDb, ...data.codeMetaDb };
       saveCodeMetaToStorage();
     }
+    if(data.playlistUsageDb && typeof data.playlistUsageDb === 'object'){
+      playlistUsageDb = { ...playlistUsageDb, ...data.playlistUsageDb };
+      saveUsageDbToStorage();
+    }
     if(data.artistGenreDb && typeof data.artistGenreDb === 'object'){
       Object.entries(data.artistGenreDb).forEach(([k, v]) => artistGenreCache.set(k, v));
       saveArtistCacheToStorage();
     }
     refreshCatalogUI();
-    addMsg(document.getElementById('fileParseMsg'), 'Backup Database importato e sincronizzato con successo!', 'ok');
+    addMsg(document.getElementById('fileParseMsg'), 'Backup Database (inclusi contatori utilizzo playlist) importato con successo!', 'ok');
   }catch(err){
     alert('File di backup non valido: ' + err.message);
   }
@@ -1639,29 +1923,33 @@ document.getElementById('importDbFileInput').addEventListener('change', async (e
 
 document.getElementById('exportCatalogCsvBtn').addEventListener('click', () => {
   if(catalogData.length === 0){ alert('Il catalogo è vuoto.'); return; }
-  const header = ['ISRC','Titolo','Versione','Artista','Etichetta','Genere'];
+  const header = ['ISRC','Titolo','Versione','Artista','Etichetta','Genere','Numero Playlist','Nomi Playlist'];
   const rows = catalogData.map(r => {
     const meta = codeMetaDb[r.code];
     const genres = (r.genres && r.genres.length) ? r.genres : (meta?.genres || []);
+    const isrc = r.isrc || r.code.split('~')[0];
+    const u = getTrackUsageInfo(isrc);
     return [
-      r.isrc || r.code.split('~')[0],
+      isrc,
       `"${(r.title || meta?.spotifyTitle || '').replace(/"/g,'""')}"`,
       `"${(r.version || '').replace(/"/g,'""')}"`,
       `"${(r.artist || meta?.spotifyArtist || '').replace(/"/g,'""')}"`,
       `"${(r.label || '').replace(/"/g,'""')}"`,
-      `"${genres.join(', ').replace(/"/g,'""')}"`
+      `"${genres.join(', ').replace(/"/g,'""')}"`,
+      u.count,
+      `"${u.names.join(', ').replace(/"/g,'""')}"`
     ];
   });
   const csv = [header.join(';'), ...rows.map(r => r.join(';'))].join('\n');
   const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `catalogo-isrc-generi-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `catalogo-isrc-utilizzo-playlist-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
 });
 
 // ---------- Spotify Resolvers (ISRC) ----------
-function formatTrackObj(t, albumCoverFallback, kind, sourceGenre=''){
+function formatTrackObj(t, albumCoverFallback, kind, sourceGenre='', isrcCode=''){
   const cover = t.album?.images?.[t.album.images.length - 1]?.url || albumCoverFallback || '';
   return {
     uri: t.uri,
@@ -1671,7 +1959,8 @@ function formatTrackObj(t, albumCoverFallback, kind, sourceGenre=''){
     cover,
     duration_ms: t.duration_ms || 0,
     external_url: t.external_urls?.spotify || '#',
-    sourceGenre
+    sourceGenre,
+    isrc: isrcCode || t.external_ids?.isrc || ''
   };
 }
 
@@ -1680,7 +1969,7 @@ async function trackFromIsrc(isrc){
   const items = data.tracks?.items || [];
   if(items.length === 0) return { tracks: [], found:false, totalTracks: 0 };
   const t = items[0];
-  const track = formatTrackObj(t, '', 'catalog');
+  const track = formatTrackObj(t, '', 'catalog', '', isrc);
   const artistIds = [...new Set((t.artists || []).map(a => a.id).filter(Boolean))].slice(0, 3);
   const primaryArtistName = (t.artists || []).map(a => a.name).join(', ');
   return {
@@ -2085,9 +2374,6 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
           continue;
         }
 
-        const catalogTracks = tracks.filter(t => (seenUri.has(t.uri) ? false : (seenUri.add(t.uri), true)));
-        let famousTracks = [];
-
         const catEntry = catalogData.find(x => x.code === rawCode.trim()) || catalogData.find(x => x.isrc === normCode);
         let genreCandidates = (catEntry?.genres || []).slice();
         if(genreCandidates.length === 0) genreCandidates = codeMetaDb[normCode]?.genres || [];
@@ -2103,6 +2389,17 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
           };
           saveCodeMetaToStorage();
         }
+
+        const primaryGenre = genreCandidates[0] || '';
+        const catalogTracks = tracks.filter(t => {
+          if(seenUri.has(t.uri)) return false;
+          seenUri.add(t.uri);
+          t.isrc = normCode;
+          if(primaryGenre && !t.sourceGenre) t.sourceGenre = primaryGenre;
+          return true;
+        });
+
+        let famousTracks = [];
 
         if(famousPerRelease > 0){
           if(genreCandidates.length === 0 && fallbackGenre){
@@ -2170,6 +2467,9 @@ document.getElementById('buildBtn').addEventListener('click', async () => {
       : combined;
 
     renderPreview();
+    // Pre-genera subito un primo prompt coerente per la scaletta appena creata
+    refreshCoverPromptWithNewVariant();
+
     if(builtTracks.length === 0){
       addMsg(msgsBox, 'Nessun brano trovato: verifica i codici ISRC inseriti.', 'warn');
     } else {
@@ -2228,12 +2528,14 @@ function renderPreview(){
     const stampClass = t.kind === 'hit' ? 'hit' : (t.kind === 'manual' ? 'manual' : 'catalog');
     const stampLabel = t.kind === 'hit' ? 'HIT' : (t.kind === 'manual' ? 'MANUALE' : 'CATALOGO');
     const genreHint = (t.sourceGenre ? ` · ${escapeHtml(t.sourceGenre)}` : '') + (t.chart ? ` · classifica ${escapeHtml(t.chart)}` : '');
+    const usageHtml = (t.kind === 'catalog' && t.isrc) ? buildUsageBadgeHtml(t.isrc) : '';
 
     row.innerHTML = `
       <span class="drag-handle" title="Trascina per riordinare">⋮⋮</span>
       <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);width:24px;text-align:right;">${idx+1}</span>
       ${t.cover ? `<img class="track-cover" src="${escapeHtml(t.cover)}" alt="">` : `<div class="track-cover"></div>`}
       <span class="stamp ${stampClass}">${stampLabel}</span>
+      ${usageHtml}
       <div class="track-info">
         <div class="track-title">
           <a href="${escapeHtml(t.external_url || '#')}" target="_blank" rel="noopener" title="Apri su Spotify">${escapeHtml(t.name)}</a>
@@ -2473,16 +2775,17 @@ document.getElementById('createBtn').addEventListener('click', async () => {
   try{
     let playlistId = '';
     let playlistUrl = '';
+    let finalPlaylistName = '';
     const uris = builtTracks.map(t => t.uri);
 
     if(mode === 'new'){
-      const name = document.getElementById('plName').value.trim() || 'Playlist Etichetta';
+      finalPlaylistName = document.getElementById('plName').value.trim() || 'Playlist Etichetta';
       const description = document.getElementById('plDesc').value.trim() || 'Generata con Sala Stampa.';
       const isPublic = document.getElementById('plVisibility').value === 'public';
 
       const playlist = await spotifyFetch(`https://api.spotify.com/v1/me/playlists`, {
         method: 'POST',
-        body: JSON.stringify({ name, description, public: isPublic })
+        body: JSON.stringify({ name: finalPlaylistName, description, public: isPublic })
       });
       playlistId = playlist.id;
       playlistUrl = playlist.external_urls?.spotify || `https://open.spotify.com/playlist/${playlistId}`;
@@ -2496,6 +2799,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
         addMsg(msgsBox, 'Seleziona una playlist esistente dalla lista.', 'warn');
         return;
       }
+      finalPlaylistName = getCurrentPlaylistName();
       playlistUrl = `https://open.spotify.com/playlist/${playlistId}`;
 
       if(mode === 'replace'){
@@ -2511,11 +2815,14 @@ document.getElementById('createBtn').addEventListener('click', async () => {
       }
     }
 
+    // Aggiorna in tempo reale il contatore Verde->Rosso per tutti i brani del catalogo presenti nella scaletta!
+    recordPlaylistUsageLocal(playlistId, finalPlaylistName, mode, builtTracks);
+    renderPreview();
+
     if(document.getElementById('coverEnable').checked){
       try{
         createBtn.textContent = 'Genero / Carico la copertina...';
-        const wantName = getCurrentPlaylistName();
-        if(!coverState || coverState.name !== wantName) await makeCover();
+        if(!coverState) await makeCover();
         await uploadPlaylistCover(playlistId);
         addMsg(msgsBox, 'Copertina AI impostata sulla playlist.', 'ok');
       }catch(coverErr){
@@ -2525,7 +2832,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
     }
     const okDiv = document.createElement('div');
     okDiv.className = 'msg ok';
-    okDiv.innerHTML = `Operazione completata con successo (${uris.length} brani)! <a href="${escapeHtml(playlistUrl)}" target="_blank" rel="noopener" style="font-weight:600;margin-left:8px;">Aprila su Spotify →</a>`;
+    okDiv.innerHTML = `Operazione completata con successo (${uris.length} brani — contatori utilizzo aggiornati)! <a href="${escapeHtml(playlistUrl)}" target="_blank" rel="noopener" style="font-weight:600;margin-left:8px;">Aprila su Spotify →</a>`;
     msgsBox.appendChild(okDiv);
   }catch(e){
     console.error(e);
@@ -2574,7 +2881,6 @@ function mountOrPlaySpotifyController(trackId){
     });
     return;
   }
-  // Fallback nel caso lo script iFrame API non sia ancora pronto
   pendingTrackIdToPlay = trackId;
   const container = document.getElementById('miniPlayerEmbed');
   container.innerHTML = `<iframe src="https://open.spotify.com/embed/track/${encodeURIComponent(trackId)}?utm_source=generator&autoplay=1" width="100%" height="80" frameborder="0" style="border-radius:10px;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
@@ -2618,29 +2924,133 @@ document.getElementById('releaseChecklist').addEventListener('click', async (e) 
   openMiniPlayer(id, btn.dataset.label);
 });
 
-// ---------- Copertina AI 100% Textless (ComfyUI + LoRA opzionale + Pollinations + OpenAI) ----------
-const COVER_SCENES = [
-  [/lounge|chill|relax|ambient|easy listening|meditat|downtempo|sunset|cocktail/, 'an upscale coastal terrace at golden hour, two crystal glasses on a travertine stone table, warm amber sunset reflections over calm sea water, soft bokeh lights, shallow depth of field'],
-  [/techno|hard techno|minimal|acid/, 'a cavernous brutalist concrete space, geometric beams of white and violet laser light cutting through atmospheric fog, dark minimal industrial aesthetic'],
-  [/house|dance|edm|trance|electro|disco|club|party/, 'immersive neon light installation in a dark club, glowing magenta and cyan light tubes reflecting on wet dark floor, atmospheric haze, vibrant bokeh'],
-  [/hip hop|rap|trap/, 'cinematic night street alley after rain, glowing orange and teal puddles on dark asphalt, moody urban architecture, shallow depth of field'],
-  [/latin|reggaeton|salsa|merengue|tropical|summer|estate/, 'tropical palm silhouettes against a glowing coral and golden sunset sky over the ocean, warm summer evening atmosphere'],
-  [/reggae/, 'warm golden sunset over calm Caribbean turquoise water, palm fronds in foreground, rich natural colours'],
-  [/jazz|blues|soul|r&b|funk/, 'close-up of a gleaming brass saxophone resting on dark velvet under a warm amber spotlight, smoky intimate atmosphere, rich shadows'],
-  [/classical|orchestr/, 'polished ebony grand piano strings and hammers under warm golden chandelier light, shallow depth of field, classical elegance'],
-  [/rock|metal|alternative|indie|new wave/, 'dramatic stage spotlights cutting through dark blue smoke, glowing vacuum tubes of a vintage amplifier, high contrast'],
-  [/folk|acoustic|singer/, 'sunlight streaming through autumn forest trees onto a wooden path, warm golden hour dust motes, natural organic photography'],
-  [/world|arabic|african|afro|ethnic|folklore|brazil|bossa/, 'warm terracotta courtyard at dusk illuminated by glowing brass lanterns, intricate shadows, rich earthy tones'],
-  [/pop/, 'iridescent glass prism refracting vibrant pastel light beams on a clean dark studio background, glossy modern photography']
+// ---------- GENERATORE DI PROMPT COPERTINA MULTI-SCENA CON REFRESH INFINITO ----------
+const SCENE_POOLS = {
+  house: [
+    'an underground club dancefloor seen from behind the DJ booth, glowing pioneer rotary mixer knobs in foreground, crowd silhouettes in warm magenta and cyan haze',
+    'a giant mirror disco ball suspended in a dark warehouse club, reflecting thousands of sharp golden and electric blue light beams through atmospheric smoke',
+    'macro close-up of a spinning black vinyl record on a brushed aluminum turntable platter, neon violet and warm amber light reflections on the grooves',
+    'futuristic geometric LED light tunnel in an electronic music club, wet dark reflective floor, volumetric fog, vibrant nocturnal energy',
+    'rooftop DJ set overlooking a glowing metropolitan skyline at dusk, warm string lights, silhouettes of people dancing against a deep indigo sky',
+    'retro-futuristic synthesizer studio filled with warm glowing analog VU meters, patch cables, and moody cyan and orange rim lighting',
+    'minimalist architectural courtyard transformed into a night club, floating glowing spheres of warm light, palm shadows on concrete walls',
+    'abstract soundwaves made of liquid gold and glowing neon plasma floating in a dark acoustic chamber, macro studio photography'
+  ],
+  deep: [
+    'an upscale Mediterranean cliffside lounge terrace at golden hour, two crystal cocktail glasses with orange peel on travertine stone, calm sea horizon',
+    'infinity pool overlooking a sunset ocean in Ibiza, warm amber and rose gold sky reflecting onrippling water, minimalist luxury architecture',
+    'intimate candlelit courtyard with linen sofas, olive trees, and warm terracotta walls glowing in the last rays of sunset',
+    'vintage Riva wooden speedboat cruising on calm glassy water at dusk, warm golden reflections, cinematic coastal atmosphere',
+    'modern architectural living room with floor-to-ceiling glass windows facing a misty ocean sunset, warm tungsten floor lamp, plush velvet armchair',
+    'close-up of ice cubes and rising bubbles inside a crystal glass at sunset on a teak wooden deck, warm golden bokeh background',
+    'palm tree silhouettes reflected in a tranquil resort lagoon at twilight, gradient sky from deep violet to warm coral orange',
+    'minimalist desert pavilion at sunset, warm firepit embers, soft sand dunes in the distance under a purple and gold sky'
+  ],
+  techno: [
+    'a cavernous brutalist concrete warehouse, intense white and ultraviolet strobe beams cutting through thick industrial fog, high contrast',
+    'monolithic dark steel structures in a subterranean hall illuminated by a single blood-red laser grid and volumetric steam',
+    'macro photography of dark ferrofluid spikes reacting to a magnetic bass frequency, lit by cold cyan and silver rim light',
+    'abandoned power plant turbine hall at night, dramatic vertical shafts of cold xenon light piercing through dense smoke',
+    'cyberpunk brutalist corridor with wet asphalt floor reflecting pulsing amber and white LED monoliths, atmospheric mist',
+    'abstract architectural labyrinth of raw concrete and glowing white neon lines, dramatic chiaroscuro lighting, minimal techno aesthetic',
+    'close-up of a modular synthesizer rack in the dark, hundreds of patch cables glowing under ultraviolet blacklight',
+    'dark volcanic basalt landscape under an eclipse, glowing geometric ring of cold white light in the mist'
+  ],
+  afro: [
+    'a breathtaking savanna sunset with a lone acacia tree silhouette against a giant glowing crimson and gold sun, warm dust in the air',
+    'carved wooden djembe drums and woven lanterns arranged around a glowing firepit on a red clay terrace at dusk',
+    'sunbeams piercing through a lush tropical rainforest canopy onto a misty river at golden hour, rich emerald and gold palette',
+    'moroccan desert camp at twilight, warm brass lanterns casting intricate geometric light patterns on wind-sculpted sand dunes',
+    'coastal bonfire on a wild beach at dusk, sparks rising into a deep indigo sky, waves washing over dark volcanic sand',
+    'artistic macro portrait of golden tribal bronze jewelry and natural woven textures illuminated by warm firelight',
+    'terraced canyon at sunset with warm ochre rock formations glowing under a dramatic orange and violet sky',
+    'tranquil oasis lagoon surrounded by date palms at sunset, mirror-like water reflecting a fiery sky'
+  ],
+  hiphop: [
+    'cinematic New York style street alley at night after rain, neon reflections in wet asphalt puddles, steam rising from a manhole',
+    'vintage lowrider classic car parked under a warm sodium streetlight at night, chrome details gleaming in the dark, moody urban fog',
+    'rooftop basketball court at twilight overlooking a sprawling city skyline, chain-link fence in foreground, dramatic golden and blue hour lighting',
+    'underground recording studio control room at night, large mixing console with glowing faders, warm moody amber and purple lighting',
+    'concrete skatepark bowl at sunset, long dramatic shadows, warm golden light grazing the curved concrete surfaces',
+    'luxury dark marble hallway with gold neon architectural accents and dramatic low-angle spotlighting',
+    'vintage boombox resting on wet concrete steps at night, illuminated by passing car headlights and colourful street bokeh',
+    'panoramic view of a city bridge at night with light trails and moody fog rolling over dark water'
+  ],
+  pop: [
+    'iridescent glass prism refracting vibrant pastel rainbow light beams across a sleek dark studio surface, macro photography',
+    'glossy rooftop party terrace at twilight with colourful neon flamingo pink and turquoise lights, city skyline bokeh',
+    'floating metallic chrome balloons and confetti suspended in mid-air inside a sunlit minimalist pastel atrium',
+    'retro 1980s roller rink floor with glowing neon pink and electric blue reflections, cinematic synthwave aesthetic',
+    'candy-coloured convertible car driving along a coastal highway at sunset, palm trees, vibrant dreamy colour grading',
+    'abstract 3D composition of glossy pastel spheres and liquid holographic ribbons floating in soft studio light',
+    'sun-drenched California poolside with turquoise water, striped umbrellas, and vibrant summer colours',
+    'neon-lit arcade room at night with glowing magenta and cyan reflections on a polished floor'
+  ],
+  latin: [
+    'vibrant Havana street at golden hour, colourful colonial architecture, warm tropical sunlight and long evening shadows',
+    'tropical beach party at sunset, palm trees framing a glowing orange and magenta sky over turquoise ocean waves',
+    'lush botanical courtyard with hibiscus flowers, warm string lights, and terracotta tiles at dusk',
+    'Caribbean деревянный pier extending into crystal-clear turquoise water at sunset, warm golden horizon',
+    'close-up of tropical cocktails garnished with pineapple and lime on a sunlit bamboo bar by the sea',
+    'warm sunset over Rio de Janeiro coastline, dramatic mountain silhouettes, golden and violet sky',
+    'festive open-air courtyard at night illuminated by warm paper lanterns and lush tropical foliage'
+  ],
+  rock: [
+    'vintage tube guitar amplifier glowing warmly on a dark smoky concert stage, dramatic backlight beams',
+    'close-up of an electric guitar fretboard and strings under dramatic red and blue stage spotlights, shallow depth of field',
+    'desert highway stretching toward a dramatic thunderstorm at sunset, lightning bolt in the distance, cinematic mood',
+    'dark rehearsal room with a drum kit silhouetted against a wall of bright white stage par lights and haze',
+    'weathered leather jacket and vintage microphone stand on a wooden stage floor under a single warm spotlight',
+    'dramatic mountain peak emerging from dark storm clouds, illuminated by a shaft of golden sunlight'
+  ],
+  chill: [
+    'misty Nordic mountain lake at dawn, wooden dock extending into mirror-still water, soft pastel pink and blue sky',
+    'raindrops on a cozy windowpane at dusk, warm blurred city lights and a steaming ceramic mug in the background',
+    'sunlight filtering through a quiet Japanese bamboo forest in the early morning mist, serene green and gold tones',
+    'minimalist zen garden with raked white sand, mossy stones, and soft diffused morning light',
+    'calm ocean waves gently washing over smooth pebbles at sunset, long exposure silky water effect',
+    'cozy cabin interior with a crackling fireplace looking out at a snowy pine forest at twilight',
+    'floating clouds over a tranquil pastel sea at sunrise, aerial minimalist photography'
+  ],
+  jazz: [
+    'intimate subterranean velvet lounge with dim amber table lamps, a crystal glass of whisky on a dark walnut table, smoky atmosphere',
+    'polished ebony grand piano keys reflecting warm candlelight in a quiet concert hall, shallow depth of field',
+    'vintage vinyl record sleeve and a warm glowing tube preamplifier on a mid-century wooden credenza at night',
+    'rainy Paris boulevard at night seen through the window of a warm bistro, golden reflections on cobblestones',
+    'upright wooden double bass resting in the corner of a warmly lit brick studio, rich shadows and golden rim light',
+    'classic vintage ribbon microphone under a warm spotlight in a 1950s wood-paneled recording studio'
+  ],
+  abstract: [
+    'sculptural waves of translucent obsidian glass and liquid gold intersecting in mid-air, studio macro photography',
+    'iridescent soap bubble macro surface swirling with emerald, amber, and violet patterns on a pitch-black background',
+    'geometric Bauhaus-inspired 3D composition of brushed brass, matte black stone, and warm diffused light',
+    'glowing bioluminescent waves washing onto a dark shore at night, starry sky above, surreal nature photography',
+    'ribbons of coloured silk fabric floating weightlessly in a dark studio, lit by dramatic dual-tone rim lights',
+    'macro crystal geode interior glowing with warm amber and amethyst light reflections'
+  ]
+};
+
+const LIGHTING_MODIFIERS = [
+  'Volumetric cinematic lighting, anamorphic lens flare, rich colour grading',
+  'Shot on 35mm Kodak Portra film, natural grain, warm highlights and deep shadows',
+  ' Chiaroscuro dramatic lighting, shallow depth of field (f/1.4), creamy bokeh',
+  'Ultra-crisp medium format photography, Hasselblad H6D, balanced studio-grade dynamic range',
+  'Moody atmospheric haze, neon rim lighting, high-contrast nocturnal palette',
+  'Golden hour natural sunlight, soft diffused glow, organic textures'
 ];
-const DEFAULT_SCENE = 'abstract sculptural waves of iridescent glass and warm golden light on a deep dark background, macro studio photography';
-let coverState = null;
+
+let promptVariantCounter = 0;
+let lastPickedSceneKey = '';
 
 function dominantGenres(){
   const counts = {};
   const byCode = new Map(catalogData.map(r => [r.code, r]));
-  document.getElementById('upcs').value.split('\n').map(s => s.trim()).filter(Boolean)
-    .forEach(c => (byCode.get(c)?.genres || []).forEach(g => counts[g] = (counts[g] || 0) + 1));
+  const byIsrc = new Map(catalogData.map(r => [normalizeIsrcKey(r.isrc || r.code), r]));
+
+  document.getElementById('upcs').value.split('\n').map(s => s.trim()).filter(Boolean).forEach(c => {
+    const item = byCode.get(c) || byIsrc.get(normalizeIsrcKey(c));
+    (item?.genres || []).forEach(g => counts[g] = (counts[g] || 0) + 1);
+  });
   builtTracks.forEach(t => { if(t.sourceGenre) counts[t.sourceGenre] = (counts[t.sourceGenre] || 0) + 1; });
   return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => e[0]);
 }
@@ -2654,21 +3064,73 @@ function getCurrentPlaylistName(){
   return document.getElementById('plName').value.trim() || 'Soulgem Selection';
 }
 
+function detectThemeCategory(genresList, playlistTitle){
+  const manualTheme = document.getElementById('coverThemeSelect').value;
+  if(manualTheme && manualTheme !== 'auto' && SCENE_POOLS[manualTheme]) return manualTheme;
+
+  // Rimuove "soulgem", "records", "selection", "playlist" dal titolo per evitare falsi positivi come "soul" dentro "Soulgem"!
+  const cleanedTitle = String(playlistTitle || '')
+    .replace(/soulgem|records|selection|official|playlist|volume|vol\b/gi, ' ')
+    .toLowerCase();
+  const genreText = genresList.join(' ').toLowerCase();
+  const combined = `${genreText} ${cleanedTitle}`;
+
+  if(/afro\s*house|afrobeat|tribal|organic\s*house|ethnic|african|arabic|world/.test(combined)) return 'afro';
+  if(/deep\s*house|lounge|sunset|aperitivo|chill\s*house|balearic|downtempo/.test(combined)) return 'deep';
+  if(/hard\s*techno|techno|minimal|acid|industrial|rave|schranz/.test(combined)) return 'techno';
+  if(/house|tech\s*house|jackin|funky|groove|dance|edm|club|electro|disco|trance/.test(combined)) return 'house';
+  if(/hip\s*hop|\brap\b|\btrap\b|urban|drill/.test(combined)) return 'hiphop';
+  if(/latin|reggaeton|salsa|merengue|bachata|tropical|summer|estate/.test(combined)) return 'latin';
+  if(/rock|metal|punk|grunge|alternative|indie\s*rock/.test(combined)) return 'rock';
+  if(/chill|ambient|relax|meditat|easy\s*listening|lo-fi|lofi|sleep|nature/.test(combined)) return 'chill';
+  if(/\bjazz\b|\bblues\b|\br&b\b|\bsoul\b|bossa/.test(combined)) return 'jazz';
+  if(/\bpop\b|synthpop|electropop|italodance/.test(combined)) return 'pop';
+
+  // Se non ci sono generi specifici, ruota tra i temi principali di Soulgem
+  const fallbackThemes = ['house', 'deep', 'abstract', 'pop', 'afro', 'chill'];
+  return fallbackThemes[promptVariantCounter % fallbackThemes.length];
+}
+
 function buildCoverPrompt(name){
+  promptVariantCounter++;
   const genres = dominantGenres();
-  const pick = (text) => (COVER_SCENES.find(([re]) => re.test(text.toLowerCase())) || [])[1];
-  const scene = pick(name) || pick(genres.join(' ')) || DEFAULT_SCENE;
-  const aiText = document.getElementById('comfyAiText').value.trim();
-  if(aiText){
-    return `Square 1:1 cinematic photography. Scene: ${scene}, featuring a glowing sign with the exact text "${aiText}" clearly written. Ultra detailed, rich colour grading, 8k high definition.`;
+  const themeKey = detectThemeCategory(genres, name);
+  const pool = SCENE_POOLS[themeKey] || SCENE_POOLS.abstract;
+
+  // Sceglie una scena diversa dall'ultima usata
+  let candidates = pool.map((s, idx) => ({ s, key: `${themeKey}_${idx}` }));
+  if(candidates.length > 1){
+    candidates = candidates.filter(c => c.key !== lastPickedSceneKey);
   }
-  // Nessun riferimento a "album cover" o al titolo per impedire a FLUX di inventare scritte
-  return `Pure visual square 1:1 photography. Subject: ${scene}. Style: cinematic lighting, ultra detailed, rich colour grading, clean uncluttered composition, 8k high definition. Strictly textless, no text, no letters, no typography, no words, no logos, no signs, no watermark.`;
+  const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+  lastPickedSceneKey = chosen.key;
+
+  const lightMod = LIGHTING_MODIFIERS[Math.floor(Math.random() * LIGHTING_MODIFIERS.length)];
+  const aiText = document.getElementById('comfyAiText').value.trim();
+
+  const badgeEl = document.getElementById('promptVariantBadge');
+  if(badgeEl){
+    badgeEl.textContent = `[Variante #${promptVariantCounter} · Tema: ${themeKey.toUpperCase()}${genres.length ? ' · ' + genres[0] : ''}]`;
+  }
+
+  if(aiText){
+    return `Square 1:1 cinematic photography. Scene: ${chosen.s}, featuring a glowing sign with the exact text "${aiText}" clearly written. ${lightMod}, 8k high definition.`;
+  }
+  return `Pure visual square 1:1 photography. Subject: ${chosen.s}. ${lightMod}, clean uncluttered composition, 8k high definition. Strictly textless, no text, no letters, no typography, no words, no logos, no signs, no watermark.`;
+}
+
+function refreshCoverPromptWithNewVariant(){
+  const name = getCurrentPlaylistName();
+  const newPrompt = buildCoverPrompt(name);
+  document.getElementById('coverCustomPrompt').value = newPrompt;
+  return newPrompt;
 }
 
 document.getElementById('regenPromptBtn').addEventListener('click', () => {
-  const name = getCurrentPlaylistName();
-  document.getElementById('coverCustomPrompt').value = buildCoverPrompt(name);
+  refreshCoverPromptWithNewVariant();
+});
+document.getElementById('coverThemeSelect').addEventListener('change', () => {
+  refreshCoverPromptWithNewVariant();
 });
 
 // ---------- ComfyUI Connection & Multi-Loader + LoRA ----------
@@ -3162,11 +3624,14 @@ function drawCover(img, size, title, overlayStyle){
   return c;
 }
 
-async function makeCover(){
+async function makeCover(forceNewPrompt = false){
   const name = getCurrentPlaylistName();
   const customPromptEl = document.getElementById('coverCustomPrompt');
-  const prompt = customPromptEl.value.trim() || buildCoverPrompt(name);
-  customPromptEl.value = prompt;
+  let prompt = customPromptEl.value.trim();
+  if(!prompt || forceNewPrompt){
+    prompt = buildCoverPrompt(name);
+    customPromptEl.value = prompt;
+  }
 
   const overlayStyle = document.getElementById('coverOverlayStyle').value;
   const img = await loadImg(await generateCoverSrc(prompt));
@@ -3211,8 +3676,9 @@ document.getElementById('coverPreviewBtn').addEventListener('click', async () =>
   box.innerHTML = '';
   btn.disabled = true; btn.textContent = '⏳ Generazione in corso...';
   try{
-    await makeCover();
-    addMsg(box, 'Copertina generata (senza scritte errate) e pronta per Spotify!', 'ok');
+    const autoRotate = document.getElementById('autoRotatePrompt').checked;
+    await makeCover(autoRotate);
+    addMsg(box, 'Copertina generata e pronta per Spotify!', 'ok');
   }catch(err){
     addMsg(box, 'Copertina non generata: ' + err.message, 'warn');
   }finally{
